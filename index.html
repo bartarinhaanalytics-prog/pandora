@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PANDORA IRAN | هر چارم، بخشی از داستان توست</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Reusable jewelry line-art motifs (referenced via <use> throughout the page) -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <linearGradient id="gradRoseGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0d9c4"/>
+      <stop offset="1" stop-color="#a9714f"/>
+    </linearGradient>
+    <linearGradient id="gradGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3e2b8"/>
+      <stop offset="1" stop-color="#b98a3e"/>
+    </linearGradient>
+    <linearGradient id="gradBlush" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6d3d9"/>
+      <stop offset="1" stop-color="#cf8a97"/>
+    </linearGradient>
+    <linearGradient id="gradSkin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e9c8a8"/>
+      <stop offset="1" stop-color="#c99b76"/>
+    </linearGradient>
+
+    <!-- Bangle bracelet with three dangling charms -->
+    <symbol id="motif-bracelet" viewBox="0 0 120 100">
+      <ellipse cx="60" cy="34" rx="42" ry="16" fill="none" stroke="url(#gradRoseGold)" stroke-width="4"/>
+      <line x1="34" y1="46" x2="30" y2="64" stroke="url(#gradRoseGold)" stroke-width="2.5"/>
+      <line x1="60" y1="50" x2="60" y2="70" stroke="url(#gradRoseGold)" stroke-width="2.5"/>
+      <line x1="86" y1="46" x2="90" y2="64" stroke="url(#gradRoseGold)" stroke-width="2.5"/>
+      <path d="M30 68c-6-6-16-1-13 7 2 5 8 8 13 12 5-4 11-7 13-12 3-8-7-13-13-7z" fill="url(#gradBlush)"/>
+      <path d="M60 70l4 8-4 8-4-8z M52 78h16" stroke="url(#gradGold)" stroke-width="2" fill="url(#gradGold)"/>
+      <circle cx="90" cy="72" r="9" fill="url(#gradGold)"/>
+      <circle cx="90" cy="72" r="3" fill="#fff8ea" opacity=".7"/>
+    </symbol>
+
+    <!-- Heart pendant charm -->
+    <symbol id="motif-heart" viewBox="0 0 60 60">
+      <circle cx="30" cy="12" r="6" fill="none" stroke="url(#gradGold)" stroke-width="2.5"/>
+      <path d="M30 22c-9-9-24-1-19 10 3 7 12 12 19 18 7-6 16-11 19-18 5-11-10-19-19-10z" fill="url(#gradBlush)"/>
+    </symbol>
+
+    <!-- Ring with round gem -->
+    <symbol id="motif-ring" viewBox="0 0 60 60">
+      <path d="M14 30a16 16 0 1 0 32 0 16 16 0 1 0-32 0" fill="none" stroke="url(#gradGold)" stroke-width="4"/>
+      <path d="M22 16l8-8 8 8-4 6h-8z" fill="url(#gradBlush)"/>
+      <circle cx="30" cy="14" r="6.5" fill="url(#gradBlush)"/>
+      <path d="M25 12l5-5 5 5-2.5 4h-5z" fill="#fff" opacity=".35"/>
+    </symbol>
+
+    <!-- Hoop earring with dangling gem -->
+    <symbol id="motif-earring" viewBox="0 0 60 80">
+      <circle cx="30" cy="10" r="4" fill="url(#gradGold)"/>
+      <path d="M18 26a12 12 0 1 1 24 0" fill="none" stroke="url(#gradGold)" stroke-width="3.5"/>
+      <line x1="30" y1="38" x2="30" y2="50" stroke="url(#gradGold)" stroke-width="2"/>
+      <path d="M30 50l7 12-7 8-7-8z" fill="url(#gradBlush)"/>
+    </symbol>
+
+    <!-- Necklace with teardrop pendant -->
+    <symbol id="motif-necklace" viewBox="0 0 100 90">
+      <path d="M8 8c0 34 20 46 42 46s42-12 42-46" fill="none" stroke="url(#gradGold)" stroke-width="3"/>
+      <path d="M50 54c-8 0-14 6-14 13 0 8 14 18 14 18s14-10 14-18c0-7-6-13-14-13z" fill="url(#gradBlush)"/>
+      <circle cx="50" cy="66" r="4" fill="#fff" opacity=".4"/>
+    </symbol>
+
+    <!-- Daisy flower charm -->
+    <symbol id="motif-daisy" viewBox="0 0 60 60">
+      <g fill="url(#gradGold)">
+        <ellipse cx="30" cy="14" rx="7" ry="11"/>
+        <ellipse cx="30" cy="46" rx="7" ry="11"/>
+        <ellipse cx="14" cy="30" rx="11" ry="7"/>
+        <ellipse cx="46" cy="30" rx="11" ry="7"/>
+        <ellipse cx="19" cy="19" rx="7" ry="10" transform="rotate(-45 19 19)"/>
+        <ellipse cx="41" cy="41" rx="7" ry="10" transform="rotate(-45 41 41)"/>
+        <ellipse cx="41" cy="19" rx="7" ry="10" transform="rotate(45 41 19)"/>
+        <ellipse cx="19" cy="41" rx="7" ry="10" transform="rotate(45 19 41)"/>
+      </g>
+      <circle cx="30" cy="30" r="8" fill="url(#gradBlush)"/>
+    </symbol>
+
+    <!-- Infinity motif ring -->
+    <symbol id="motif-infinity" viewBox="0 0 60 60">
+      <path d="M14 34a16 16 0 1 0 32 0 16 16 0 1 0-32 0" fill="none" stroke="url(#gradGold)" stroke-width="4"/>
+      <path d="M16 16c3-4 8-4 11 0 3 4 8 4 11 0 3-4 8-4 11 0" fill="none" stroke="url(#gradBlush)" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Gift box -->
+    <symbol id="motif-giftbox" viewBox="0 0 60 60">
+      <rect x="10" y="24" width="40" height="26" rx="2" fill="url(#gradRoseGold)"/>
+      <rect x="10" y="24" width="40" height="8" fill="url(#gradGold)"/>
+      <rect x="26" y="14" width="8" height="36" fill="url(#gradGold)"/>
+      <path d="M30 14c-10 0-12-12-2-12 6 0 2 8 2 12zM30 14c10 0 12-12 2-12-6 0-2 8-2 12z" fill="url(#gradGold)"/>
+    </symbol>
+
+    <!-- Simple outline icons for the "find your symbol" mood picker -->
+    <symbol id="icon-heart" viewBox="0 0 32 32">
+      <path d="M16 27S4 19.5 4 11.8C4 6.9 7.8 4 11.6 4c2 0 3.7 1 4.4 2.6C16.7 5 18.4 4 20.4 4 24.2 4 28 6.9 28 11.8 28 19.5 16 27 16 27z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-cake" viewBox="0 0 32 32">
+      <path d="M16 4v5M12 4.5v4M20 4.5v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M6 15c1.6 1.6 4.4 1.6 6 0s4.4-1.6 6 0 4.4 1.6 6 0v11H6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M6 22h20" stroke="currentColor" stroke-width="1.4"/>
+    </symbol>
+    <symbol id="icon-star" viewBox="0 0 32 32">
+      <path d="M16 4l3.5 8.2 8.5.8-6.4 5.9 1.9 8.6L16 23.4 8.5 27.5l1.9-8.6L4 13l8.5-.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-family" viewBox="0 0 32 32">
+      <circle cx="11" cy="10" r="3.4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="21" cy="10" r="3.4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M4 26v-3c0-3.3 2.7-6 6-6h2c3.3 0 6 2.7 6 6v3M16 26v-2c0-3.3 2.7-6 6-6h.4c3.3 0 6 2.7 6 6v2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-plane" viewBox="0 0 32 32">
+      <path d="M4 18l24-10-8 24-3-9-9-3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-clover" viewBox="0 0 32 32">
+      <path d="M16 16c0-4.4-3.6-8-8-8s-8 3.6-8 8 3.6 8 8 8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M16 16c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M16 16c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M16 16v14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Cropped forearm wearing a charm bracelet (hero / editorial illustration) -->
+    <symbol id="motif-wrist" viewBox="0 0 400 520">
+      <path d="M120 520 C110 380 130 300 175 250 C205 218 235 210 255 235 C275 260 260 300 300 340 C350 388 360 460 340 520 Z" fill="url(#gradSkin)"/>
+      <ellipse cx="222" cy="272" rx="66" ry="26" fill="none" stroke="url(#gradGold)" stroke-width="6" transform="rotate(-18 222 272)"/>
+      <line x1="176" y1="292" x2="164" y2="330" stroke="url(#gradGold)" stroke-width="3"/>
+      <line x1="222" y1="300" x2="222" y2="342" stroke="url(#gradGold)" stroke-width="3"/>
+      <line x1="266" y1="288" x2="276" y2="326" stroke="url(#gradGold)" stroke-width="3"/>
+      <path d="M164 330c-8-8-22-1-18 9 3 7 11 10 18 16 7-6 15-9 18-16 4-10-10-17-18-9z" fill="url(#gradBlush)"/>
+      <circle cx="222" cy="352" r="12" fill="url(#gradGold)"/>
+      <circle cx="222" cy="352" r="4" fill="#fff8ea" opacity=".7"/>
+      <path d="M276 326l6 12-6 11-6-11z M270 337h12" fill="url(#gradBlush)" stroke="url(#gradBlush)" stroke-width="2"/>
+      <circle cx="60" cy="90" r="3" fill="#fff" opacity=".5"/>
+      <circle cx="340" cy="140" r="5" fill="#fff" opacity=".35"/>
+      <circle cx="90" cy="420" r="4" fill="#fff" opacity=".3"/>
+      <circle cx="320" cy="440" r="3" fill="#fff" opacity=".4"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Announcement / promo strip -->
+<div class="promo-strip">ارسال رایگان برای خرید بالای ۱,۵۰۰,۰۰۰ تومان | خرید اقساطی بدون ضامن</div>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="container header-inner">
+    <button class="icon-btn menu-toggle" aria-label="منو" id="menuToggle">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#">داستان‌ها</a>
+      <a href="#">انگشترها</a>
+      <a href="#">هدیه</a>
+      <a href="#">معنی چارم</a>
+      <a href="#">کالکشن‌ها</a>
+      <a href="#">دسته‌بندی‌ها</a>
+    </nav>
+
+    <a href="#" class="logo">
+      <span class="logo-title">PANDORA</span>
+      <span class="logo-sub">IRAN</span>
+    </a>
+
+    <div class="header-icons">
+      <button class="icon-btn" aria-label="جستجو">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="حساب کاربری">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 20c1.5-4 4-5.6 7.5-5.6s6 1.6 7.5 5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="سبد خرید">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16l-1.5 10.5a2 2 0 01-2 1.7H7.5a2 2 0 01-2-1.7L4 6z" stroke="currentColor" stroke-width="1.6"/><path d="M8 6a4 4 0 018 0" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span class="cart-badge">2</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-media" role="img" aria-label="مدل با دستبند و جواهرات پاندورا">
+    <svg class="hero-wrist" viewBox="0 0 400 520" preserveAspectRatio="xMidYMax slice"><use href="#motif-wrist"/></svg>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <h1>Every Charm<br>Tells Your Story</h1>
+    <p class="hero-fa">هر چارم، بخشی از داستان توست</p>
+    <a href="#" class="hero-link">داستان پاندورا</a>
+    <div class="hero-actions">
+      <a href="#" class="btn btn-dark">خرید مجموعه <span class="arrow">←</span></a>
+      <a href="#" class="btn btn-outline">انتخاب هدیه <svg class="gift-icon" viewBox="0 0 24 24"><path d="M20 12v8H4v-8M2 7h20v5H2V7zM12 7v13M12 7c-1.5-3-6-3-6 0s4.5 3 6 0zm0 0c1.5-3 6-3 6 0s-4.5 3-6 0z" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></a>
+    </div>
+  </div>
+
+  <div class="trust-bar container">
+    <div class="trust-item">
+      <span class="trust-icon">✓</span>
+      <div><strong>ضمانت اصالت</strong><span>ضمانت ۱۷۰۰۰ اصالت کالا</span></div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">۴</span>
+      <div><strong>قسط با اسنپ‌پی</strong><span>بدون کارمزد و بدون ضامن</span></div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon">🚚</span>
+      <div><strong>ارسال رایگان</strong><span>برای سفارشات بالای ۱,۵۰۰,۰۰۰ تومان</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="categories container">
+  <a href="#" class="cat-card cat-bracelets">
+    <svg class="cat-icon" viewBox="0 0 120 100"><use href="#motif-bracelet"/></svg>
+    <span class="cat-fa">دستبندها</span><span class="cat-en">Bracelets</span>
+    <span class="cat-plus">+</span>
+  </a>
+  <a href="#" class="cat-card cat-charms">
+    <svg class="cat-icon" viewBox="0 0 60 60"><use href="#motif-heart"/></svg>
+    <span class="cat-fa">چارم‌ها</span><span class="cat-en">Charms</span>
+    <span class="cat-plus">+</span>
+  </a>
+  <a href="#" class="cat-card cat-earrings">
+    <svg class="cat-icon" viewBox="0 0 60 80"><use href="#motif-earring"/></svg>
+    <span class="cat-fa">گوشواره‌ها</span><span class="cat-en">Earrings</span>
+    <span class="cat-plus">+</span>
+  </a>
+  <a href="#" class="cat-card cat-necklaces">
+    <svg class="cat-icon" viewBox="0 0 100 90"><use href="#motif-necklace"/></svg>
+    <span class="cat-fa">گردنبندها</span><span class="cat-en">Necklaces</span>
+    <span class="cat-plus">+</span>
+  </a>
+  <a href="#" class="cat-card cat-rings">
+    <svg class="cat-icon" viewBox="0 0 60 60"><use href="#motif-ring"/></svg>
+    <span class="cat-fa">انگشترها</span><span class="cat-en">Rings</span>
+    <span class="cat-plus">+</span>
+  </a>
+</section>
+
+<!-- Collection banner -->
+<section class="collection-banner container">
+  <div class="collection-media">
+    <svg class="collection-icon" viewBox="0 0 120 100"><use href="#motif-bracelet"/></svg>
+  </div>
+  <div class="collection-text">
+    <span class="tag">NEW COLLECTION</span>
+    <h2>Summer 2026</h2>
+    <p>درخشش تابستان، در هر جزئیات</p>
+    <a href="#" class="btn btn-outline-light">کشف مجموعه <span class="arrow">←</span></a>
+  </div>
+</section>
+
+<!-- Best sellers -->
+<section class="products container">
+  <div class="section-head">
+    <a href="#" class="see-all">مشاهده همه</a>
+    <h2>پرفروش‌ترین‌ها</h2>
+  </div>
+
+  <div class="product-grid">
+
+    <article class="product-card">
+      <span class="badge badge-new">NEW</span>
+      <button class="wish-btn" aria-label="افزودن به علاقه‌مندی">♡</button>
+      <div class="product-media product-media-1">
+        <svg class="product-icon" viewBox="0 0 120 100"><use href="#motif-bracelet"/></svg>
+      </div>
+      <h3>Pandora Moments Bracelet</h3>
+      <div class="stars">★★★★★ <span>(۹۹)</span></div>
+      <div class="price-row">
+        <span class="price">۴,۸۰۰,۰۰۰ تومان</span>
+        <span class="off">٪۲۰</span>
+      </div>
+      <button class="btn btn-add">افزودن به سبد</button>
+    </article>
+
+    <article class="product-card">
+      <button class="wish-btn" aria-label="افزودن به علاقه‌مندی">♡</button>
+      <div class="product-media product-media-2">
+        <svg class="product-icon" viewBox="0 0 60 60"><use href="#motif-heart"/></svg>
+      </div>
+      <h3>Sparkling Heart Charm</h3>
+      <div class="stars">★★★★★ <span>(۱۱۴)</span></div>
+      <div class="price-row">
+        <span class="price">۲,۴۸۶,۰۰۰ تومان</span>
+      </div>
+      <button class="btn btn-add">افزودن به سبد</button>
+    </article>
+
+    <article class="product-card">
+      <span class="badge badge-new">NEW</span>
+      <button class="wish-btn" aria-label="افزودن به علاقه‌مندی">♡</button>
+      <div class="product-media product-media-3">
+        <svg class="product-icon" viewBox="0 0 60 60"><use href="#motif-ring"/></svg>
+      </div>
+      <h3>Pandora Rose Ring</h3>
+      <div class="stars">★★★★★ <span>(۷۳)</span></div>
+      <div class="price-row">
+        <span class="price">۳,۲۰۰,۰۰۰ تومان</span>
+      </div>
+      <button class="btn btn-add">افزودن به سبد</button>
+    </article>
+
+    <article class="product-card">
+      <button class="wish-btn" aria-label="افزودن به علاقه‌مندی">♡</button>
+      <div class="product-media product-media-4">
+        <svg class="product-icon" viewBox="0 0 60 60"><use href="#motif-daisy"/></svg>
+      </div>
+      <h3>Daisy Flower Charm</h3>
+      <div class="stars">★★★★★ <span>(۵۶)</span></div>
+      <div class="price-row">
+        <span class="price">۱,۱۵۶,۰۰۰ تومان</span>
+      </div>
+      <button class="btn btn-add">افزودن به سبد</button>
+    </article>
+
+    <article class="product-card">
+      <button class="wish-btn" aria-label="افزودن به علاقه‌مندی">♡</button>
+      <div class="product-media product-media-5">
+        <svg class="product-icon" viewBox="0 0 60 60"><use href="#motif-infinity"/></svg>
+      </div>
+      <h3>Infinity Knot Ring</h3>
+      <div class="stars">★★★★★ <span>(۷۵)</span></div>
+      <div class="price-row">
+        <span class="price">۲,۸۵۶,۰۰۰ تومان</span>
+      </div>
+      <button class="btn btn-add">افزودن به سبد</button>
+    </article>
+
+  </div>
+</section>
+
+<!-- Symbol finder dark banner -->
+<section class="symbol-finder">
+  <svg class="symbol-finder-bg" viewBox="0 0 120 100" preserveAspectRatio="xMidYMid slice"><use href="#motif-bracelet"/></svg>
+  <div class="container symbol-finder-inner">
+    <h2>نماد متناسب خودت را پیدا کن</h2>
+    <p>امروز چه حسی داری؟</p>
+    <div class="symbol-icons">
+      <div class="symbol-item"><span><svg viewBox="0 0 32 32"><use href="#icon-heart"/></svg></span><small>عشق ناب</small></div>
+      <div class="symbol-item"><span><svg viewBox="0 0 32 32"><use href="#icon-cake"/></svg></span><small>تولد</small></div>
+      <div class="symbol-item"><span><svg viewBox="0 0 32 32"><use href="#icon-star"/></svg></span><small>موفقیت</small></div>
+      <div class="symbol-item"><span><svg viewBox="0 0 32 32"><use href="#icon-family"/></svg></span><small>خانواده</small></div>
+      <div class="symbol-item"><span><svg viewBox="0 0 32 32"><use href="#icon-plane"/></svg></span><small>سفر</small></div>
+      <div class="symbol-item"><span><svg viewBox="0 0 32 32"><use href="#icon-clover"/></svg></span><small>خوش‌شانسی</small></div>
+    </div>
+    <a href="#" class="btn btn-outline-light">شروع کن <span class="arrow">←</span></a>
+  </div>
+</section>
+
+<!-- Story split -->
+<section class="story-split">
+  <div class="story-media">
+    <svg class="story-icon" viewBox="0 0 400 520" preserveAspectRatio="xMidYMid slice"><use href="#motif-wrist"/></svg>
+  </div>
+  <div class="story-text">
+    <h2>هر چارم<br>یک داستان دارد</h2>
+    <p>ما باور داریم که هر جزئی، ارزش خاص خودش را دارد. چارم‌های پاندورا برای همین لحظات ساخته شده‌اند.</p>
+    <a href="#" class="btn btn-dark">مطالعه داستان ما <span class="arrow">←</span></a>
+  </div>
+</section>
+
+<!-- Collections carousel -->
+<section class="collections container">
+  <h2>کالکشن‌های پاندورا</h2>
+  <div class="collections-row">
+    <button class="carousel-btn" aria-label="قبلی">‹</button>
+    <div class="collections-track">
+      <div class="collection-item"><span class="collection-circle">Moments</span><small>Moments</small></div>
+      <div class="collection-item"><span class="collection-circle">ME</span><small>ME</small></div>
+      <div class="collection-item"><span class="collection-circle collection-marvel">MARVEL</span><small>Marvel</small></div>
+      <div class="collection-item"><span class="collection-circle collection-disney">Disney</span><small>Disney</small></div>
+      <div class="collection-item"><span class="collection-circle">Charms</span><small>Charms</small></div>
+      <div class="collection-item"><span class="collection-circle">Bracelets</span><small>Bracelets</small></div>
+    </div>
+    <button class="carousel-btn" aria-label="بعدی">›</button>
+  </div>
+</section>
+
+<!-- Perks + instagram -->
+<section class="perks container">
+  <div class="perk-card">
+    <svg class="perk-icon" viewBox="0 0 60 60"><use href="#motif-giftbox"/></svg>
+    <strong>بسته‌بندی هدیه</strong>
+    <small>بسته‌بندی خاص برای هر مناسبتی</small>
+  </div>
+  <div class="perk-card">
+    <span class="perk-icon">✓</span>
+    <strong>ضمانت اصالت</strong>
+    <small>ضمانت ۱۷۰۰ اصالت کالا</small>
+  </div>
+  <div class="perk-card">
+    <span class="perk-icon">🚚</span>
+    <strong>ارسال رایگان</strong>
+    <small>برای سفارشات بالای ۱,۵۰۰,۰۰۰ تومان</small>
+  </div>
+  <div class="perk-card perk-instagram">
+    <strong>از نگاه شما</strong>
+    <small>@pandora.iran</small>
+    <a href="#" class="btn btn-outline-dark-sm">مشاهده بیشتر</a>
+  </div>
+</section>
+
+<!-- Instagram gallery -->
+<section class="insta-gallery container">
+  <div class="insta-thumb insta-1"><svg viewBox="0 0 120 100"><use href="#motif-bracelet"/></svg></div>
+  <div class="insta-thumb insta-2"><svg viewBox="0 0 60 60"><use href="#motif-ring"/></svg></div>
+  <div class="insta-thumb insta-3"><svg viewBox="0 0 100 90"><use href="#motif-necklace"/></svg></div>
+  <div class="insta-thumb insta-4"><svg viewBox="0 0 60 80"><use href="#motif-earring"/></svg></div>
+  <div class="insta-thumb insta-5"><svg viewBox="0 0 60 60"><use href="#motif-heart"/></svg></div>
+  <div class="insta-thumb insta-6"><svg viewBox="0 0 60 60"><use href="#motif-daisy"/></svg></div>
+</section>
+
+<!-- Reviews -->
+<section class="reviews container">
+  <div class="section-head">
+    <h2>نظرات شما</h2>
+  </div>
+  <div class="reviews-row">
+    <button class="carousel-btn" aria-label="قبلی">‹</button>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p>«بهترین خرید، بیشتر از عالی! ارسال سریع و کالای اصل بود.»</p>
+      <div class="reviewer"><span class="avatar"></span> نگین محمدی</div>
+    </div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p>«بسته‌بندی فوق‌العاده و کیفیت محصولات بی‌نظیره.»</p>
+      <div class="reviewer"><span class="avatar"></span> سارا یوسفی</div>
+    </div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p>«کیفیت محصولات بی‌نظیره، حتما دوباره خرید می‌کنم.»</p>
+      <div class="reviewer"><span class="avatar"></span> مهدی رستمی</div>
+    </div>
+    <button class="carousel-btn" aria-label="بعدی">›</button>
+  </div>
+</section>
+
+<!-- Magazine -->
+<section class="magazine container">
+  <div class="section-head">
+    <a href="#" class="see-all">مشاهده همه مقالات</a>
+    <h2>مجله پاندورا</h2>
+  </div>
+  <div class="magazine-grid">
+    <article class="magazine-card">
+      <div class="magazine-media mag-1"><svg viewBox="0 0 120 100"><use href="#motif-bracelet"/></svg></div>
+      <strong>راهنمای انتخاب دستبند مناسب</strong>
+      <small>۳ دقیقه مطالعه</small>
+    </article>
+    <article class="magazine-card">
+      <div class="magazine-media mag-2"><svg viewBox="0 0 60 60"><use href="#motif-daisy"/></svg></div>
+      <strong>نمادهای محبوب پاندورا برای بیستم‌ها چیست؟</strong>
+      <small>۵ دقیقه مطالعه</small>
+    </article>
+    <article class="magazine-card">
+      <div class="magazine-media mag-3"><svg viewBox="0 0 100 90"><use href="#motif-necklace"/></svg></div>
+      <strong>چطور ست کاملی از جواهرات بسازیم؟</strong>
+      <small>۴ دقیقه مطالعه</small>
+    </article>
+    <article class="magazine-card">
+      <div class="magazine-media mag-4"><svg viewBox="0 0 60 60"><use href="#motif-heart"/></svg></div>
+      <strong>هدیه دادن، هنر ابراز عشق</strong>
+      <small>۳ دقیقه مطالعه</small>
+    </article>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter">
+  <div class="container newsletter-inner">
+    <div class="newsletter-text">
+      <h2>یک داستان جدید هر هفته</h2>
+      <p>با عضویت در خبرنامه، از جدیدترین محصولات و تخفیف‌ها باخبر شوید.</p>
+    </div>
+    <form class="newsletter-form" onsubmit="return false;">
+      <input type="email" placeholder="ایمیل شما" required>
+      <button type="submit" class="btn btn-dark">عضویت</button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col footer-brand">
+      <span class="logo-title">PANDORA</span><span class="logo-sub">IRAN</span>
+      <p>هر چارم، بخشی از داستان توست.</p>
+    </div>
+    <div class="footer-col">
+      <h4>دسته‌بندی‌ها</h4>
+      <a href="#">دستبندها</a>
+      <a href="#">چارم‌ها</a>
+      <a href="#">گوشواره‌ها</a>
+      <a href="#">گردنبندها</a>
+      <a href="#">انگشترها</a>
+    </div>
+    <div class="footer-col">
+      <h4>خدمات مشتریان</h4>
+      <a href="#">پیگیری سفارش</a>
+      <a href="#">راهنمای سایز</a>
+      <a href="#">شرایط بازگشت کالا</a>
+      <a href="#">تماس با ما</a>
+    </div>
+    <div class="footer-col">
+      <h4>درباره ما</h4>
+      <a href="#">داستان پاندورا</a>
+      <a href="#">فروشگاه‌ها</a>
+      <a href="#">فرصت‌های شغلی</a>
+      <a href="#">وبلاگ</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© ۱۴۰۵ پاندورا ایران. تمامی حقوق محفوظ است.</span>
+    <div class="social-icons">
+      <a href="#" aria-label="اینستاگرام">IG</a>
+      <a href="#" aria-label="تلگرام">TG</a>
+      <a href="#" aria-label="واتس‌اپ">WA</a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
