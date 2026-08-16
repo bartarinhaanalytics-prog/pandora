@@ -44,20 +44,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<span class="bar"></span>
 				</div>
 
-				<div class="tabs" style="margin-bottom:22px;">
-					<button class="is-active"><?php esc_html_e( 'همه', 'techrato' ); ?></button>
-					<button><?php esc_html_e( 'موبایل', 'techrato' ); ?></button>
-					<button><?php esc_html_e( 'اپل', 'techrato' ); ?></button>
-					<button><?php esc_html_e( 'اینترنت', 'techrato' ); ?></button>
-					<button><?php esc_html_e( 'هوش مصنوعی', 'techrato' ); ?></button>
-					<button><?php esc_html_e( 'بازی ویدیویی', 'techrato' ); ?></button>
+				<?php $techrato_has_posts = have_posts(); ?>
+				<div class="widget list-widget">
+					<div class="tabs" style="margin-bottom:16px;">
+						<button class="is-active"><?php esc_html_e( 'همه', 'techrato' ); ?></button>
+						<button><?php esc_html_e( 'موبایل', 'techrato' ); ?></button>
+						<button><?php esc_html_e( 'اپل', 'techrato' ); ?></button>
+						<button><?php esc_html_e( 'اینترنت', 'techrato' ); ?></button>
+						<button><?php esc_html_e( 'هوش مصنوعی', 'techrato' ); ?></button>
+						<button><?php esc_html_e( 'بازی ویدیویی', 'techrato' ); ?></button>
+					</div>
+
+					<?php if ( $techrato_has_posts ) : ?>
+						<?php while ( have_posts() ) : the_post(); ?>
+							<?php get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true ) ); ?>
+						<?php endwhile; ?>
+					<?php else : ?>
+						<?php techrato_empty_card_notice( __( 'مطلبی برای نمایش یافت نشد.', 'techrato' ) ); ?>
+					<?php endif; ?>
 				</div>
 
-				<?php if ( have_posts() ) : ?>
-					<?php while ( have_posts() ) : the_post(); ?>
-						<?php get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true ) ); ?>
-					<?php endwhile; ?>
-
+				<?php if ( $techrato_has_posts ) : ?>
 					<div class="pagination">
 						<div><?php echo get_previous_posts_link( '« ' . esc_html__( 'قبل', 'techrato' ) ); ?></div>
 						<div>
@@ -68,8 +75,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</div>
 						<div><?php echo get_next_posts_link( esc_html__( 'بعد', 'techrato' ) . ' »' ); ?></div>
 					</div>
-				<?php else : ?>
-					<?php techrato_empty_card_notice( __( 'مطلبی برای نمایش یافت نشد.', 'techrato' ) ); ?>
 				<?php endif; ?>
 			</div>
 

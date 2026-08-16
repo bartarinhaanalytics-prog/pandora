@@ -87,24 +87,26 @@ $shown_ids = array();
 						<h2><?php esc_html_e( 'جدیدترین اخبار تکنولوژی', 'techrato' ); ?></h2>
 						<span class="bar"></span>
 					</div>
-					<div class="tabs" style="margin-bottom:20px;">
-						<button class="is-active"><?php esc_html_e( 'همه', 'techrato' ); ?></button>
-						<button><?php esc_html_e( 'اپل', 'techrato' ); ?></button>
-						<button><?php esc_html_e( 'موبایل', 'techrato' ); ?></button>
-						<button><?php esc_html_e( 'اینترنت', 'techrato' ); ?></button>
-						<button><?php esc_html_e( 'بازی ویدیویی', 'techrato' ); ?></button>
+					<div class="widget list-widget">
+						<div class="tabs" style="margin-bottom:16px;">
+							<button class="is-active"><?php esc_html_e( 'همه', 'techrato' ); ?></button>
+							<button><?php esc_html_e( 'اپل', 'techrato' ); ?></button>
+							<button><?php esc_html_e( 'موبایل', 'techrato' ); ?></button>
+							<button><?php esc_html_e( 'اینترنت', 'techrato' ); ?></button>
+							<button><?php esc_html_e( 'بازی ویدیویی', 'techrato' ); ?></button>
+						</div>
+						<?php
+						$latest = new WP_Query( array( 'posts_per_page' => 4, 'ignore_sticky_posts' => true ) );
+						if ( $latest->have_posts() ) :
+							while ( $latest->have_posts() ) : $latest->the_post();
+								get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true, 'excerpt' => true ) );
+							endwhile;
+							wp_reset_postdata();
+						else :
+							techrato_empty_card_notice();
+						endif;
+						?>
 					</div>
-					<?php
-					$latest = new WP_Query( array( 'posts_per_page' => 4, 'ignore_sticky_posts' => true ) );
-					if ( $latest->have_posts() ) :
-						while ( $latest->have_posts() ) : $latest->the_post();
-							get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true, 'excerpt' => true ) );
-						endwhile;
-						wp_reset_postdata();
-					else :
-						techrato_empty_card_notice();
-					endif;
-					?>
 				</div>
 
 				<aside>
