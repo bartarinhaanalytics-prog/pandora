@@ -17,5 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 		<p><?php echo esc_html( wp_trim_words( get_the_excerpt(), 18 ) ); ?></p>
 		<?php techrato_card_meta(); ?>
+		<span class="hero-dots" aria-hidden="true"><span class="is-active"></span><span></span><span></span></span>
 	</div>
 </article>

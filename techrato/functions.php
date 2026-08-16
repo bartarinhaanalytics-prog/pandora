@@ -35,6 +35,7 @@ function techrato_setup() {
 		'trending'         => __( 'نوار پرطرفدارها', 'techrato' ),
 		'footer-techrato'  => __( 'فوتر - تکراتو', 'techrato' ),
 		'footer-categories' => __( 'فوتر - دسته‌بندی‌ها', 'techrato' ),
+		'search-suggestions' => __( 'کلمات پرجستجو (پنل جستجو)', 'techrato' ),
 	) );
 
 	add_image_size( 'techrato-hero', 900, 560, true );
@@ -113,6 +114,19 @@ function techrato_fallback_primary_menu() {
 	echo '<ul class="main-nav">';
 	foreach ( $items as $label => $url ) {
 		printf( '<li><a href="%s">%s</a></li>', esc_url( $url ), esc_html( $label ) );
+	}
+	echo '</ul>';
+}
+
+/**
+ * Fallback trending-search keywords shown in the search overlay when no
+ * "کلمات پرجستجو" menu has been assigned yet.
+ */
+function techrato_fallback_search_suggestions() {
+	$items = array( 'اپل', 'هوش مصنوعی', 'ویندوز', 'OpenAi', 'موبایل', 'اینترنت' );
+	echo '<ul class="suggestions-nav">';
+	foreach ( $items as $label ) {
+		printf( '<li><a href="%s">%s</a></li>', esc_url( home_url( '/?s=' . rawurlencode( $label ) ) ), esc_html( $label ) );
 	}
 	echo '</ul>';
 }
