@@ -18,33 +18,37 @@ get_header();
 			<article <?php post_class(); ?>>
 
 				<header class="article-header">
-					<h1><?php the_title(); ?></h1>
+					<div class="article-header-grid">
+						<div class="article-header-info">
+							<h1><?php the_title(); ?></h1>
 
-					<?php if ( has_post_thumbnail() ) : ?>
-						<div class="article-featured"><?php the_post_thumbnail( 'techrato-hero' ); ?></div>
-					<?php endif; ?>
+							<div class="meta" style="margin-bottom:6px;">
+								<span class="meta-item">
+									<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+									<?php the_author(); ?>
+								</span>
+								<?php techrato_card_meta(); ?>
+							</div>
 
-					<div class="meta" style="margin-bottom:6px;">
-						<span class="meta-item">
-							<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-							<?php the_author(); ?>
-						</span>
-						<?php techrato_card_meta(); ?>
-					</div>
+							<div class="article-actions">
+								<span class="action">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+									<?php echo esc_html( get_post_meta( get_the_ID(), 'techrato_likes', true ) ?: 0 ); ?>
+								</span>
+								<span class="action">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+									<?php comments_number( __( 'بدون دیدگاه', 'techrato' ), __( '۱ دیدگاه', 'techrato' ), __( '% دیدگاه', 'techrato' ) ); ?>
+								</span>
+								<span class="action">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9M8.6 13.5l6.8 3.9"/></svg>
+									<?php esc_html_e( 'اشتراک‌گذاری', 'techrato' ); ?>
+								</span>
+							</div>
+						</div>
 
-					<div class="article-actions">
-						<span class="action">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
-							<?php echo esc_html( get_post_meta( get_the_ID(), 'techrato_likes', true ) ?: 0 ); ?>
-						</span>
-						<span class="action">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-							<?php comments_number( __( 'بدون دیدگاه', 'techrato' ), __( '۱ دیدگاه', 'techrato' ), __( '% دیدگاه', 'techrato' ) ); ?>
-						</span>
-						<span class="action">
-							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9M8.6 13.5l6.8 3.9"/></svg>
-							<?php esc_html_e( 'اشتراک‌گذاری', 'techrato' ); ?>
-						</span>
+						<?php if ( has_post_thumbnail() ) : ?>
+							<div class="article-featured"><?php the_post_thumbnail( 'techrato-hero' ); ?></div>
+						<?php endif; ?>
 					</div>
 				</header>
 
@@ -98,7 +102,7 @@ get_header();
 					<?php
 					$cats = get_the_category();
 					$related_args = array(
-						'posts_per_page'      => 5,
+						'posts_per_page'      => 4,
 						'post__not_in'        => array( get_the_ID() ),
 						'ignore_sticky_posts' => true,
 					);
@@ -108,7 +112,7 @@ get_header();
 					$related = new WP_Query( $related_args );
 					if ( $related->have_posts() ) :
 						?>
-						<div class="grid-5">
+						<div class="grid-4">
 							<?php while ( $related->have_posts() ) : $related->the_post(); ?>
 								<?php get_template_part( 'template-parts/card', 'vertical' ); ?>
 							<?php endwhile; wp_reset_postdata(); ?>
