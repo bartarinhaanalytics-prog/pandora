@@ -1,0 +1,88 @@
+<?php
+/**
+ * The header for the Techrato theme.
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?><!DOCTYPE html>
+<html <?php language_attributes(); ?> dir="rtl" data-theme="dark">
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
+<?php wp_body_open(); ?>
+
+<a class="screen-reader-text" href="#primary"><?php esc_html_e( 'رفتن به محتوای اصلی', 'techrato' ); ?></a>
+
+<header class="site-header">
+	<div class="container topbar">
+		<a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+			<?php if ( has_custom_logo() ) : ?>
+				<?php the_custom_logo(); ?>
+			<?php else : ?>
+				<span><?php bloginfo( 'name' ); ?></span>
+				<span class="logo-mark">
+					<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/><rect x="10" y="7" width="4" height="14" rx="1" fill="currentColor"/><rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/></svg>
+				</span>
+			<?php endif; ?>
+		</a>
+
+		<div class="topbar-icons">
+			<a class="icon-btn" href="<?php echo esc_url( wp_login_url() ); ?>" aria-label="<?php esc_attr_e( 'ورود', 'techrato' ); ?>">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+			</a>
+			<button class="icon-btn js-search-toggle" aria-label="<?php esc_attr_e( 'جستجو', 'techrato' ); ?>">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+			</button>
+			<span class="topbar-divider"></span>
+			<button class="icon-btn js-theme-toggle" aria-label="<?php esc_attr_e( 'تغییر پوسته روشن/تیره', 'techrato' ); ?>">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+			</button>
+			<button class="icon-btn mobile-toggle js-menu-toggle" aria-label="<?php esc_attr_e( 'منو', 'techrato' ); ?>">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+			</button>
+		</div>
+	</div>
+
+	<div class="search-panel js-search-panel" hidden>
+		<div class="container">
+			<?php get_search_form(); ?>
+		</div>
+	</div>
+
+	<nav class="main-nav-wrap js-mobile-nav" id="site-navigation" aria-label="<?php esc_attr_e( 'منوی اصلی', 'techrato' ); ?>">
+		<div class="container">
+			<?php
+			if ( has_nav_menu( 'primary' ) ) {
+				wp_nav_menu( array(
+					'theme_location' => 'primary',
+					'container'      => false,
+					'menu_class'     => 'main-nav',
+					'depth'          => 1,
+				) );
+			} else {
+				techrato_fallback_primary_menu();
+			}
+			?>
+		</div>
+	</nav>
+
+	<?php if ( has_nav_menu( 'trending' ) ) : ?>
+	<div class="trending-bar">
+		<div class="container">
+			<span class="label"><?php esc_html_e( 'پرطرفدارها:', 'techrato' ); ?></span>
+			<?php
+			wp_nav_menu( array(
+				'theme_location' => 'trending',
+				'container'      => false,
+				'menu_class'     => 'trending-nav',
+				'depth'          => 1,
+			) );
+			?>
+		</div>
+	</div>
+	<?php endif; ?>
+</header>
