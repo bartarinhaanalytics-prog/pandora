@@ -18,22 +18,22 @@ $tags     = ! empty( $args['tags'] );
 $class    = 'card-list-row' . ( $featured ? ' card-list-row--featured' : '' );
 ?>
 <article class="<?php echo esc_attr( $class ); ?>">
-	<a class="thumb" href="<?php the_permalink(); ?>">
-		<?php if ( has_post_thumbnail() ) : ?>
-			<?php the_post_thumbnail( 'techrato-list' ); ?>
-		<?php else : ?>
-			<img src="<?php echo esc_url( TECHRATO_URI . '/assets/images/placeholder.svg' ); ?>" alt="">
-		<?php endif; ?>
-	</a>
+	<div class="thumb-frame">
+		<a class="thumb" href="<?php the_permalink(); ?>">
+			<?php if ( has_post_thumbnail() ) : ?>
+				<?php the_post_thumbnail( 'techrato-list' ); ?>
+			<?php else : ?>
+				<img src="<?php echo esc_url( TECHRATO_URI . '/assets/images/placeholder.svg' ); ?>" alt="">
+			<?php endif; ?>
+		</a>
+		<?php techrato_save_button(); ?>
+	</div>
 	<div class="body">
 		<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 		<?php if ( $excerpt ) : ?>
 			<p class="excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 20 ) ); ?></p>
 		<?php endif; ?>
 		<div class="row-meta">
-			<button class="save-btn" aria-label="<?php esc_attr_e( 'ذخیره', 'techrato' ); ?>">
-				<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 4h12v17l-6-4-6 4V4Z"/></svg>
-			</button>
 			<?php techrato_card_meta(); ?>
 			<?php if ( $tags ) : ?>
 				<?php foreach ( array_slice( get_the_category(), 0, 2 ) as $cat ) : ?>

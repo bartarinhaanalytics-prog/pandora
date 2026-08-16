@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.3.0
+Version: 1.4.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -146,7 +146,7 @@ body.no-scroll { overflow: hidden; }
  * instead of covering the full screen. A pseudo-element has no DOM
  * descendants, so it gets the glass look without that side effect.
  */
-.site-header { position: sticky; top: 0; z-index: 60; border-bottom: 1px solid var(--border); }
+.site-header { position: relative; z-index: 60; border-bottom: 1px solid var(--border); }
 .site-header::before {
 	content: ""; position: absolute; inset: 0; z-index: -1;
 	background: rgba(10, 22, 19, 0.72);
@@ -172,7 +172,7 @@ body.no-scroll { overflow: hidden; }
 .site-logo .logo-mark svg { width: 28px; height: 28px; }
 
 .main-nav-wrap { border-top: 1px solid var(--border); }
-.main-nav { display: flex; align-items: center; justify-content: center; gap: 34px; padding: 14px 0; flex-wrap: wrap; }
+.main-nav { display: flex; align-items: center; justify-content: flex-start; gap: 34px; padding: 14px 0; flex-wrap: wrap; }
 .main-nav a { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; }
 .main-nav a:hover { color: var(--accent); }
 .main-nav .current-menu-item > a { color: var(--accent); }
@@ -251,23 +251,32 @@ section.block { padding-block: 46px; }
 	background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px;
 	backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
 }
-.card-vertical .thumb { border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 4/3; background: var(--card-solid); margin-bottom: 14px; position: relative; }
+.card-vertical .thumb-frame { border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 4/3; background: var(--card-solid); margin-bottom: 14px; position: relative; }
+.card-vertical .thumb { display: block; width: 100%; height: 100%; }
 .card-vertical .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
 .card-vertical:hover .thumb img { transform: scale(1.06); }
 .card-vertical h3 { font-size: 13px; margin-bottom: 10px; }
 .card-vertical h3 a:hover { color: var(--accent); }
 
-.thumb .badge-tag { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,.55); color: #fff; font-size: 10px; padding: 3px 10px; border-radius: var(--radius-pill); display: flex; align-items: center; gap: 4px; z-index: 2; }
+.thumb-frame { position: relative; }
+.thumb-frame .badge-tag { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,.55); color: #fff; font-size: 10px; padding: 3px 10px; border-radius: var(--radius-pill); display: flex; align-items: center; gap: 4px; z-index: 2; }
+.thumb-frame .save-btn {
+	position: absolute; top: 8px; left: 8px; z-index: 2;
+	width: 30px; height: 30px; border-radius: 50%; border: none;
+	background: rgba(0,0,0,.55); color: #fff;
+	display: flex; align-items: center; justify-content: center;
+}
+.thumb-frame .save-btn:hover { color: var(--accent); }
 
 .card-vertical--compact { padding: 10px; }
-.card-vertical--compact .thumb { aspect-ratio: 16/10; margin-bottom: 10px; }
+.card-vertical--compact .thumb-frame { aspect-ratio: 16/10; margin-bottom: 10px; }
 .card-vertical--compact h3 { font-size: 12px; margin-bottom: 8px; }
 .card-vertical--compact .meta { font-size: 11px; }
 
 .card-vertical--feature {
 	background: none; border: none; padding: 0; backdrop-filter: none; -webkit-backdrop-filter: none;
 }
-.card-vertical--feature .thumb { aspect-ratio: 16/8; margin-bottom: 18px; }
+.card-vertical--feature .thumb-frame { aspect-ratio: 16/8; margin-bottom: 18px; }
 .card-vertical--feature h3 { font-size: 16px; margin-bottom: 14px; }
 .card-vertical--feature .tags { display: flex; gap: 8px; margin-bottom: 14px; }
 
@@ -283,17 +292,16 @@ section.block { padding-block: 46px; }
 
 .card-list-row { display: flex; align-items: center; gap: 16px; padding-block: 18px; border-bottom: 1px solid var(--border); }
 .card-list-row:last-child { border-bottom: none; }
-.card-list-row .thumb { flex: none; width: 130px; height: 88px; border-radius: var(--radius-sm); overflow: hidden; }
+.card-list-row .thumb-frame { flex: none; width: 130px; height: 88px; border-radius: var(--radius-sm); overflow: hidden; }
+.card-list-row .thumb { display: block; width: 100%; height: 100%; }
 .card-list-row .thumb img { width: 100%; height: 100%; object-fit: cover; }
 .card-list-row .body { flex: 1; min-width: 0; }
 .card-list-row h3 { font-size: 14px; margin-bottom: 10px; }
 .card-list-row h3 a:hover { color: var(--accent); }
 .card-list-row .excerpt { font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.9; }
 .card-list-row .row-meta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.card-list-row .save-btn { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
-.card-list-row .save-btn:hover { color: var(--accent); border-color: var(--accent); }
 .card-list-row.card-list-row--featured h3 { font-size: 15px; }
-.card-list-row.card-list-row--featured .thumb { width: 150px; height: 100px; }
+.card-list-row.card-list-row--featured .thumb-frame { width: 150px; height: 100px; }
 
 .card-avatar-row { display: flex; align-items: center; gap: 12px; padding-block: 14px; border-bottom: 1px solid var(--border); }
 .card-avatar-row:last-child { border-bottom: none; }
@@ -321,7 +329,7 @@ section.block { padding-block: 46px; }
 .hero-grid > div { height: 100%; }
 .hero-grid .hero-thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .hero-grid .hero-thumbs .card-vertical--compact { display: flex; flex-direction: column; }
-.hero-grid .hero-thumbs .card-vertical--compact .thumb { flex: 1; }
+.hero-grid .hero-thumbs .card-vertical--compact .thumb-frame { flex: 1; }
 .layout-with-sidebar { display: grid; grid-template-columns: 1fr 340px; gap: 26px; align-items: start; }
 .layout-with-sidebar.layout-reverse { grid-template-columns: 340px 1fr; }
 .split-feature { display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px; align-items: start; }
@@ -390,7 +398,7 @@ section.block { padding-block: 46px; }
 /* 16. FOOTER                                          */
 /* -------------------------------------------------- */
 .site-footer { background: var(--bg-soft); border-top: 1px solid var(--border); margin-top: 60px; padding-top: 50px; }
-.footer-grid { display: grid; grid-template-columns: 1.3fr 0.8fr 0.8fr 1.4fr; gap: 30px; padding-bottom: 40px; }
+.footer-grid { display: grid; grid-template-columns: 1.4fr 0.8fr 0.8fr 1.3fr; gap: 30px; padding-bottom: 40px; }
 .footer-col h4 { font-size: 14px; margin-bottom: 18px; }
 .footer-col ul li { margin-bottom: 12px; }
 .footer-col ul a { font-size: 12.5px; color: var(--text-muted); }
@@ -533,8 +541,8 @@ section.block { padding-block: 46px; }
 	/* ---- Stacked list-row cards (image below text) ---- */
 	.card-list-row { flex-direction: column; align-items: stretch; }
 	.card-list-row .body { order: 1; }
-	.card-list-row .thumb { order: 2; width: 100%; height: 190px; margin-top: 12px; }
-	.card-list-row.card-list-row--featured .thumb { width: 100%; }
+	.card-list-row .thumb-frame { order: 2; width: 100%; height: 190px; margin-top: 12px; }
+	.card-list-row.card-list-row--featured .thumb-frame { width: 100%; }
 	.hero-dots { display: flex; }
 }
 @media (max-width: 640px) {
@@ -545,7 +553,7 @@ section.block { padding-block: 46px; }
 	.social-banner { flex-direction: column; align-items: flex-start; }
 	.comment-form-wrap .row { grid-template-columns: 1fr; }
 	.footer-grid { grid-template-columns: 1fr; }
-	.footer-grid .footer-col:nth-child(3), .footer-grid .footer-col:nth-child(4) { display: none; }
-	.footer-grid .footer-col:nth-child(2) ul { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+	.footer-grid .footer-col--popular, .footer-grid .footer-col--categories { display: none; }
+	.footer-grid .footer-col:not(.footer-brand):not(.footer-col--popular):not(.footer-col--categories) ul { display: flex; flex-wrap: wrap; gap: 8px 18px; }
 	.comment.is-reply { margin-inline-start: 20px; }
 }

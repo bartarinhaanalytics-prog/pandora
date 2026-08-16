@@ -16,14 +16,17 @@ $class   = 'card-vertical' . ( $variant ? ' card-vertical--' . esc_attr( $varian
 $size    = 'feature' === $variant ? 'techrato-hero' : 'techrato-card';
 ?>
 <article class="<?php echo esc_attr( $class ); ?>">
-	<a class="thumb" href="<?php the_permalink(); ?>">
-		<?php if ( has_post_thumbnail() ) : ?>
-			<?php the_post_thumbnail( $size ); ?>
-		<?php else : ?>
-			<img src="<?php echo esc_url( TECHRATO_URI . '/assets/images/placeholder.svg' ); ?>" alt="">
-		<?php endif; ?>
-		<?php if ( $badge ) : ?><span class="badge-tag"><?php echo esc_html( $badge ); ?></span><?php endif; ?>
-	</a>
+	<div class="thumb-frame">
+		<a class="thumb" href="<?php the_permalink(); ?>">
+			<?php if ( has_post_thumbnail() ) : ?>
+				<?php the_post_thumbnail( $size ); ?>
+			<?php else : ?>
+				<img src="<?php echo esc_url( TECHRATO_URI . '/assets/images/placeholder.svg' ); ?>" alt="">
+			<?php endif; ?>
+			<?php if ( $badge ) : ?><span class="badge-tag"><?php echo esc_html( $badge ); ?></span><?php endif; ?>
+		</a>
+		<?php techrato_save_button(); ?>
+	</div>
 	<?php if ( 'feature' === $variant ) : ?>
 		<div class="tags">
 			<?php

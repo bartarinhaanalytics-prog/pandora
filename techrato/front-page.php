@@ -102,10 +102,11 @@ $shown_ids = array();
 								get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true, 'excerpt' => true ) );
 							endwhile;
 							wp_reset_postdata();
-						else :
-							techrato_empty_card_notice();
-						endif;
-						?>
+							?>
+							<a class="more-link" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+						<?php else : ?>
+							<?php techrato_empty_card_notice(); ?>
+						<?php endif; ?>
 					</div>
 				</div>
 

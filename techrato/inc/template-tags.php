@@ -118,6 +118,20 @@ function techrato_query_by_slug( $slug, $count = 5, $exclude = array() ) {
 }
 
 /**
+ * Bookmark/save button overlaid on a card thumbnail (top-left corner).
+ * Purely client-side placeholder for now — wire up to a real "save for
+ * later" endpoint (user meta / localStorage) when that feature is needed.
+ */
+function techrato_save_button( $post_id = null ) {
+	$post_id = $post_id ? $post_id : get_the_ID();
+	?>
+	<button class="save-btn" data-post-id="<?php echo esc_attr( $post_id ); ?>" aria-label="<?php esc_attr_e( 'ذخیره', 'techrato' ); ?>">
+		<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v17l-6-4-6 4V4Z"/></svg>
+	</button>
+	<?php
+}
+
+/**
  * Print a social "follow" icon link (generic outward-arrow icon, matches design).
  */
 function techrato_social_icon( $url ) {
