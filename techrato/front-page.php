@@ -129,6 +129,36 @@ $shown_ids = array();
 			</div>
 		</section>
 
+		<!-- ===== MOST VIEWED ===== -->
+		<section class="block" style="padding-top:0;">
+			<div class="widget" style="margin-bottom:0;">
+				<h3 class="widget-title">
+					<svg viewBox="0 0 24 24" width="16" height="16" style="display:inline-block;vertical-align:-3px;margin-inline-start:6px;" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8M21 7v6M21 7h-6"/></svg>
+					<?php esc_html_e( 'پربازدید ترین مطالب', 'techrato' ); ?>
+				</h3>
+				<div class="most-viewed-grid">
+					<?php
+					$popular = new WP_Query( array(
+						'posts_per_page'      => 3,
+						'post__not_in'        => $shown_ids,
+						'ignore_sticky_posts' => true,
+						'orderby'             => 'comment_count',
+						'order'               => 'DESC',
+					) );
+					if ( $popular->have_posts() ) :
+						while ( $popular->have_posts() ) : $popular->the_post(); $shown_ids[] = get_the_ID();
+							get_template_part( 'template-parts/card', 'horizontal' );
+						endwhile;
+						wp_reset_postdata();
+					else :
+						techrato_empty_card_notice();
+					endif;
+					?>
+				</div>
+				<a class="more-link" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+			</div>
+		</section>
+
 		<?php get_template_part( 'template-parts/social-banner' ); ?>
 
 		<!-- ===== IRAN TECH NEWS ===== -->
