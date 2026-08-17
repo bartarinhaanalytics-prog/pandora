@@ -4,15 +4,9 @@
 	var root = document.documentElement;
 	var THEME_KEY = 'techrato-theme';
 
-	/* ---- Dark / light toggle (icon appears both in the topbar and the mobile drawer) ---- */
-	function applyStoredTheme() {
-		var stored = window.localStorage.getItem( THEME_KEY );
-		if ( stored ) {
-			root.setAttribute( 'data-theme', stored );
-		}
-	}
-	applyStoredTheme();
-
+	/* ---- Dark / light toggle (icon appears both in the topbar and the mobile drawer).
+	   The initial theme is already applied by a blocking inline script in <head>
+	   (before first paint) — this only handles the click. ---- */
 	document.querySelectorAll( '.js-theme-toggle' ).forEach( function ( btn ) {
 		btn.addEventListener( 'click', function () {
 			var current = root.getAttribute( 'data-theme' ) === 'light' ? 'light' : 'dark';
@@ -138,13 +132,30 @@
 		} );
 	} );
 
-	/* ---- Like toggle (single-post page) ---- */
+	/* ---- Like toggle (single-post page). The server (post meta + a cookie)
+	   is the source of truth for the count, but the "did I like this" visual
+	   state is also mirrored in localStorage so it still shows correctly even
+	   if a page-cache plugin serves a stale copy of the server-rendered HTML. ---- */
+	var LIKED_KEY = 'techrato-liked-posts';
+
+	function getLikedPosts() {
+		try {
+			return JSON.parse( window.localStorage.getItem( LIKED_KEY ) ) || [];
+		} catch ( e ) {
+			return [];
+		}
+	}
+
 	document.querySelectorAll( '.js-like-btn' ).forEach( function ( btn ) {
+		var postId = btn.getAttribute( 'data-post-id' );
+		if ( postId && getLikedPosts().indexOf( postId ) !== -1 ) {
+			btn.classList.add( 'is-liked' );
+		}
+
 		btn.addEventListener( 'click', function () {
 			if ( btn.disabled || typeof techratoData === 'undefined' ) {
 				return;
 			}
-			var postId = btn.getAttribute( 'data-post-id' );
 			var countEl = btn.querySelector( '.count' );
 			btn.disabled = true;
 
@@ -162,10 +173,19 @@
 				.then( function ( res ) { return res.json(); } )
 				.then( function ( res ) {
 					if ( res && res.success ) {
-						btn.classList.toggle( 'is-liked', !! res.data.liked );
+						var liked = !! res.data.liked;
+						btn.classList.toggle( 'is-liked', liked );
 						if ( countEl ) {
 							countEl.textContent = res.data.count;
 						}
+						var liked_posts = getLikedPosts();
+						var index = liked_posts.indexOf( postId );
+						if ( liked && index === -1 ) {
+							liked_posts.push( postId );
+						} else if ( ! liked && index !== -1 ) {
+							liked_posts.splice( index, 1 );
+						}
+						window.localStorage.setItem( LIKED_KEY, JSON.stringify( liked_posts ) );
 					}
 				} )
 				.finally( function () {

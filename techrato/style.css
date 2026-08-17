@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.12.0
+Version: 1.13.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -514,11 +514,14 @@ button.action { cursor: pointer; }
 	.topbar-desktop { display: none; }
 	.topbar-mobile {
 		display: grid; grid-template-columns: auto 1fr auto; align-items: center;
-		padding: 6px 5px; margin-block: 14px; border: 1px solid var(--border);
+		padding: 6px 10px; margin-block: 14px; border: 1px solid var(--border);
 		border-radius: var(--radius-pill); background: var(--card);
 		backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
 	}
 	.topbar-mobile .icon-btn { background: none; border: none; }
+	.topbar-mobile-brand { font-size: 15px; gap: 7px; }
+	.topbar-mobile-brand img { max-height: 26px; }
+	.topbar-mobile-brand .logo-mark svg { width: 20px; height: 20px; }
 	.grid-3 { grid-template-columns: 1fr; }
 	.most-viewed-grid { grid-template-columns: 1fr; }
 
@@ -603,7 +606,7 @@ button.action { cursor: pointer; }
 	.hero-dots { display: flex; }
 
 	/* ---- Compact single-row social banner ---- */
-	.social-banner-wrap { padding-block: 15px; }
+	section.block.social-banner-wrap { padding-block: 5px; }
 	.social-banner {
 		flex-direction: row; align-items: center; justify-content: space-between;
 		padding: 14px 16px; gap: 12px; border-radius: var(--radius-md);
