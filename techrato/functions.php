@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.14.0' );
+define( 'TECHRATO_VERSION', '1.15.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
