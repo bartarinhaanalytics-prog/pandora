@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.16.0' );
+define( 'TECHRATO_VERSION', '1.17.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -68,6 +68,27 @@ function techrato_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'techrato_assets' );
+
+/**
+ * WP Rocket compatibility: the theme's own script drives immediate UI
+ * (menu, search, theme toggle, like/save buttons) and must run right away.
+ * WP Rocket's "Delay JavaScript Execution" / "Combine JS" features hold
+ * scripts back until the visitor's first click/scroll/touch, which makes
+ * every one of those controls look broken (or only "wake up" after an
+ * unrelated interaction) until then — so this file is excluded from both.
+ */
+add_filter( 'rocket_delay_js_exclusions', function ( $exclusions ) {
+	$exclusions[] = 'main.js';
+	return $exclusions;
+} );
+add_filter( 'rocket_exclude_js', function ( $exclude_list ) {
+	$exclude_list[] = 'main.js';
+	return $exclude_list;
+} );
+add_filter( 'rocket_exclude_defer_js', function ( $exclude_list ) {
+	$exclude_list[] = 'main.js';
+	return $exclude_list;
+} );
 
 /**
  * Load the Google Fonts stylesheet without blocking the initial render —
