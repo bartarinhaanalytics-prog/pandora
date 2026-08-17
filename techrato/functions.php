@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.17.0' );
+define( 'TECHRATO_VERSION', '1.18.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -89,6 +89,19 @@ add_filter( 'rocket_exclude_defer_js', function ( $exclude_list ) {
 	$exclude_list[] = 'main.js';
 	return $exclude_list;
 } );
+
+/**
+ * Belt-and-suspenders: WP Rocket (and similar optimizers like Autoptimize
+ * or LiteSpeed Cache) also recognize a `data-no-optimize="1"` attribute
+ * directly on the <script> tag itself, which works even if the admin-panel
+ * exclusion list above is misconfigured or cleared later.
+ */
+add_filter( 'script_loader_tag', function ( $tag, $handle ) {
+	if ( 'techrato-main' === $handle ) {
+		$tag = str_replace( ' src=', ' data-no-optimize="1" data-cfasync="false" data-rocket-defer-exclude data-pagespeed-no-defer src=', $tag );
+	}
+	return $tag;
+}, 10, 2 );
 
 /**
  * Load the Google Fonts stylesheet without blocking the initial render —

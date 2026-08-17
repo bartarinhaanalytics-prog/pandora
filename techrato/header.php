@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<script>
+	<script data-no-optimize="1" data-cfasync="false" data-rocket-defer-exclude data-pagespeed-no-defer>
 	(function () {
 		try {
 			var stored = localStorage.getItem( 'techrato-theme' );
