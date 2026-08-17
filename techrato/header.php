@@ -38,19 +38,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 	</div>
 
-	<!-- Mobile topbar: hamburger alone on the right, search + logo grouped on the left -->
+	<!-- Mobile topbar: menu on the right, logo centered, search on the left — all inside one bordered bar -->
 	<div class="container topbar topbar-mobile">
 		<button class="icon-btn js-menu-toggle" aria-label="<?php esc_attr_e( 'منو', 'techrato' ); ?>">
 			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
 		</button>
-		<span class="topbar-mobile-brand">
-			<a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<?php techrato_site_logo(); ?>
-			</a>
-			<button class="icon-btn js-search-toggle" aria-label="<?php esc_attr_e( 'جستجو', 'techrato' ); ?>">
-				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-			</button>
-		</span>
+		<a class="site-logo topbar-mobile-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+			<?php techrato_site_logo(); ?>
+		</a>
+		<button class="icon-btn js-search-toggle" aria-label="<?php esc_attr_e( 'جستجو', 'techrato' ); ?>">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+		</button>
 	</div>
 
 	<!-- Search — inline dropdown on desktop, full-screen overlay on mobile -->

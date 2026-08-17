@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.10.0
+Version: 1.11.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -156,7 +156,7 @@ body.no-scroll { overflow: hidden; }
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
 .topbar-icons { display: flex; align-items: center; gap: 14px; }
 .topbar-mobile { display: none; }
-.topbar-mobile-brand { display: flex; align-items: center; gap: 12px; }
+.topbar-mobile-brand { justify-self: center; }
 .icon-btn {
 	width: 38px; height: 38px; border-radius: 50%;
 	display: flex; align-items: center; justify-content: center;
@@ -212,6 +212,7 @@ body.no-scroll { overflow: hidden; }
 .section-title .more:hover { color: var(--accent); }
 
 section.block { padding-block: 46px; }
+.hero-section { padding-top: 34px; }
 
 /* -------------------------------------------------- */
 /* 7. TABS                                             */
@@ -504,7 +505,13 @@ section.block { padding-block: 46px; }
 	.article-header-grid { grid-template-columns: 1fr; }
 	.article-featured { margin-bottom: 20px; }
 	.topbar-desktop { display: none; }
-	.topbar-mobile { display: flex; }
+	.topbar-mobile {
+		display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+		padding: 6px 5px; margin-block: 14px; border: 1px solid var(--border);
+		border-radius: var(--radius-pill); background: var(--card);
+		backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+	}
+	.topbar-mobile .icon-btn { background: none; border: none; }
 	.grid-3 { grid-template-columns: 1fr; }
 	.most-viewed-grid { grid-template-columns: 1fr; }
 
@@ -565,11 +572,12 @@ section.block { padding-block: 46px; }
 	.trending-bar .trending-nav a { padding: 7px 16px; border-radius: var(--radius-pill); border: 1px solid var(--border-strong); white-space: nowrap; }
 	.trending-bar .trending-nav .current-menu-item > a { background: var(--accent); color: #06231d; border-color: var(--accent); font-weight: 700; }
 
-	/* ---- Quick category row under the homepage hero ---- */
-	.quick-categories { display: block; border-bottom: 1px solid var(--border); padding-block: 14px; margin-bottom: 30px; }
+	/* ---- Quick category row above the homepage hero ---- */
+	.quick-categories { display: block; border-bottom: 1px solid var(--border); padding-block: 14px; margin-bottom: 0; }
 	.quick-categories .container { overflow-x: auto; scrollbar-width: none; }
 	.quick-categories .container::-webkit-scrollbar { display: none; }
 	.quick-categories-nav { display: flex; gap: 8px; flex-wrap: nowrap; list-style: none; margin: 0; padding: 0; }
+	.hero-section { padding-top: 20px; }
 	.quick-categories-nav a {
 		display: block; padding: 7px 16px; border-radius: var(--radius-pill);
 		border: 1px solid var(--border-strong); white-space: nowrap; font-size: 12.5px; color: var(--text-muted);

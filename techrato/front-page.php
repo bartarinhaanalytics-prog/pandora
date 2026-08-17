@@ -18,7 +18,7 @@ $shown_ids = array();
 	<div class="container">
 
 		<!-- ===== HERO ===== -->
-		<section class="block" style="padding-top:34px;">
+		<section class="block hero-section">
 			<?php
 			$hero_thumbs = techrato_query_by_slug( 'technology', 4, $shown_ids );
 			$hero_ids    = wp_list_pluck( $hero_thumbs->posts, 'ID' );
