@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.15.0' );
+define( 'TECHRATO_VERSION', '1.16.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -68,6 +68,19 @@ function techrato_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'techrato_assets' );
+
+/**
+ * Load the Google Fonts stylesheet without blocking the initial render —
+ * it swaps to the real font once it arrives (font-display:swap is already
+ * set on the URL), so there's no layout shift, just a faster first paint.
+ */
+function techrato_async_font_style( $html, $handle ) {
+	if ( 'techrato-fonts' === $handle ) {
+		$html = str_replace( "rel='stylesheet'", "rel='stylesheet' media='print' onload=\"this.media='all'\"", $html );
+	}
+	return $html;
+}
+add_filter( 'style_loader_tag', 'techrato_async_font_style', 10, 2 );
 
 /**
  * AJAX like toggle for single posts. One like per browser, tracked with a
