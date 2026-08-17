@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.7.0
+Version: 1.8.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -183,6 +183,10 @@ body.no-scroll { overflow: hidden; }
 .trending-bar .trending-nav { display: flex; gap: 16px; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
 .trending-bar a { font-size: 12px; color: var(--text-muted); }
 .trending-bar a:hover { color: var(--accent); }
+
+/* Mobile-only quick category row under the homepage hero — hidden on desktop
+   since the header's own primary nav already covers this. */
+.quick-categories { display: none; }
 
 .search-panel { border-top: 1px solid var(--border); background: var(--bg-soft); padding-block: 16px; }
 .search-panel[hidden] { display: none; }
@@ -545,6 +549,17 @@ section.block { padding-block: 46px; }
 	.trending-bar .trending-nav { flex-wrap: nowrap; }
 	.trending-bar .trending-nav a { padding: 7px 16px; border-radius: var(--radius-pill); border: 1px solid var(--border-strong); white-space: nowrap; }
 	.trending-bar .trending-nav .current-menu-item > a { background: var(--accent); color: #06231d; border-color: var(--accent); font-weight: 700; }
+
+	/* ---- Quick category row under the homepage hero ---- */
+	.quick-categories { display: block; border-bottom: 1px solid var(--border); padding-block: 14px; margin-bottom: 30px; }
+	.quick-categories .container { overflow-x: auto; scrollbar-width: none; }
+	.quick-categories .container::-webkit-scrollbar { display: none; }
+	.quick-categories-nav { display: flex; gap: 8px; flex-wrap: nowrap; list-style: none; margin: 0; padding: 0; }
+	.quick-categories-nav a {
+		display: block; padding: 7px 16px; border-radius: var(--radius-pill);
+		border: 1px solid var(--border-strong); white-space: nowrap; font-size: 12.5px; color: var(--text-muted);
+	}
+	.quick-categories-nav .current-menu-item > a { background: var(--accent); color: #06231d; border-color: var(--accent); font-weight: 700; }
 
 	/* ---- Stacked list-row cards (image on top, text below) ---- */
 	.card-list-row { flex-direction: column; align-items: stretch; }

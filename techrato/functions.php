@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.7.0' );
+define( 'TECHRATO_VERSION', '1.8.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -99,7 +99,7 @@ require TECHRATO_DIR . '/inc/customizer.php';
  * Fallback menu for the primary nav when no menu has been assigned yet,
  * so the header never looks broken on a fresh install.
  */
-function techrato_fallback_primary_menu() {
+function techrato_fallback_primary_menu( $class = 'main-nav' ) {
 	$items = array(
 		'تکراتو'      => home_url( '/' ),
 		'کسب و کار'   => home_url( '/' ),
@@ -111,7 +111,7 @@ function techrato_fallback_primary_menu() {
 		'خودرو'       => home_url( '/' ),
 		'تکنولوژی'    => home_url( '/' ),
 	);
-	echo '<ul class="main-nav">';
+	echo '<ul class="' . esc_attr( $class ) . '">';
 	foreach ( $items as $label => $url ) {
 		printf( '<li><a href="%s">%s</a></li>', esc_url( $url ), esc_html( $label ) );
 	}

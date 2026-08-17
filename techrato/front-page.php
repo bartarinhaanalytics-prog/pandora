@@ -56,6 +56,12 @@ $shown_ids = array();
 			</div>
 		</section>
 
+		</div>
+
+		<?php get_template_part( 'template-parts/quick-categories' ); ?>
+
+		<div class="container">
+
 		<!-- ===== EDITOR'S PICKS ===== -->
 		<section class="block">
 			<div class="section-title">
