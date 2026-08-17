@@ -12,6 +12,9 @@ $shown_ids = array();
 ?>
 
 <main id="primary">
+
+	<?php get_template_part( 'template-parts/quick-categories' ); ?>
+
 	<div class="container">
 
 		<!-- ===== HERO ===== -->
@@ -55,12 +58,6 @@ $shown_ids = array();
 				</div>
 			</div>
 		</section>
-
-		</div>
-
-		<?php get_template_part( 'template-parts/quick-categories' ); ?>
-
-		<div class="container">
 
 		<!-- ===== EDITOR'S PICKS ===== -->
 		<section class="block">
