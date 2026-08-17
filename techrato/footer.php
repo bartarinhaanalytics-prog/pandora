@@ -93,14 +93,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<div class="footer-col footer-brand">
 					<a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-						<?php if ( has_custom_logo() ) : ?>
-							<?php the_custom_logo(); ?>
-						<?php else : ?>
-							<span><?php bloginfo( 'name' ); ?></span>
-							<span class="logo-mark">
-								<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/><rect x="10" y="7" width="4" height="14" rx="1" fill="currentColor"/><rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/></svg>
-							</span>
-						<?php endif; ?>
+						<?php techrato_site_logo(); ?>
 					</a>
 
 					<div class="newsletter-box">

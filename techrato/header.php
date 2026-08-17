@@ -21,14 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<!-- Desktop topbar: logo on the right, icon cluster on the left -->
 	<div class="container topbar topbar-desktop">
 		<a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-			<?php if ( has_custom_logo() ) : ?>
-				<?php the_custom_logo(); ?>
-			<?php else : ?>
-				<span><?php bloginfo( 'name' ); ?></span>
-				<span class="logo-mark">
-					<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/><rect x="10" y="7" width="4" height="14" rx="1" fill="currentColor"/><rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/></svg>
-				</span>
-			<?php endif; ?>
+			<?php techrato_site_logo(); ?>
 		</a>
 
 		<div class="topbar-icons">
@@ -52,14 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</button>
 		<span class="topbar-mobile-brand">
 			<a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<?php if ( has_custom_logo() ) : ?>
-					<?php the_custom_logo(); ?>
-				<?php else : ?>
-					<span><?php bloginfo( 'name' ); ?></span>
-					<span class="logo-mark">
-						<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/><rect x="10" y="7" width="4" height="14" rx="1" fill="currentColor"/><rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/></svg>
-					</span>
-				<?php endif; ?>
+				<?php techrato_site_logo(); ?>
 			</a>
 			<button class="icon-btn js-search-toggle" aria-label="<?php esc_attr_e( 'جستجو', 'techrato' ); ?>">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
@@ -71,10 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="search-panel js-search-panel" hidden>
 		<div class="search-panel-head container">
 			<a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<span><?php bloginfo( 'name' ); ?></span>
-				<span class="logo-mark">
-					<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/><rect x="10" y="7" width="4" height="14" rx="1" fill="currentColor"/><rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/></svg>
-				</span>
+				<?php techrato_site_logo(); ?>
 			</a>
 			<button class="icon-btn js-search-toggle" aria-label="<?php esc_attr_e( 'بستن', 'techrato' ); ?>">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -111,10 +94,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<nav class="main-nav-wrap js-mobile-nav" id="site-navigation" aria-label="<?php esc_attr_e( 'منوی اصلی', 'techrato' ); ?>">
 		<div class="drawer-head container">
 			<a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<span><?php bloginfo( 'name' ); ?></span>
-				<span class="logo-mark">
-					<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/><rect x="10" y="7" width="4" height="14" rx="1" fill="currentColor"/><rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/></svg>
-				</span>
+				<?php techrato_site_logo(); ?>
 			</a>
 			<button class="icon-btn js-menu-toggle" aria-label="<?php esc_attr_e( 'بستن منو', 'techrato' ); ?>">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6 6 18"/></svg>

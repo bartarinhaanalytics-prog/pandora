@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.5.0
+Version: 1.6.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -546,11 +546,15 @@ section.block { padding-block: 46px; }
 	.trending-bar .trending-nav a { padding: 7px 16px; border-radius: var(--radius-pill); border: 1px solid var(--border-strong); white-space: nowrap; }
 	.trending-bar .trending-nav .current-menu-item > a { background: var(--accent); color: #06231d; border-color: var(--accent); font-weight: 700; }
 
-	/* ---- Stacked list-row cards (image below text) ---- */
+	/* ---- Stacked list-row cards (image on top, text below) ---- */
 	.card-list-row { flex-direction: column; align-items: stretch; }
-	.card-list-row .body { order: 1; }
-	.card-list-row .thumb-frame { order: 2; width: 100%; height: 190px; margin-top: 12px; }
+	.card-list-row .thumb-frame { order: 1; width: 100%; height: 190px; margin-bottom: 12px; }
+	.card-list-row .body { order: 2; }
 	.card-list-row.card-list-row--featured .thumb-frame { width: 100%; }
+
+	/* ---- Smaller category badge + no bookmark overlay on thumbnails ---- */
+	.thumb-frame .badge-tag { font-size: 9px; padding: 2px 8px; }
+	.thumb-frame .save-btn { display: none; }
 	.hero-dots { display: flex; }
 }
 @media (max-width: 640px) {

@@ -8,6 +8,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Site logo content — just the <img> (or the text+icon fallback), never a
+ * wrapping <a>, so callers can put it inside their own single <a class="site-logo">.
+ * the_custom_logo() outputs its own <a class="custom-logo-link">, which
+ * nested inside another <a> is invalid HTML and breaks layout in some
+ * browsers (they close the outer anchor early, so the logo escapes its
+ * flex container) — this avoids that entirely.
+ */
+function techrato_site_logo() {
+	$custom_logo_id = get_theme_mod( 'custom_logo' );
+	if ( $custom_logo_id ) {
+		echo wp_get_attachment_image( $custom_logo_id, 'full', false, array( 'class' => 'custom-logo' ) );
+		return;
+	}
+	?>
+	<span><?php bloginfo( 'name' ); ?></span>
+	<span class="logo-mark">
+		<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/><rect x="10" y="7" width="4" height="14" rx="1" fill="currentColor"/><rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/></svg>
+	</span>
+	<?php
+}
+
+/**
  * Persian-ish relative time, e.g. "۴ ساعت قبل".
  * Falls back gracefully; keeps Latin digits to match the approved design.
  */
