@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.11.0
+Version: 1.12.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -276,6 +276,8 @@ section.block { padding-block: 46px; }
 	display: flex; align-items: center; justify-content: center;
 }
 .thumb-frame .save-btn:hover { color: var(--accent); }
+.thumb-frame .save-btn.is-saved { color: var(--accent); }
+.thumb-frame .save-btn.is-saved svg { fill: currentColor; }
 
 .card-vertical--compact { padding: 10px; }
 .card-vertical--compact .thumb-frame { aspect-ratio: 16/10; margin-bottom: 10px; }
@@ -435,8 +437,13 @@ section.block { padding-block: 46px; }
 .article-featured { border-radius: var(--radius-lg); overflow: hidden; height: 100%; }
 .article-featured img { height: 100%; object-fit: cover; }
 .article-actions { display: flex; align-items: center; gap: 18px; padding-block: 16px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
-.article-actions .action { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+.article-actions .action { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); background: none; border: none; padding: 0; font-family: inherit; }
+button.action { cursor: pointer; }
 .article-actions .action svg { width: 16px; height: 16px; }
+.article-actions .action.js-like-btn.is-liked,
+.article-actions .action.js-save-btn.is-saved { color: var(--accent); }
+.article-actions .action.js-like-btn.is-liked svg,
+.article-actions .action.js-save-btn.is-saved svg { fill: currentColor; }
 
 .article-content { font-size: 14px; line-height: 2.05; color: var(--text); padding-block: 24px; }
 .article-content p { margin-bottom: 20px; color: var(--text-muted); }
@@ -596,6 +603,7 @@ section.block { padding-block: 46px; }
 	.hero-dots { display: flex; }
 
 	/* ---- Compact single-row social banner ---- */
+	.social-banner-wrap { padding-block: 15px; }
 	.social-banner {
 		flex-direction: row; align-items: center; justify-content: space-between;
 		padding: 14px 16px; gap: 12px; border-radius: var(--radius-md);
@@ -604,7 +612,7 @@ section.block { padding-block: 46px; }
 	.social-banner .content { min-width: 0; }
 	.social-banner .content h2 { font-size: 12.5px; margin-bottom: 0; }
 	.social-banner .content p { display: none; }
-	.social-banner .socials { margin-top: 0; flex-shrink: 0; }
+	.social-banner .socials { margin-top: 5px; flex-shrink: 0; }
 }
 @media (max-width: 640px) {
 	.grid-5, .grid-4, .grid-2 { grid-template-columns: repeat(2, 1fr); }

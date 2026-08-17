@@ -95,6 +95,85 @@
 		} );
 	}
 
+	/* ---- Bookmark/save toggle (thumbnail overlay buttons + the single-post action button) ---- */
+	var SAVED_KEY = 'techrato-saved-posts';
+
+	function getSavedPosts() {
+		try {
+			return JSON.parse( window.localStorage.getItem( SAVED_KEY ) ) || [];
+		} catch ( e ) {
+			return [];
+		}
+	}
+
+	function setSaveButtonsState( postId, saved ) {
+		document.querySelectorAll( '.js-save-btn[data-post-id="' + postId + '"]' ).forEach( function ( btn ) {
+			btn.classList.toggle( 'is-saved', saved );
+		} );
+	}
+
+	var savedPosts = getSavedPosts();
+	savedPosts.forEach( function ( id ) {
+		setSaveButtonsState( id, true );
+	} );
+
+	document.querySelectorAll( '.js-save-btn' ).forEach( function ( btn ) {
+		btn.addEventListener( 'click', function () {
+			var postId = btn.getAttribute( 'data-post-id' );
+			if ( ! postId ) {
+				return;
+			}
+			var saved = getSavedPosts();
+			var index = saved.indexOf( postId );
+			var nowSaved;
+			if ( index === -1 ) {
+				saved.push( postId );
+				nowSaved = true;
+			} else {
+				saved.splice( index, 1 );
+				nowSaved = false;
+			}
+			window.localStorage.setItem( SAVED_KEY, JSON.stringify( saved ) );
+			setSaveButtonsState( postId, nowSaved );
+		} );
+	} );
+
+	/* ---- Like toggle (single-post page) ---- */
+	document.querySelectorAll( '.js-like-btn' ).forEach( function ( btn ) {
+		btn.addEventListener( 'click', function () {
+			if ( btn.disabled || typeof techratoData === 'undefined' ) {
+				return;
+			}
+			var postId = btn.getAttribute( 'data-post-id' );
+			var countEl = btn.querySelector( '.count' );
+			btn.disabled = true;
+
+			var body = new window.URLSearchParams();
+			body.set( 'action', 'techrato_toggle_like' );
+			body.set( 'nonce', techratoData.nonce );
+			body.set( 'post_id', postId );
+
+			window.fetch( techratoData.ajaxUrl, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: body.toString(),
+			} )
+				.then( function ( res ) { return res.json(); } )
+				.then( function ( res ) {
+					if ( res && res.success ) {
+						btn.classList.toggle( 'is-liked', !! res.data.liked );
+						if ( countEl ) {
+							countEl.textContent = res.data.count;
+						}
+					}
+				} )
+				.finally( function () {
+					btn.disabled = false;
+				} );
+		} );
+	} );
+
 	/* ---- Tab UI (visual state only — wire up to real queries as content grows) ---- */
 	document.querySelectorAll( '.tabs' ).forEach( function ( group ) {
 		group.querySelectorAll( 'button, a' ).forEach( function ( tab ) {

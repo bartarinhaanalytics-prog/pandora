@@ -30,11 +30,17 @@ get_header();
 								<?php techrato_card_meta(); ?>
 							</div>
 
+							<?php
+							$techrato_post_id  = get_the_ID();
+							$techrato_likes    = (int) get_post_meta( $techrato_post_id, 'techrato_likes', true );
+							$techrato_is_liked = ! empty( $_COOKIE[ 'techrato_liked_' . $techrato_post_id ] );
+							$techrato_is_saved = false; // Saved posts live in the browser's localStorage; JS applies this on load.
+							?>
 							<div class="article-actions">
-								<span class="action">
+								<button type="button" class="action js-like-btn<?php echo $techrato_is_liked ? ' is-liked' : ''; ?>" data-post-id="<?php echo esc_attr( $techrato_post_id ); ?>">
 									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
-									<?php echo esc_html( get_post_meta( get_the_ID(), 'techrato_likes', true ) ?: 0 ); ?>
-								</span>
+									<span class="count"><?php echo esc_html( $techrato_likes ); ?></span>
+								</button>
 								<span class="action">
 									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
 									<?php comments_number( __( 'بدون دیدگاه', 'techrato' ), __( '۱ دیدگاه', 'techrato' ), __( '% دیدگاه', 'techrato' ) ); ?>
@@ -43,6 +49,10 @@ get_header();
 									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9M8.6 13.5l6.8 3.9"/></svg>
 									<?php esc_html_e( 'اشتراک‌گذاری', 'techrato' ); ?>
 								</span>
+								<button type="button" class="action js-save-btn<?php echo $techrato_is_saved ? ' is-saved' : ''; ?>" data-post-id="<?php echo esc_attr( $techrato_post_id ); ?>">
+									<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v17l-6-4-6 4V4Z"/></svg>
+									<span><?php esc_html_e( 'ذخیره', 'techrato' ); ?></span>
+								</button>
 							</div>
 						</div>
 

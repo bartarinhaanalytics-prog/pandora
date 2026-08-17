@@ -7,9 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $socials = array(
-	get_theme_mod( 'social_link_1', '' ),
-	get_theme_mod( 'social_link_2', '' ),
-	get_theme_mod( 'social_link_3', '' ),
+	get_theme_mod( 'social_link_1', 'https://twitter.com/Techratocom' ),
+	get_theme_mod( 'social_link_2', 'https://www.instagram.com/techratocom' ),
+	get_theme_mod( 'social_link_3', 'https://t.me/techrato_com' ),
 );
 ?>
 <div class="promo-box">

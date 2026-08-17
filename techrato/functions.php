@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.11.0' );
+define( 'TECHRATO_VERSION', '1.12.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -58,12 +58,51 @@ function techrato_assets() {
 	);
 	wp_enqueue_style( 'techrato-style', get_stylesheet_uri(), array(), TECHRATO_VERSION );
 	wp_enqueue_script( 'techrato-main', TECHRATO_URI . '/assets/js/main.js', array(), TECHRATO_VERSION, true );
+	wp_localize_script( 'techrato-main', 'techratoData', array(
+		'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+		'nonce'   => wp_create_nonce( 'techrato_like' ),
+	) );
 
 	if ( is_singular() && comments_open() ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'techrato_assets' );
+
+/**
+ * AJAX like toggle for single posts. One like per browser, tracked with a
+ * cookie (no account system in this theme, so there's no per-user identity
+ * to key off instead).
+ */
+function techrato_ajax_toggle_like() {
+	check_ajax_referer( 'techrato_like', 'nonce' );
+
+	$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+	if ( ! $post_id || 'publish' !== get_post_status( $post_id ) ) {
+		wp_send_json_error();
+	}
+
+	$cookie_name = 'techrato_liked_' . $post_id;
+	$likes       = (int) get_post_meta( $post_id, 'techrato_likes', true );
+	$already     = ! empty( $_COOKIE[ $cookie_name ] );
+
+	if ( $already ) {
+		$likes = max( 0, $likes - 1 );
+		setcookie( $cookie_name, '', time() - YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN );
+	} else {
+		$likes++;
+		setcookie( $cookie_name, '1', time() + YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN );
+	}
+
+	update_post_meta( $post_id, 'techrato_likes', $likes );
+
+	wp_send_json_success( array(
+		'count' => $likes,
+		'liked' => ! $already,
+	) );
+}
+add_action( 'wp_ajax_techrato_toggle_like', 'techrato_ajax_toggle_like' );
+add_action( 'wp_ajax_nopriv_techrato_toggle_like', 'techrato_ajax_toggle_like' );
 
 /**
  * Content width for embeds/oEmbed.
