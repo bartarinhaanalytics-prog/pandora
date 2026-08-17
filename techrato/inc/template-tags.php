@@ -154,15 +154,50 @@ function techrato_save_button( $post_id = null ) {
 }
 
 /**
- * Print a social "follow" icon link (generic outward-arrow icon, matches design).
+ * Print a social "follow" icon link. Detects the platform from the URL's
+ * host so each button gets its real brand icon instead of a generic one.
  */
 function techrato_social_icon( $url ) {
 	if ( empty( $url ) ) {
 		return;
 	}
+
+	$host = wp_parse_url( $url, PHP_URL_HOST );
+	$host = $host ? strtolower( preg_replace( '/^www\./', '', $host ) ) : '';
+
+	$icons = array(
+		'twitter'  => array(
+			'match' => array( 'twitter.com', 'x.com' ),
+			'label' => __( 'توییتر', 'techrato' ),
+			'svg'   => '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3h3l-7 8 8.2 10h-6.4l-5-6.5L5 21H2l7.5-8.6L1.7 3h6.5l4.5 5.9L18.9 3Zm-1.1 16.2h1.7L7.3 4.7H5.5l12.3 14.5Z"/></svg>',
+		),
+		'instagram' => array(
+			'match' => array( 'instagram.com' ),
+			'label' => __( 'اینستاگرام', 'techrato' ),
+			'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>',
+		),
+		'telegram' => array(
+			'match' => array( 't.me', 'telegram.org', 'telegram.me' ),
+			'label' => __( 'تلگرام', 'techrato' ),
+			'svg'   => '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5 3.2 11.4c-1.2.47-1.19 1.12-.22 1.42l4.68 1.46 1.8 5.5c.22.6.38.85.78.85.35 0 .53-.16.75-.38l1.83-1.78 4.1 3.03c.75.42 1.3.2 1.5-.7l2.7-13.1c.3-1.2-.4-1.7-1.14-1.24Zm-3.2 3.15-9.6 6.05-.42 3.98-1.9-5.9 11.9-4.13Z"/></svg>',
+		),
+	);
+
+	$icon = null;
+	foreach ( $icons as $data ) {
+		foreach ( $data['match'] as $needle ) {
+			if ( $host && false !== strpos( $host, $needle ) ) {
+				$icon = $data;
+				break 2;
+			}
+		}
+	}
+
+	$label = $icon ? $icon['label'] : __( 'شبکه اجتماعی', 'techrato' );
+	$svg   = $icon ? $icon['svg'] : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17 17 7M9 7h8v8"/></svg>';
 	?>
-	<a class="icon-btn" href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer">
-		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17 17 7M9 7h8v8"/></svg>
+	<a class="icon-btn" href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $label ); ?>">
+		<?php echo $svg; // phpcs:ignore -- static, theme-defined SVG markup, not user input. ?>
 	</a>
 	<?php
 }

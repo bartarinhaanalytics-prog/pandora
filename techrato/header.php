@@ -120,7 +120,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'theme_location' => 'primary',
 					'container'      => false,
 					'menu_class'     => 'main-nav',
-					'depth'          => 1,
+					'depth'          => 0,
 				) );
 			} else {
 				techrato_fallback_primary_menu();

@@ -22,13 +22,14 @@ function techrato_customize_register( $wp_customize ) {
 	) );
 
 	$socials = array(
-		'social_link_1' => __( 'لینک شبکه اجتماعی اول (مثلا تلگرام)', 'techrato' ),
-		'social_link_2' => __( 'لینک شبکه اجتماعی دوم (مثلا اینستاگرام)', 'techrato' ),
-		'social_link_3' => __( 'لینک شبکه اجتماعی سوم (مثلا آپارات)', 'techrato' ),
+		'social_link_1' => array( __( 'لینک توییتر (X)', 'techrato' ), 'https://twitter.com/Techratocom' ),
+		'social_link_2' => array( __( 'لینک اینستاگرام', 'techrato' ), 'https://www.instagram.com/techratocom' ),
+		'social_link_3' => array( __( 'لینک تلگرام', 'techrato' ), 'https://t.me/techrato_com' ),
 	);
-	foreach ( $socials as $id => $label ) {
+	foreach ( $socials as $id => $social ) {
+		list( $label, $default ) = $social;
 		$wp_customize->add_setting( $id, array(
-			'default'           => '',
+			'default'           => $default,
 			'sanitize_callback' => 'esc_url_raw',
 		) );
 		$wp_customize->add_control( $id, array(

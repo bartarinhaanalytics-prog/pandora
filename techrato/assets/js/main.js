@@ -75,6 +75,26 @@
 
 	window.addEventListener( 'resize', updateScrollLock );
 
+	/* ---- Mobile drawer accordion: tap a parent item to reveal its sub-categories (desktop nav is untouched) ---- */
+	if ( mobileNav ) {
+		mobileNav.querySelectorAll( '.main-nav > li.menu-item-has-children > a' ).forEach( function ( link ) {
+			link.addEventListener( 'click', function ( e ) {
+				if ( window.innerWidth > 960 ) {
+					return;
+				}
+				e.preventDefault();
+				var li = link.parentElement;
+				var wasExpanded = li.classList.contains( 'is-expanded' );
+				li.parentElement.querySelectorAll( ':scope > li.is-expanded' ).forEach( function ( openLi ) {
+					openLi.classList.remove( 'is-expanded' );
+				} );
+				if ( ! wasExpanded ) {
+					li.classList.add( 'is-expanded' );
+				}
+			} );
+		} );
+	}
+
 	/* ---- Tab UI (visual state only — wire up to real queries as content grows) ---- */
 	document.querySelectorAll( '.tabs' ).forEach( function ( group ) {
 		group.querySelectorAll( 'button, a' ).forEach( function ( tab ) {
