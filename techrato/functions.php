@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.21.0' );
+define( 'TECHRATO_VERSION', '1.22.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -178,13 +178,42 @@ function techrato_debug_editorial_flags() {
 		}
 	}
 
-	echo "\n--- all meta keys ending in _tc ---\n";
-	$found = $wpdb->get_col( "SELECT DISTINCT meta_key FROM {$wpdb->postmeta} WHERE meta_key LIKE '%\_tc' LIMIT 50" );
-	echo $found ? implode( "\n", $found ) : '(none)';
+	// The four lookups above hit the meta_key index and are cheap. Scanning
+	// for unknown keys needs a leading-wildcard LIKE, which is a full scan of
+	// postmeta and can time out on a large site — so it only runs on demand.
+	if ( isset( $_GET['techrato_debug_scan'] ) ) {
+		echo "\n--- meta keys ending in _tc (slow scan) ---\n";
+		$found = $wpdb->get_col( "SELECT DISTINCT meta_key FROM {$wpdb->postmeta} WHERE meta_key LIKE '%\_tc' LIMIT 50" );
+		echo $found ? implode( "\n", $found ) : '(none)';
+	} else {
+		echo "\n(add &techrato_debug_scan=1 to also scan for unknown keys — slow)\n";
+	}
 
-	echo "\n\n--- options containing featured/editor ---\n";
-	$opts = $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '%featured%' OR option_name LIKE '%editor_suggestion%' LIMIT 30" );
-	echo $opts ? implode( "\n", $opts ) : '(none)';
+	// --- Why is wp-admin slow? The usual suspects, measured rather than guessed.
+	echo "\n--- PERFORMANCE ---\n";
+
+	// Autoloaded options load on EVERY request. Healthy is under ~800KB.
+	$auto = $wpdb->get_row( "SELECT COUNT(*) AS cnt, SUM(LENGTH(option_value)) AS sz FROM {$wpdb->options} WHERE autoload = 'yes'" );
+	printf( "autoloaded options  : %d options, %s KB\n", $auto->cnt, number_format( $auto->sz / 1024, 1 ) );
+
+	$big = $wpdb->get_results( "SELECT option_name, LENGTH(option_value) AS sz FROM {$wpdb->options} WHERE autoload = 'yes' ORDER BY sz DESC LIMIT 8" );
+	foreach ( $big as $opt ) {
+		printf( "    %-46s %s KB\n", $opt->option_name, number_format( $opt->sz / 1024, 1 ) );
+	}
+
+	$revisions = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = 'revision'" );
+	printf( "\npost revisions      : %s\n", number_format( $revisions ) );
+
+	$sizes = $wpdb->get_results( "SELECT table_name, table_rows, ROUND((data_length + index_length)/1048576, 1) AS mb FROM information_schema.TABLES WHERE table_schema = DATABASE() ORDER BY (data_length + index_length) DESC LIMIT 6" );
+	echo "\nlargest tables      :\n";
+	foreach ( $sizes as $t ) {
+		printf( "    %-30s ~%s rows, %s MB\n", $t->table_name, number_format( $t->table_rows ), $t->mb );
+	}
+
+	printf( "\nactive plugins      : %d\n", count( (array) get_option( 'active_plugins', array() ) ) );
+	printf( "object cache        : %s\n", wp_using_ext_object_cache() ? 'yes' : 'no (every query hits the DB)' );
+	printf( "PHP version         : %s\n", phpversion() );
+	printf( "memory limit        : %s\n", ini_get( 'memory_limit' ) );
 
 	echo "\n</pre>";
 }
