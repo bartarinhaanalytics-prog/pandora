@@ -140,6 +140,45 @@ function techrato_query_by_slug( $slug, $count = 5, $exclude = array() ) {
 }
 
 /**
+ * Fetch posts flagged from the editor's "انتخاب‌های تحریریه" box in the post
+ * editor. Those checkboxes are provided by the site's Techrato Core plugin and
+ * store a "1" in post meta, so we read the same keys rather than duplicating
+ * the UI — every post already flagged keeps working untouched.
+ *
+ * Falls back to the newest posts when nothing is flagged yet, so a section
+ * never renders empty.
+ *
+ * @param string $meta_key Meta key set by the editorial checkbox.
+ * @param int    $count    How many posts to fetch.
+ * @param array  $exclude  Post IDs already shown elsewhere on the page.
+ * @return WP_Query
+ */
+function techrato_query_by_flag( $meta_key, $count = 5, $exclude = array() ) {
+	$args = array(
+		'posts_per_page'      => $count,
+		'post_status'         => 'publish',
+		'ignore_sticky_posts' => true,
+		'post__not_in'        => $exclude,
+		'meta_query'          => array(
+			array(
+				'key'     => $meta_key,
+				'value'   => '1',
+				'compare' => '=',
+			),
+		),
+	);
+
+	$query = new WP_Query( $args );
+
+	if ( ! $query->have_posts() ) {
+		unset( $args['meta_query'] );
+		$query = new WP_Query( $args );
+	}
+
+	return $query;
+}
+
+/**
  * Bookmark/save button overlaid on a card thumbnail (top-left corner).
  * Purely client-side placeholder for now — wire up to a real "save for
  * later" endpoint (user meta / localStorage) when that feature is needed.

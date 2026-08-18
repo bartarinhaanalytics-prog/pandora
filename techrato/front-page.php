@@ -20,15 +20,14 @@ $shown_ids = array();
 		<!-- ===== HERO ===== -->
 		<section class="block hero-section">
 			<?php
-			$hero_thumbs = techrato_query_by_slug( 'technology', 4, $shown_ids );
-			$hero_ids    = wp_list_pluck( $hero_thumbs->posts, 'ID' );
-			$shown_ids   = array_merge( $shown_ids, $hero_ids );
+			// The big hero card uses "تیتر اصلی صفحه نخست"; the smaller cards
+			// beside it use "نوشته شاخص". Both come from the editorial
+			// checkboxes on the post editor screen.
+			$hero_featured = techrato_query_by_flag( '_featured_one_post_tc', 1, $shown_ids );
+			$shown_ids     = array_merge( $shown_ids, wp_list_pluck( $hero_featured->posts, 'ID' ) );
 
-			$hero_featured = techrato_query_by_slug( 'apple', 1, $shown_ids );
-			if ( ! $hero_featured->have_posts() ) {
-				$hero_featured = new WP_Query( array( 'posts_per_page' => 1, 'post__not_in' => $shown_ids, 'ignore_sticky_posts' => true ) );
-			}
-			$shown_ids = array_merge( $shown_ids, wp_list_pluck( $hero_featured->posts, 'ID' ) );
+			$hero_thumbs = techrato_query_by_flag( '_featured_post_tc', 4, $shown_ids );
+			$shown_ids   = array_merge( $shown_ids, wp_list_pluck( $hero_thumbs->posts, 'ID' ) );
 			?>
 			<div class="hero-grid">
 				<div>
@@ -67,7 +66,7 @@ $shown_ids = array();
 				<span class="bar"></span>
 			</div>
 			<?php
-			$editors = techrato_query_by_slug( 'ai', 5, $shown_ids );
+			$editors = techrato_query_by_flag( '_editor_suggestion_tc', 5, $shown_ids );
 			if ( $editors->have_posts() ) :
 				?>
 				<div class="grid-5">
