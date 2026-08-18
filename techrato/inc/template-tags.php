@@ -159,11 +159,15 @@ function techrato_query_by_flag( $meta_key, $count = 5, $exclude = array() ) {
 		'post_status'         => 'publish',
 		'ignore_sticky_posts' => true,
 		'post__not_in'        => $exclude,
+		// Accept any truthy value rather than an exact "1": the plugin that
+		// owns these checkboxes may store 1, "1", "on", "yes" or "true"
+		// depending on its version, and an exact match silently returns
+		// nothing — which looks like the checkbox does nothing at all.
 		'meta_query'          => array(
 			array(
 				'key'     => $meta_key,
-				'value'   => '1',
-				'compare' => '=',
+				'value'   => array( '1', 'on', 'yes', 'true' ),
+				'compare' => 'IN',
 			),
 		),
 	);
