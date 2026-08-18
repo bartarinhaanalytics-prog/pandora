@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.20.0' );
+define( 'TECHRATO_VERSION', '1.21.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -148,6 +148,48 @@ function techrato_ajax_toggle_like() {
 		'liked' => ! $already,
 	) );
 }
+/**
+ * Diagnostic for the editorial checkboxes ("انتخاب‌های تحریریه").
+ *
+ * Visible only to administrators, and only when ?techrato_debug=1 is on the
+ * URL. Prints what is actually stored in the database for those flags so we
+ * can tell a "nothing is saved" problem apart from a "saved under a different
+ * key/value" one. Safe to leave in place; remove once the flags are confirmed.
+ */
+function techrato_debug_editorial_flags() {
+	if ( ! isset( $_GET['techrato_debug'] ) || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	global $wpdb;
+	$keys = array( '_featured_one_post_tc', '_featured_post_tc', '_editor_suggestion_tc', '_top_year_tc' );
+
+	echo '<pre style="background:#111;color:#0f0;padding:16px;margin:0;direction:ltr;text-align:left;font-size:13px;overflow:auto;z-index:99999;position:relative;">';
+	echo "=== TECHRATO EDITORIAL FLAG DIAGNOSTIC ===\n\n";
+
+	foreach ( $keys as $key ) {
+		$rows = $wpdb->get_results( $wpdb->prepare(
+			"SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s LIMIT 10",
+			$key
+		) );
+		printf( "%-24s : %d row(s)\n", $key, count( $rows ) );
+		foreach ( $rows as $row ) {
+			printf( "    post %-8s value = '%s'\n", $row->post_id, $row->meta_value );
+		}
+	}
+
+	echo "\n--- all meta keys ending in _tc ---\n";
+	$found = $wpdb->get_col( "SELECT DISTINCT meta_key FROM {$wpdb->postmeta} WHERE meta_key LIKE '%\_tc' LIMIT 50" );
+	echo $found ? implode( "\n", $found ) : '(none)';
+
+	echo "\n\n--- options containing featured/editor ---\n";
+	$opts = $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '%featured%' OR option_name LIKE '%editor_suggestion%' LIMIT 30" );
+	echo $opts ? implode( "\n", $opts ) : '(none)';
+
+	echo "\n</pre>";
+}
+add_action( 'wp_body_open', 'techrato_debug_editorial_flags' );
+
 add_action( 'wp_ajax_techrato_toggle_like', 'techrato_ajax_toggle_like' );
 add_action( 'wp_ajax_nopriv_techrato_toggle_like', 'techrato_ajax_toggle_like' );
 
