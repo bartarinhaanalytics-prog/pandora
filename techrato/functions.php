@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.22.0' );
+define( 'TECHRATO_VERSION', '1.23.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -167,14 +167,30 @@ function techrato_debug_editorial_flags() {
 	echo '<pre style="background:#111;color:#0f0;padding:16px;margin:0;direction:ltr;text-align:left;font-size:13px;overflow:auto;z-index:99999;position:relative;">';
 	echo "=== TECHRATO EDITORIAL FLAG DIAGNOSTIC ===\n\n";
 
+	// The plugin writes a row for every post — '' when the box is unchecked and
+	// '1' when it is checked. Only the checked ones matter, so count and list
+	// those rather than the first N rows of mostly-empty values.
 	foreach ( $keys as $key ) {
-		$rows = $wpdb->get_results( $wpdb->prepare(
-			"SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s LIMIT 10",
+		$checked = $wpdb->get_col( $wpdb->prepare(
+			"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value != '' AND meta_value != '0' ORDER BY post_id DESC LIMIT 20",
 			$key
 		) );
-		printf( "%-24s : %d row(s)\n", $key, count( $rows ) );
-		foreach ( $rows as $row ) {
-			printf( "    post %-8s value = '%s'\n", $row->post_id, $row->meta_value );
+		$total = (int) $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value != '' AND meta_value != '0'",
+			$key
+		) );
+
+		printf( "%-24s : %d post(s) ticked\n", $key, $total );
+
+		foreach ( $checked as $post_id ) {
+			$status = get_post_status( $post_id );
+			printf(
+				"    post %-8s status=%-8s value='%s'  %s\n",
+				$post_id,
+				$status ? $status : 'MISSING',
+				get_post_meta( $post_id, $key, true ),
+				get_the_title( $post_id )
+			);
 		}
 	}
 
