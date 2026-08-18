@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 320" width="420" height="320" role="img" aria-label="مقاله">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c2b190"/>
+      <stop offset="1" stop-color="#93a476"/>
+    </linearGradient>
+  </defs>
+  <rect width="420" height="320" fill="url(#g)"/>
+  <g fill="#ffffff" opacity=".35">
+    <circle cx="315" cy="80" r="35"/>
+    <path d="M0 240 Q 105 160 210 240 T 420 240 L 420 320 L 0 320 Z"/>
+  </g>
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
+        font-family="Tahoma, sans-serif" font-size="22" fill="#ffffff" opacity=".8">مقاله</text>
+</svg>
