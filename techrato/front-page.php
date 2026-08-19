@@ -105,7 +105,7 @@ $shown_ids = array();
 							endwhile;
 							wp_reset_postdata();
 							?>
-							<a class="more-link" href="<?php echo esc_url( techrato_archive_url() ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+							<a class="more-link" href="<?php echo esc_url( techrato_more_url( 'more_link_latest', $latest ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
 						<?php else : ?>
 							<?php techrato_empty_card_notice(); ?>
 						<?php endif; ?>
@@ -123,7 +123,7 @@ $shown_ids = array();
 							endwhile;
 							wp_reset_postdata();
 							?>
-							<a class="more-link" href="<?php echo esc_url( techrato_archive_url( 'learning' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+							<a class="more-link" href="<?php echo esc_url( techrato_more_url( 'more_link_learning', $learning, 'learning' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
 						<?php else : ?>
 							<?php techrato_empty_card_notice(); ?>
 						<?php endif; ?>
@@ -160,23 +160,23 @@ $shown_ids = array();
 					endif;
 					?>
 				</div>
-				<a class="more-link" href="<?php echo esc_url( techrato_archive_url() ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+				<a class="more-link" href="<?php echo esc_url( techrato_more_url( 'more_link_popular', $popular ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
 			</div>
 		</section>
 
 		<?php get_template_part( 'template-parts/social-banner' ); ?>
 
 		<!-- ===== IRAN TECH NEWS ===== -->
+		<?php $iran_feature = techrato_query_by_slug( 'technology', 1, $shown_ids ); ?>
 		<section class="block">
 			<div class="section-title">
 				<h2><?php esc_html_e( 'آخرین اخبار فناوری ایران', 'techrato' ); ?></h2>
 				<span class="bar"></span>
-				<a class="more" href="<?php echo esc_url( techrato_archive_url( 'technology' ) ); ?>">« <?php esc_html_e( 'محتوای بیشتر', 'techrato' ); ?></a>
+				<a class="more" href="<?php echo esc_url( techrato_more_url( 'more_link_iran', $iran_feature, 'technology' ) ); ?>">« <?php esc_html_e( 'محتوای بیشتر', 'techrato' ); ?></a>
 			</div>
 			<div class="split-feature">
 				<div>
 					<?php
-					$iran_feature = techrato_query_by_slug( 'technology', 1, $shown_ids );
 					if ( $iran_feature->have_posts() ) :
 						while ( $iran_feature->have_posts() ) : $iran_feature->the_post(); $shown_ids[] = get_the_ID();
 							get_template_part( 'template-parts/card', 'vertical', array( 'variant' => 'feature' ) );

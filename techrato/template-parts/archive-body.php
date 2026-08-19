@@ -89,7 +89,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						endwhile;
 						wp_reset_postdata();
 						?>
-						<a class="more-link" href="<?php echo esc_url( techrato_archive_url( 'learning' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+						<a class="more-link" href="<?php echo esc_url( techrato_more_url( 'more_link_learning', $learning, 'learning' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
 					<?php else : ?>
 						<?php techrato_empty_card_notice(); ?>
 					<?php endif; ?>

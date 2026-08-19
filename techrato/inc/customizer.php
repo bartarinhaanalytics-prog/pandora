@@ -101,5 +101,36 @@ function techrato_customize_register( $wp_customize ) {
 		'section' => 'techrato_follow_banner',
 		'type'    => 'textarea',
 	) );
+
+	/* "مشاهده مطالب بیشتر" link targets */
+	$wp_customize->add_section( 'techrato_more_links', array(
+		'title'       => __( 'لینک‌های «مشاهده مطالب بیشتر»', 'techrato' ),
+		'description' => __( 'برای هر بخش صفحه نخست تعیین کنید دکمه «مشاهده مطالب بیشتر» به کدام دسته برود. اگر «خودکار» بماند، دکمه به دسته‌ای می‌رود که بیشتر مطالب همان بخش در آن قرار دارند.', 'techrato' ),
+		'panel'       => 'techrato_options',
+	) );
+
+	$choices = array( 0 => __( 'خودکار', 'techrato' ) );
+	foreach ( get_categories( array( 'hide_empty' => false ) ) as $category ) {
+		$choices[ $category->term_id ] = $category->name;
+	}
+
+	$more_links = array(
+		'more_link_latest'   => __( 'بخش «جدیدترین اخبار تکنولوژی»', 'techrato' ),
+		'more_link_learning' => __( 'باکس «مقالات آموزشی تکراتو»', 'techrato' ),
+		'more_link_popular'  => __( 'بخش «پربازدید ترین مطالب»', 'techrato' ),
+		'more_link_iran'     => __( 'بخش «آخرین اخبار فناوری ایران»', 'techrato' ),
+	);
+	foreach ( $more_links as $id => $label ) {
+		$wp_customize->add_setting( $id, array(
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+		) );
+		$wp_customize->add_control( $id, array(
+			'label'   => $label,
+			'section' => 'techrato_more_links',
+			'type'    => 'select',
+			'choices' => $choices,
+		) );
+	}
 }
 add_action( 'customize_register', 'techrato_customize_register' );

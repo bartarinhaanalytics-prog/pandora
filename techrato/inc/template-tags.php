@@ -183,41 +183,58 @@ function techrato_query_by_flag( $meta_key, $count = 5, $exclude = array() ) {
 }
 
 /**
- * URL of a real posts archive, used by the "مشاهده مطالب بیشتر" links.
+ * Target for a section's "مشاهده مطالب بیشتر" link.
  *
- * With a slug it returns that category's archive. Without one it returns the
- * blog archive: the page assigned as the posts page, or — when the site has
- * none — the newest post's year archive, which always renders the archive
- * template and lists posts.
+ * Each section links to the continuation of that section, resolved in order:
+ *   1. the category picked for it in Customizer > تنظیمات تکراتو > لینک‌ها
+ *   2. the category slug the section is built around, when the site has it
+ *   3. the category most of the posts on display belong to
+ *   4. the site's posts page, when one is assigned
  *
- * It deliberately avoids home_url( '/' ): the homepage renders front-page.php,
- * so linking there just reloads the same page instead of showing more posts.
- *
- * @param string $slug Optional category slug.
+ * @param string        $setting   Theme-mod key holding an explicit category ID.
+ * @param WP_Query|null $query     The query whose posts the section is showing.
+ * @param string        $slug_hint Category slug the section is built around.
  * @return string
  */
-function techrato_archive_url( $slug = '' ) {
-	if ( $slug ) {
-		$term = get_category_by_slug( $slug );
+function techrato_more_url( $setting = '', $query = null, $slug_hint = '' ) {
+
+	if ( $setting ) {
+		$chosen = (int) get_theme_mod( $setting, 0 );
+		if ( $chosen && get_term( $chosen, 'category' ) instanceof WP_Term ) {
+			return get_category_link( $chosen );
+		}
+	}
+
+	if ( $slug_hint ) {
+		$term = get_category_by_slug( $slug_hint );
 		if ( $term ) {
 			return get_category_link( $term->term_id );
+		}
+	}
+
+	// Follow the posts themselves: whichever category most of the listed
+	// posts sit in is where more of the same lives. This keeps the link
+	// meaningful on sites whose categories don't match the theme's slugs.
+	if ( $query instanceof WP_Query && ! empty( $query->posts ) ) {
+		$counts = array();
+		foreach ( $query->posts as $listed ) {
+			$post_id = is_object( $listed ) ? $listed->ID : (int) $listed;
+			foreach ( get_the_category( $post_id ) as $cat ) {
+				if ( 'uncategorized' === $cat->slug ) {
+					continue;
+				}
+				$counts[ $cat->term_id ] = isset( $counts[ $cat->term_id ] ) ? $counts[ $cat->term_id ] + 1 : 1;
+			}
+		}
+		if ( $counts ) {
+			arsort( $counts );
+			return get_category_link( key( $counts ) );
 		}
 	}
 
 	$posts_page = (int) get_option( 'page_for_posts' );
 	if ( $posts_page && 'publish' === get_post_status( $posts_page ) ) {
 		return get_permalink( $posts_page );
-	}
-
-	$newest = get_posts( array(
-		'posts_per_page'   => 1,
-		'post_status'      => 'publish',
-		'suppress_filters' => false,
-		'fields'           => 'ids',
-	) );
-
-	if ( $newest ) {
-		return get_year_link( (int) get_the_date( 'Y', $newest[0] ) );
 	}
 
 	return home_url( '/' );
