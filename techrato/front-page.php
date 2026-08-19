@@ -105,7 +105,7 @@ $shown_ids = array();
 							endwhile;
 							wp_reset_postdata();
 							?>
-							<a class="more-link" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+							<a class="more-link" href="<?php echo esc_url( techrato_archive_url() ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
 						<?php else : ?>
 							<?php techrato_empty_card_notice(); ?>
 						<?php endif; ?>
@@ -123,7 +123,7 @@ $shown_ids = array();
 							endwhile;
 							wp_reset_postdata();
 							?>
-							<a class="more-link" href="<?php echo esc_url( home_url( '/?cat=learning' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+							<a class="more-link" href="<?php echo esc_url( techrato_archive_url( 'learning' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
 						<?php else : ?>
 							<?php techrato_empty_card_notice(); ?>
 						<?php endif; ?>
@@ -160,7 +160,7 @@ $shown_ids = array();
 					endif;
 					?>
 				</div>
-				<a class="more-link" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+				<a class="more-link" href="<?php echo esc_url( techrato_archive_url() ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
 			</div>
 		</section>
 
@@ -171,7 +171,7 @@ $shown_ids = array();
 			<div class="section-title">
 				<h2><?php esc_html_e( 'آخرین اخبار فناوری ایران', 'techrato' ); ?></h2>
 				<span class="bar"></span>
-				<a class="more" href="<?php echo esc_url( home_url( '/' ) ); ?>">« <?php esc_html_e( 'محتوای بیشتر', 'techrato' ); ?></a>
+				<a class="more" href="<?php echo esc_url( techrato_archive_url( 'technology' ) ); ?>">« <?php esc_html_e( 'محتوای بیشتر', 'techrato' ); ?></a>
 			</div>
 			<div class="split-feature">
 				<div>

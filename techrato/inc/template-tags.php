@@ -183,6 +183,47 @@ function techrato_query_by_flag( $meta_key, $count = 5, $exclude = array() ) {
 }
 
 /**
+ * URL of a real posts archive, used by the "مشاهده مطالب بیشتر" links.
+ *
+ * With a slug it returns that category's archive. Without one it returns the
+ * blog archive: the page assigned as the posts page, or — when the site has
+ * none — the newest post's year archive, which always renders the archive
+ * template and lists posts.
+ *
+ * It deliberately avoids home_url( '/' ): the homepage renders front-page.php,
+ * so linking there just reloads the same page instead of showing more posts.
+ *
+ * @param string $slug Optional category slug.
+ * @return string
+ */
+function techrato_archive_url( $slug = '' ) {
+	if ( $slug ) {
+		$term = get_category_by_slug( $slug );
+		if ( $term ) {
+			return get_category_link( $term->term_id );
+		}
+	}
+
+	$posts_page = (int) get_option( 'page_for_posts' );
+	if ( $posts_page && 'publish' === get_post_status( $posts_page ) ) {
+		return get_permalink( $posts_page );
+	}
+
+	$newest = get_posts( array(
+		'posts_per_page'   => 1,
+		'post_status'      => 'publish',
+		'suppress_filters' => false,
+		'fields'           => 'ids',
+	) );
+
+	if ( $newest ) {
+		return get_year_link( (int) get_the_date( 'Y', $newest[0] ) );
+	}
+
+	return home_url( '/' );
+}
+
+/**
  * Bookmark/save button overlaid on a card thumbnail (top-left corner).
  * Purely client-side placeholder for now — wire up to a real "save for
  * later" endpoint (user meta / localStorage) when that feature is needed.
