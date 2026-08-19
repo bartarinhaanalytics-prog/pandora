@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.26.0' );
+define( 'TECHRATO_VERSION', '1.27.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -228,6 +228,18 @@ function techrato_debug_editorial_flags() {
 
 	printf( "\nactive plugins      : %d\n", count( (array) get_option( 'active_plugins', array() ) ) );
 	printf( "object cache        : %s\n", wp_using_ext_object_cache() ? 'yes' : 'no (every query hits the DB)' );
+
+	// Which caching backends this server could actually use. OPcache matters
+	// most: without it PHP recompiles every file on every request, which is
+	// pure overhead independent of any database work.
+	$opcache = function_exists( 'opcache_get_status' ) ? @opcache_get_status( false ) : false;
+	printf(
+		"OPcache             : %s\n",
+		( $opcache && ! empty( $opcache['opcache_enabled'] ) ) ? 'ENABLED' : 'OFF  <-- recompiles all PHP every request'
+	);
+	printf( "APCu available      : %s\n", function_exists( 'apcu_fetch' ) ? 'yes' : 'no' );
+	printf( "Memcached available : %s\n", class_exists( 'Memcached' ) ? 'yes' : 'no' );
+	printf( "Redis available     : %s\n", class_exists( 'Redis' ) ? 'yes' : 'no' );
 	printf( "PHP version         : %s\n", phpversion() );
 	printf( "memory limit        : %s\n", ini_get( 'memory_limit' ) );
 
