@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.24.0' );
+define( 'TECHRATO_VERSION', '1.25.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -275,6 +275,108 @@ function techrato_remove_comment_bubble( $wp_admin_bar ) {
 	$wp_admin_bar->remove_node( 'comments' );
 }
 add_action( 'admin_bar_menu', 'techrato_remove_comment_bubble', 999 );
+
+/* -------------------------------------------------------------------------
+ * Outbound HTTP requests from wp-admin
+ *
+ * Every admin page makes blocking calls to external APIs (update checks,
+ * plugin licence servers, feeds). When the server cannot reach a host, each
+ * call sits waiting for its timeout — WordPress defaults to 5s but plugins
+ * routinely ask for 30s — and the page cannot finish until it gives up. That
+ * is the same cost on every screen, which matches "everything is slow".
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Cap every outbound request at 3 seconds. A reachable host answers in well
+ * under that; an unreachable one now costs 3s instead of up to 30s.
+ */
+function techrato_cap_http_timeout( $args ) {
+	if ( empty( $args['timeout'] ) || $args['timeout'] > 3 ) {
+		$args['timeout'] = 3;
+	}
+	return $args;
+}
+add_filter( 'http_request_args', 'techrato_cap_http_timeout', 999 );
+
+/**
+ * Record each outbound request and how long it took, so we can see which
+ * hosts are actually costing time before deciding what to block.
+ */
+$GLOBALS['techrato_http_log']   = array();
+$GLOBALS['techrato_http_start'] = array();
+
+function techrato_http_start( $pre, $args, $url ) {
+	$GLOBALS['techrato_http_start'][ $url ] = microtime( true );
+	return $pre;
+}
+add_filter( 'pre_http_request', 'techrato_http_start', 1, 3 );
+
+function techrato_http_finish( $response, $context, $class, $args, $url ) {
+	$started  = isset( $GLOBALS['techrato_http_start'][ $url ] ) ? $GLOBALS['techrato_http_start'][ $url ] : microtime( true );
+	$duration = microtime( true ) - $started;
+
+	$GLOBALS['techrato_http_log'][] = array(
+		'url'      => $url,
+		'seconds'  => $duration,
+		'error'    => is_wp_error( $response ) ? $response->get_error_message() : '',
+	);
+}
+add_action( 'http_api_debug', 'techrato_http_finish', 10, 5 );
+
+/**
+ * Print the log at the bottom of any admin page for administrators. Shown
+ * only when there was at least one request, so it stays out of the way once
+ * the noisy ones are gone.
+ */
+function techrato_print_http_log() {
+	if ( ! current_user_can( 'manage_options' ) || empty( $GLOBALS['techrato_http_log'] ) ) {
+		return;
+	}
+
+	$log   = $GLOBALS['techrato_http_log'];
+	$total = 0;
+	foreach ( $log as $entry ) {
+		$total += $entry['seconds'];
+	}
+
+	echo '<div style="background:#111;color:#0f0;padding:14px;margin:20px;direction:ltr;text-align:left;font:13px monospace;white-space:pre;overflow:auto;">';
+	printf( "OUTBOUND HTTP ON THIS PAGE: %d request(s), %.2fs total\n\n", count( $log ), $total );
+
+	usort( $log, function ( $a, $b ) {
+		return $b['seconds'] <=> $a['seconds'];
+	} );
+
+	foreach ( $log as $entry ) {
+		printf(
+			"%6.2fs  %s%s\n",
+			$entry['seconds'],
+			esc_html( $entry['url'] ),
+			$entry['error'] ? '   [ERROR: ' . esc_html( $entry['error'] ) . ']' : ''
+		);
+	}
+	echo '</div>';
+}
+add_action( 'admin_footer', 'techrato_print_http_log' );
+
+/**
+ * Hosts to refuse outright. Requests to these return instantly instead of
+ * waiting for a timeout. Add a host here once the log above shows it is slow
+ * and its feature is not needed.
+ */
+function techrato_blocked_http_hosts() {
+	return array(
+		// 'api.wordpress.org',  // update checks — uncomment only if it proves slow
+	);
+}
+
+function techrato_block_slow_hosts( $pre, $args, $url ) {
+	$host = wp_parse_url( $url, PHP_URL_HOST );
+	if ( $host && in_array( strtolower( $host ), techrato_blocked_http_hosts(), true ) ) {
+		return new WP_Error( 'techrato_blocked', 'Blocked by theme: ' . $host );
+	}
+	return $pre;
+}
+add_filter( 'pre_http_request', 'techrato_block_slow_hosts', 5, 3 );
 
 add_action( 'wp_ajax_techrato_toggle_like', 'techrato_ajax_toggle_like' );
 add_action( 'wp_ajax_nopriv_techrato_toggle_like', 'techrato_ajax_toggle_like' );
