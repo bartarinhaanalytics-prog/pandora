@@ -194,17 +194,30 @@
 		} );
 	} );
 
-	/* ---- Tab UI (visual state only — wire up to real queries as content grows) ---- */
+	/* ---- Tabs: highlight the tab and show its panel ---- */
 	document.querySelectorAll( '.tabs' ).forEach( function ( group ) {
+		var scope = group.parentElement;
+
 		group.querySelectorAll( 'button, a' ).forEach( function ( tab ) {
 			tab.addEventListener( 'click', function ( e ) {
 				if ( tab.tagName === 'BUTTON' ) {
 					e.preventDefault();
 				}
+
 				group.querySelectorAll( '.is-active' ).forEach( function ( el ) {
 					el.classList.remove( 'is-active' );
+					el.setAttribute( 'aria-selected', 'false' );
 				} );
 				tab.classList.add( 'is-active' );
+				tab.setAttribute( 'aria-selected', 'true' );
+
+				var target = tab.getAttribute( 'data-panel' );
+				if ( ! target || ! scope ) {
+					return;
+				}
+				scope.querySelectorAll( '.news-tab-panel' ).forEach( function ( panel ) {
+					panel.classList.toggle( 'is-active', panel.id === target );
+				} );
 			} );
 		} );
 	} );

@@ -89,26 +89,51 @@ $shown_ids = array();
 						<h2><?php esc_html_e( 'جدیدترین اخبار تکنولوژی', 'techrato' ); ?></h2>
 						<span class="bar"></span>
 					</div>
+					<?php $news_tabs = techrato_news_tabs(); ?>
 					<div class="widget list-widget">
-						<div class="tabs" style="margin-bottom:16px;">
-							<button class="is-active"><?php esc_html_e( 'همه', 'techrato' ); ?></button>
-							<button><?php esc_html_e( 'اپل', 'techrato' ); ?></button>
-							<button><?php esc_html_e( 'موبایل', 'techrato' ); ?></button>
-							<button><?php esc_html_e( 'اینترنت', 'techrato' ); ?></button>
-							<button><?php esc_html_e( 'بازی ویدیویی', 'techrato' ); ?></button>
+						<div class="tabs" style="margin-bottom:16px;" role="tablist">
+							<?php foreach ( $news_tabs as $i => $tab ) : ?>
+								<button type="button" role="tab"
+									id="news-tab-<?php echo esc_attr( $tab['key'] ); ?>"
+									class="<?php echo 0 === $i ? 'is-active' : ''; ?>"
+									aria-selected="<?php echo 0 === $i ? 'true' : 'false'; ?>"
+									aria-controls="news-panel-<?php echo esc_attr( $tab['key'] ); ?>"
+									data-panel="news-panel-<?php echo esc_attr( $tab['key'] ); ?>"><?php echo esc_html( $tab['label'] ); ?></button>
+							<?php endforeach; ?>
 						</div>
-						<?php
-						$latest = new WP_Query( array( 'posts_per_page' => 4, 'ignore_sticky_posts' => true ) );
-						if ( $latest->have_posts() ) :
-							while ( $latest->have_posts() ) : $latest->the_post();
-								get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true, 'excerpt' => true ) );
-							endwhile;
-							wp_reset_postdata();
+
+						<?php foreach ( $news_tabs as $i => $tab ) : ?>
+							<?php
+							// Every tab is rendered up front and toggled in the
+							// browser: the homepage is page-cached, so this costs
+							// visitors nothing and switching tabs is instant.
+							$tab_args = array( 'posts_per_page' => 4, 'ignore_sticky_posts' => true );
+							if ( $tab['term'] ) {
+								$tab_args['cat'] = $tab['term']->term_id;
+							}
+							$tab_query = new WP_Query( $tab_args );
+
+							$tab_more = $tab['term']
+								? get_category_link( $tab['term']->term_id )
+								: techrato_more_url( 'more_link_latest', $tab_query );
 							?>
-							<a class="more-link" href="<?php echo esc_url( techrato_more_url( 'more_link_latest', $latest ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
-						<?php else : ?>
-							<?php techrato_empty_card_notice(); ?>
-						<?php endif; ?>
+							<div class="news-tab-panel<?php echo 0 === $i ? ' is-active' : ''; ?>"
+								id="news-panel-<?php echo esc_attr( $tab['key'] ); ?>"
+								role="tabpanel"
+								aria-labelledby="news-tab-<?php echo esc_attr( $tab['key'] ); ?>">
+								<?php
+								if ( $tab_query->have_posts() ) :
+									while ( $tab_query->have_posts() ) : $tab_query->the_post();
+										get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true, 'excerpt' => true ) );
+									endwhile;
+									wp_reset_postdata();
+									?>
+									<a class="more-link" href="<?php echo esc_url( $tab_more ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+								<?php else : ?>
+									<?php techrato_empty_card_notice(); ?>
+								<?php endif; ?>
+							</div>
+						<?php endforeach; ?>
 					</div>
 				</div>
 
