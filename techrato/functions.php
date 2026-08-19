@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.34.0' );
+define( 'TECHRATO_VERSION', '1.35.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -28,6 +28,15 @@ function techrato_setup() {
 		'flex-width'  => true,
 	) );
 	add_theme_support( 'responsive-embeds' );
+
+	// Show the site's own Persian typography inside the editor, so writers see
+	// roughly what readers will. Works for the classic editor and the block
+	// editor alike.
+	add_theme_support( 'editor-styles' );
+	add_editor_style( array(
+		'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap',
+		'assets/css/editor-style.css',
+	) );
 	add_theme_support( 'align-wide' );
 
 	register_nav_menus( array(
