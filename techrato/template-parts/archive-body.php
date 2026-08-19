@@ -13,13 +13,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<?php techrato_breadcrumbs(); ?>
 
-		<div class="archive-header">
+		<?php $term_image = ( is_category() || is_tag() || is_tax() ) ? techrato_term_image() : ''; ?>
+		<div class="archive-header<?php echo $term_image ? ' has-image' : ''; ?>">
 			<?php if ( is_category() || is_tag() || is_tax() ) : ?>
-				<span class="pill"><?php esc_html_e( 'دسته بندی', 'techrato' ); ?></span>
-				<h1><?php single_term_title(); ?></h1>
-				<?php $desc = term_description(); ?>
-				<?php if ( $desc ) : ?>
-					<p><?php echo wp_kses_post( $desc ); ?></p>
+				<div class="archive-header-text">
+					<span class="pill"><?php esc_html_e( 'دسته بندی', 'techrato' ); ?></span>
+					<h1><?php single_term_title(); ?></h1>
+					<?php $desc = term_description(); ?>
+					<?php if ( $desc ) : ?>
+						<p><?php echo wp_kses_post( $desc ); ?></p>
+					<?php endif; ?>
+				</div>
+				<?php if ( $term_image ) : ?>
+					<div class="archive-header-image"><?php echo $term_image; // phpcs:ignore WordPress.Security.EscapeOutput — built by techrato_term_image(). ?></div>
+				<?php else : ?>
+					<?php techrato_term_image_debug(); ?>
 				<?php endif; ?>
 			<?php elseif ( is_search() ) : ?>
 				<span class="pill"><?php esc_html_e( 'جستجو', 'techrato' ); ?></span>
@@ -44,16 +52,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<span class="bar"></span>
 				</div>
 
-				<?php $techrato_has_posts = have_posts(); ?>
+				<?php
+				$techrato_has_posts = have_posts();
+				// Real links to the sub-categories of this category (or, on a
+				// sub-category, to its siblings). A category with neither gets
+				// no tabs rather than buttons that lead nowhere.
+				$archive_tabs = techrato_archive_tabs();
+				?>
 				<div class="widget list-widget">
-					<div class="tabs" style="margin-bottom:16px;">
-						<button class="is-active"><?php esc_html_e( 'همه', 'techrato' ); ?></button>
-						<button><?php esc_html_e( 'موبایل', 'techrato' ); ?></button>
-						<button><?php esc_html_e( 'اپل', 'techrato' ); ?></button>
-						<button><?php esc_html_e( 'اینترنت', 'techrato' ); ?></button>
-						<button><?php esc_html_e( 'هوش مصنوعی', 'techrato' ); ?></button>
-						<button><?php esc_html_e( 'بازی ویدیویی', 'techrato' ); ?></button>
-					</div>
+					<?php if ( $archive_tabs ) : ?>
+						<div class="tabs" style="margin-bottom:16px;">
+							<?php foreach ( $archive_tabs as $tab ) : ?>
+								<a href="<?php echo esc_url( $tab['url'] ); ?>"<?php echo $tab['current'] ? ' class="is-active" aria-current="page"' : ''; ?>><?php echo esc_html( $tab['label'] ); ?></a>
+							<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
 
 					<?php if ( $techrato_has_posts ) : ?>
 						<?php while ( have_posts() ) : the_post(); ?>

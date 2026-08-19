@@ -197,6 +197,179 @@ function techrato_query_by_flag( $meta_key, $count = 5, $exclude = array() ) {
  * @return string
  */
 /**
+ * Image attached to a category/term by whichever plugin the site uses.
+ *
+ * Category images aren't part of WordPress core, so every plugin stores them
+ * somewhere different. Rather than betting on one, look through the keys the
+ * common plugins use — including "Categories Images", which most Persian
+ * sites use — and return the first hit.
+ *
+ * @param int|null $term_id Defaults to the queried term.
+ * @param string   $size    Image size.
+ * @return string Ready-to-print <img> markup, or '' when the term has no image.
+ */
+function techrato_term_image( $term_id = null, $size = 'large' ) {
+	$term_id = $term_id ? (int) $term_id : (int) get_queried_object_id();
+	if ( ! $term_id ) {
+		return '';
+	}
+
+	$alt = '';
+	$term = get_term( $term_id );
+	if ( $term instanceof WP_Term ) {
+		$alt = $term->name;
+	}
+
+	// Attachment IDs kept in term meta.
+	$id_keys = apply_filters( 'techrato_term_image_meta_keys', array(
+		'thumbnail_id',
+		'z_taxonomy_image_id',
+		'category_image_id',
+		'taxonomy_image_id',
+		'category_thumbnail_id',
+		'_thumbnail_id',
+	) );
+	foreach ( $id_keys as $key ) {
+		$attachment_id = (int) get_term_meta( $term_id, $key, true );
+		if ( $attachment_id ) {
+			$html = wp_get_attachment_image( $attachment_id, $size, false, array(
+				'alt'     => $alt,
+				'loading' => 'lazy',
+			) );
+			if ( $html ) {
+				return $html;
+			}
+		}
+	}
+
+	// Plain URLs kept in term meta, or in an option by older plugin versions.
+	$url_keys = apply_filters( 'techrato_term_image_url_keys', array(
+		'category_image',
+		'taxonomy_image',
+		'cat_image',
+		'category_image_url',
+		'image',
+	) );
+	$url = '';
+	foreach ( $url_keys as $key ) {
+		$value = get_term_meta( $term_id, $key, true );
+		if ( is_string( $value ) && '' !== $value ) {
+			$url = $value;
+			break;
+		}
+	}
+	if ( ! $url && function_exists( 'z_taxonomy_image_url' ) ) {
+		$url = (string) z_taxonomy_image_url( $term_id, $size, false );
+	}
+	if ( ! $url ) {
+		$url = (string) get_option( 'z_taxonomy_image' . $term_id, '' );
+	}
+
+	$url = apply_filters( 'techrato_term_image_url', $url, $term_id );
+
+	if ( ! $url ) {
+		return '';
+	}
+
+	return sprintf(
+		'<img src="%s" alt="%s" loading="lazy">',
+		esc_url( $url ),
+		esc_attr( $alt )
+	);
+}
+
+/**
+ * Administrator-only hint listing what a term actually has stored, shown when
+ * ?techrato_debug=1 is on the URL and no category image could be found. Which
+ * key holds the image depends on the plugin the site uses, and this is the
+ * quickest way to see it.
+ */
+function techrato_term_image_debug() {
+	if ( ! isset( $_GET['techrato_debug'] ) || ! current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		return;
+	}
+
+	$term_id = (int) get_queried_object_id();
+	if ( ! $term_id ) {
+		return;
+	}
+
+	$meta = get_term_meta( $term_id );
+	echo '<pre style="direction:ltr;text-align:left;background:#111;color:#0f0;padding:14px;border-radius:8px;overflow:auto;font-size:12px;">';
+	echo 'TERM ' . (int) $term_id . " — no image found. Stored term meta:\n\n";
+	if ( $meta ) {
+		foreach ( $meta as $key => $values ) {
+			$value = is_array( $values ) ? reset( $values ) : $values;
+			printf( "  %-28s = %s\n", esc_html( $key ), esc_html( is_scalar( $value ) ? (string) $value : wp_json_encode( $value ) ) );
+		}
+	} else {
+		echo "  (this category has no term meta at all)\n";
+	}
+	echo '</pre>';
+}
+
+/**
+ * Tabs above the post list on an archive page.
+ *
+ * On a category these are real links to its sub-categories — or, when it has
+ * none, to its siblings — so every tab goes somewhere and paging still works.
+ * A term with neither gets no tabs at all rather than buttons that do nothing.
+ *
+ * @return array List of array( label, url, current ).
+ */
+function techrato_archive_tabs() {
+	if ( ! is_category() && ! is_tax() && ! is_tag() ) {
+		return array();
+	}
+
+	$term = get_queried_object();
+	if ( ! $term instanceof WP_Term ) {
+		return array();
+	}
+
+	$children = get_terms( array(
+		'taxonomy'   => $term->taxonomy,
+		'parent'     => $term->term_id,
+		'hide_empty' => true,
+	) );
+
+	if ( ! is_wp_error( $children ) && $children ) {
+		$root     = $term;
+		$siblings = $children;
+	} elseif ( $term->parent ) {
+		$root     = get_term( $term->parent, $term->taxonomy );
+		$siblings = get_terms( array(
+			'taxonomy'   => $term->taxonomy,
+			'parent'     => $term->parent,
+			'hide_empty' => true,
+		) );
+		if ( is_wp_error( $siblings ) || ! $siblings || ! $root instanceof WP_Term ) {
+			return array();
+		}
+	} else {
+		return array();
+	}
+
+	$tabs = array(
+		array(
+			'label'   => sprintf( __( 'همه %s', 'techrato' ), $root->name ),
+			'url'     => get_term_link( $root ),
+			'current' => (int) $root->term_id === (int) $term->term_id,
+		),
+	);
+
+	foreach ( $siblings as $child ) {
+		$tabs[] = array(
+			'label'   => $child->name,
+			'url'     => get_term_link( $child ),
+			'current' => (int) $child->term_id === (int) $term->term_id,
+		);
+	}
+
+	return $tabs;
+}
+
+/**
  * Tabs for the "جدیدترین اخبار تکنولوژی" box.
  *
  * The first tab always lists every recent post; the rest are categories,
