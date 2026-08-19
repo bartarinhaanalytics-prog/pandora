@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.32.0' );
+define( 'TECHRATO_VERSION', '1.33.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -432,6 +432,7 @@ add_action( 'widgets_init', 'techrato_widgets_init' );
  */
 require TECHRATO_DIR . '/inc/template-tags.php';
 require TECHRATO_DIR . '/inc/customizer.php';
+require TECHRATO_DIR . '/inc/seo.php';
 
 /**
  * Fallback menu for the primary nav when no menu has been assigned yet,

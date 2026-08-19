@@ -133,6 +133,24 @@ function techrato_customize_register( $wp_customize ) {
 		) );
 	}
 
+	/* SEO */
+	$wp_customize->add_section( 'techrato_seo', array(
+		'title'       => __( 'سئو', 'techrato' ),
+		'description' => __( 'این تنظیمات فقط وقتی اثر دارند که افزونه سئو (مثل یواست یا رنک‌مث) فعال نباشد. اگر افزونه سئو فعال کنید، قالب کنار می‌کشد تا تگ‌ها تکراری نشوند.', 'techrato' ),
+		'panel'       => 'techrato_options',
+	) );
+
+	$wp_customize->add_setting( 'seo_home_description', array(
+		'default'           => '',
+		'sanitize_callback' => 'sanitize_text_field',
+	) );
+	$wp_customize->add_control( 'seo_home_description', array(
+		'label'       => __( 'توضیح صفحه اصلی برای گوگل', 'techrato' ),
+		'description' => __( 'یک تا دو جمله، حداکثر حدود ۱۵۰ حرف. اگر خالی بماند، از «توضیح کوتاه» سایت استفاده می‌شود.', 'techrato' ),
+		'section'     => 'techrato_seo',
+		'type'        => 'textarea',
+	) );
+
 	/* Tabs on the "جدیدترین اخبار تکنولوژی" box */
 	$wp_customize->add_section( 'techrato_news_tabs', array(
 		'title'       => __( 'تب‌های بخش «جدیدترین اخبار»', 'techrato' ),

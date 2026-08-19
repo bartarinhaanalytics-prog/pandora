@@ -13,6 +13,21 @@ $shown_ids = array();
 
 <main id="primary">
 
+	<?php
+	// The homepage is a collection of cards with no headline of its own, which
+	// leaves it without an <h1>. This one names the site for search engines
+	// and screen readers without altering the design.
+	?>
+	<h1 class="screen-reader-text">
+		<?php
+		echo esc_html( get_bloginfo( 'name' ) );
+		$techrato_tagline = get_bloginfo( 'description' );
+		if ( $techrato_tagline ) {
+			echo ' — ' . esc_html( $techrato_tagline );
+		}
+		?>
+	</h1>
+
 	<?php get_template_part( 'template-parts/quick-categories' ); ?>
 
 	<div class="container">

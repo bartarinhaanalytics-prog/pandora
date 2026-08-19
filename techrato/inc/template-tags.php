@@ -66,7 +66,7 @@ function techrato_card_meta( $post_id = null, $show_comments = true ) {
 	<div class="meta">
 		<span class="meta-item">
 			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-			<?php echo esc_html( techrato_time_ago( $post_id ) ); ?>
+			<time datetime="<?php echo esc_attr( get_the_date( DATE_W3C, $post_id ) ); ?>"><?php echo esc_html( techrato_time_ago( $post_id ) ); ?></time>
 		</span>
 		<?php if ( $show_comments ) : ?>
 		<span class="meta-item">
@@ -82,29 +82,24 @@ function techrato_card_meta( $post_id = null, $show_comments = true ) {
  * Breadcrumb trail: خانه > دسته‌بندی > عنوان جاری
  */
 function techrato_breadcrumbs() {
-	echo '<nav class="breadcrumb" aria-label="' . esc_attr__( 'مسیر صفحه', 'techrato' ) . '"><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'خانه', 'techrato' ) . '</a>';
+	$trail = techrato_breadcrumb_trail();
+	if ( count( $trail ) < 2 ) {
+		return;
+	}
 
-	if ( is_category() || is_tag() || is_tax() ) {
-		$term = get_queried_object();
-		if ( $term && ! empty( $term->parent ) ) {
-			$parent = get_term( $term->parent, $term->taxonomy );
-			if ( $parent && ! is_wp_error( $parent ) ) {
-				echo '<span class="sep">/</span><a href="' . esc_url( get_term_link( $parent ) ) . '">' . esc_html( $parent->name ) . '</a>';
-			}
+	$last = count( $trail ) - 1;
+
+	echo '<nav class="breadcrumb" aria-label="' . esc_attr__( 'مسیر صفحه', 'techrato' ) . '">';
+	foreach ( $trail as $position => $crumb ) {
+		if ( $position ) {
+			echo '<span class="sep">/</span>';
 		}
-		echo '<span class="sep">/</span><span class="current">' . esc_html( single_term_title( '', false ) ) . '</span>';
-	} elseif ( is_singular( 'post' ) ) {
-		$cats = get_the_category();
-		if ( ! empty( $cats ) ) {
-			echo '<span class="sep">/</span><a href="' . esc_url( get_category_link( $cats[0]->term_id ) ) . '">' . esc_html( $cats[0]->name ) . '</a>';
+		$name = $position === $last ? wp_trim_words( $crumb['name'], 6 ) : $crumb['name'];
+		if ( $position === $last ) {
+			echo '<span class="current">' . esc_html( $name ) . '</span>';
+		} else {
+			echo '<a href="' . esc_url( $crumb['url'] ) . '">' . esc_html( $name ) . '</a>';
 		}
-		echo '<span class="sep">/</span><span class="current">' . esc_html( wp_trim_words( get_the_title(), 6 ) ) . '</span>';
-	} elseif ( is_page() ) {
-		echo '<span class="sep">/</span><span class="current">' . esc_html( get_the_title() ) . '</span>';
-	} elseif ( is_search() ) {
-		echo '<span class="sep">/</span><span class="current">' . esc_html__( 'نتایج جستجو', 'techrato' ) . '</span>';
-	} elseif ( is_404() ) {
-		echo '<span class="sep">/</span><span class="current">' . esc_html__( 'صفحه پیدا نشد', 'techrato' ) . '</span>';
 	}
 	echo '</nav>';
 }
