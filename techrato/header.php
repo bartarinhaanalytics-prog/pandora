@@ -14,6 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<script data-no-optimize="1" data-cfasync="false" data-rocket-defer-exclude data-pagespeed-no-defer>
 	(function () {
+		// Marks the page as scripted before first paint, so the archive can
+		// swap its numbered pagination for the load-more button without a flash.
+		document.documentElement.className += ' has-js';
 		try {
 			var stored = localStorage.getItem( 'techrato-theme' );
 			if ( stored ) {

@@ -194,6 +194,152 @@
 		} );
 	} );
 
+	/* ---- Archive: sub-category tabs and load-more, both without a reload ---- */
+	( function () {
+		var list = document.querySelector( '.js-post-list' );
+		if ( ! list || typeof techratoData === 'undefined' ) {
+			return;
+		}
+
+		var tabs     = document.querySelector( '.js-archive-tabs' );
+		var loadMore = document.querySelector( '.js-load-more' );
+		var label    = loadMore ? loadMore.textContent : '';
+		var busy     = false;
+
+		function fetchPosts( term, paged ) {
+			var body = new URLSearchParams();
+			body.append( 'action', 'techrato_load_posts' );
+			body.append( 'term', term );
+			body.append( 'paged', paged );
+
+			return fetch( techratoData.ajaxUrl, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: body.toString()
+			} ).then( function ( response ) {
+				if ( ! response.ok ) {
+					throw new Error( response.status );
+				}
+				return response.json();
+			} ).then( function ( payload ) {
+				if ( ! payload || ! payload.success ) {
+					throw new Error( 'bad payload' );
+				}
+				return payload.data;
+			} );
+		}
+
+		function showError( message ) {
+			var note = list.parentNode.querySelector( '.load-more-error' );
+			if ( ! note ) {
+				note = document.createElement( 'p' );
+				note.className = 'load-more-error';
+				list.parentNode.appendChild( note );
+			}
+			note.textContent = message;
+		}
+
+		function clearError() {
+			var note = list.parentNode.querySelector( '.load-more-error' );
+			if ( note ) {
+				note.parentNode.removeChild( note );
+			}
+		}
+
+		function updateLoadMore( paged, maxPages ) {
+			if ( ! loadMore ) {
+				return;
+			}
+			loadMore.disabled = false;
+			loadMore.textContent = label;
+			loadMore.hidden = paged >= maxPages;
+		}
+
+		// Switch to another sub-category in place. The tab stays a real link,
+		// so middle-click and no-JS visitors still get the normal page.
+		if ( tabs ) {
+			tabs.querySelectorAll( 'a[data-term]' ).forEach( function ( tab ) {
+				tab.addEventListener( 'click', function ( e ) {
+					if ( e.metaKey || e.ctrlKey || e.shiftKey || e.button ) {
+						return;
+					}
+					e.preventDefault();
+					if ( busy ) {
+						return;
+					}
+					busy = true;
+					clearError();
+					list.classList.add( 'is-loading' );
+
+					var term = tab.getAttribute( 'data-term' );
+
+					fetchPosts( term, 1 ).then( function ( data ) {
+						list.innerHTML = data.html || '';
+						list.setAttribute( 'data-term', term );
+						list.setAttribute( 'data-paged', '1' );
+						list.setAttribute( 'data-max', data.maxPages );
+
+						tabs.querySelectorAll( '.is-active' ).forEach( function ( el ) {
+							el.classList.remove( 'is-active' );
+							el.removeAttribute( 'aria-current' );
+						} );
+						tab.classList.add( 'is-active' );
+						tab.setAttribute( 'aria-current', 'page' );
+
+						updateLoadMore( 1, data.maxPages );
+
+						// The posts are already on screen at this point — a
+						// history failure must not undo that and send the
+						// visitor to a full page load.
+						try {
+							if ( window.history && window.history.pushState ) {
+								window.history.pushState( {}, '', tab.href );
+							}
+						} catch ( err ) {}
+					} ).catch( function () {
+						window.location.href = tab.href;
+					} ).finally( function () {
+						list.classList.remove( 'is-loading' );
+						busy = false;
+					} );
+				} );
+			} );
+		}
+
+		// Append the next page under the posts already on screen.
+		if ( loadMore ) {
+			loadMore.addEventListener( 'click', function () {
+				if ( busy ) {
+					return;
+				}
+				busy = true;
+				clearError();
+
+				var term  = list.getAttribute( 'data-term' ) || '0';
+				var next  = parseInt( list.getAttribute( 'data-paged' ) || '1', 10 ) + 1;
+
+				loadMore.disabled = true;
+				loadMore.textContent = 'در حال بارگذاری…';
+
+				fetchPosts( term, next ).then( function ( data ) {
+					if ( data.html ) {
+						list.insertAdjacentHTML( 'beforeend', data.html );
+					}
+					list.setAttribute( 'data-paged', next );
+					list.setAttribute( 'data-max', data.maxPages );
+					updateLoadMore( next, data.maxPages );
+				} ).catch( function () {
+					loadMore.disabled = false;
+					loadMore.textContent = label;
+					showError( 'بارگذاری انجام نشد. دوباره تلاش کنید.' );
+				} ).finally( function () {
+					busy = false;
+				} );
+			} );
+		}
+	} )();
+
 	/* ---- Tabs: highlight the tab and show its panel ---- */
 	document.querySelectorAll( '.tabs' ).forEach( function ( group ) {
 		var scope = group.parentElement;

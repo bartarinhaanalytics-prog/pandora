@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.33.0' );
+define( 'TECHRATO_VERSION', '1.34.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -399,6 +399,54 @@ function techrato_block_slow_hosts( $pre, $args, $url ) {
 	return $pre;
 }
 add_filter( 'pre_http_request', 'techrato_block_slow_hosts', 5, 3 );
+
+/**
+ * Return a page of posts for a category, used by the archive tabs and the
+ * "مشاهده مطالب بیشتر" button.
+ *
+ * Deliberately nonce-free: it only reads published posts that are already
+ * public, and a nonce baked into a page-cached HTML file goes stale and starts
+ * rejecting perfectly ordinary visitors.
+ */
+function techrato_ajax_load_posts() {
+	$term_id = isset( $_POST['term'] ) ? absint( $_POST['term'] ) : 0;
+	$paged   = isset( $_POST['paged'] ) ? absint( $_POST['paged'] ) : 1;
+	$paged   = max( 1, $paged );
+
+	$args = array(
+		'post_status'         => 'publish',
+		'paged'               => $paged,
+		'posts_per_page'      => (int) get_option( 'posts_per_page', 10 ),
+		'ignore_sticky_posts' => true,
+	);
+
+	if ( $term_id ) {
+		$term = get_term( $term_id, 'category' );
+		if ( ! $term instanceof WP_Term ) {
+			wp_send_json_error( array( 'message' => __( 'دسته پیدا نشد.', 'techrato' ) ), 404 );
+		}
+		$args['cat'] = $term_id;
+	}
+
+	$query = new WP_Query( $args );
+
+	ob_start();
+	while ( $query->have_posts() ) {
+		$query->the_post();
+		get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true ) );
+	}
+	wp_reset_postdata();
+	$html = ob_get_clean();
+
+	wp_send_json_success( array(
+		'html'     => $html,
+		'paged'    => $paged,
+		'maxPages' => (int) $query->max_num_pages,
+		'found'    => (int) $query->found_posts,
+	) );
+}
+add_action( 'wp_ajax_techrato_load_posts', 'techrato_ajax_load_posts' );
+add_action( 'wp_ajax_nopriv_techrato_load_posts', 'techrato_ajax_load_posts' );
 
 add_action( 'wp_ajax_techrato_toggle_like', 'techrato_ajax_toggle_like' );
 add_action( 'wp_ajax_nopriv_techrato_toggle_like', 'techrato_ajax_toggle_like' );

@@ -395,6 +395,7 @@ function techrato_archive_tabs() {
 
 	$tabs = array(
 		array(
+			'term_id' => (int) $root->term_id,
 			'label'   => sprintf( __( 'همه %s', 'techrato' ), $root->name ),
 			'url'     => get_term_link( $root ),
 			'current' => (int) $root->term_id === (int) $term->term_id,
@@ -403,6 +404,7 @@ function techrato_archive_tabs() {
 
 	foreach ( $siblings as $child ) {
 		$tabs[] = array(
+			'term_id' => (int) $child->term_id,
 			'label'   => $child->name,
 			'url'     => get_term_link( $child ),
 			'current' => (int) $child->term_id === (int) $term->term_id,

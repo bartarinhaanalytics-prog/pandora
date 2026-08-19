@@ -72,31 +72,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 				// no tabs rather than buttons that lead nowhere.
 				$archive_tabs = techrato_archive_tabs();
 				?>
+				<?php
+				$techrato_current_term = ( is_category() || is_tag() || is_tax() ) ? get_queried_object() : null;
+				$techrato_term_id      = $techrato_current_term instanceof WP_Term ? (int) $techrato_current_term->term_id : 0;
+				$techrato_paged        = max( 1, (int) get_query_var( 'paged' ) );
+				$techrato_max_pages    = (int) $GLOBALS['wp_query']->max_num_pages;
+				?>
 				<div class="widget list-widget">
 					<?php if ( $archive_tabs ) : ?>
-						<div class="tabs" style="margin-bottom:16px;">
+						<div class="tabs js-archive-tabs" style="margin-bottom:16px;" role="tablist">
 							<?php foreach ( $archive_tabs as $tab ) : ?>
-								<a href="<?php echo esc_url( $tab['url'] ); ?>"<?php echo $tab['current'] ? ' class="is-active" aria-current="page"' : ''; ?>><?php echo esc_html( $tab['label'] ); ?></a>
+								<a href="<?php echo esc_url( $tab['url'] ); ?>"
+									data-term="<?php echo esc_attr( $tab['term_id'] ); ?>"
+									<?php echo $tab['current'] ? ' class="is-active" aria-current="page"' : ''; ?>><?php echo esc_html( $tab['label'] ); ?></a>
 							<?php endforeach; ?>
 						</div>
 					<?php endif; ?>
 
-					<?php if ( $techrato_has_posts ) : ?>
-						<?php while ( have_posts() ) : the_post(); ?>
-							<?php get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true ) ); ?>
-						<?php endwhile; ?>
-					<?php else : ?>
-						<?php techrato_empty_card_notice( __( 'مطلبی برای نمایش یافت نشد.', 'techrato' ) ); ?>
+					<div class="js-post-list"
+						data-term="<?php echo esc_attr( $techrato_term_id ); ?>"
+						data-paged="<?php echo esc_attr( $techrato_paged ); ?>"
+						data-max="<?php echo esc_attr( $techrato_max_pages ); ?>"
+						aria-live="polite">
+						<?php if ( $techrato_has_posts ) : ?>
+							<?php while ( have_posts() ) : the_post(); ?>
+								<?php get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true ) ); ?>
+							<?php endwhile; ?>
+						<?php else : ?>
+							<?php techrato_empty_card_notice( __( 'مطلبی برای نمایش یافت نشد.', 'techrato' ) ); ?>
+						<?php endif; ?>
+					</div>
+
+					<?php if ( $techrato_has_posts && $techrato_max_pages > $techrato_paged ) : ?>
+						<button type="button" class="more-link js-load-more"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></button>
 					<?php endif; ?>
 				</div>
 
 				<?php if ( $techrato_has_posts ) : ?>
-					<div class="pagination">
+					<?php // Kept for crawlers and for visitors without JavaScript; the load-more button replaces it when scripts run. ?>
+					<div class="pagination js-classic-pagination">
 						<div><?php echo get_previous_posts_link( '« ' . esc_html__( 'قبل', 'techrato' ) ); ?></div>
 						<div>
 							<?php
 							/* translators: 1: current page 2: total pages */
-							printf( esc_html__( 'صفحه %1$s از %2$s', 'techrato' ), esc_html( max( 1, get_query_var( 'paged' ) ) ), esc_html( $GLOBALS['wp_query']->max_num_pages ) );
+							printf( esc_html__( 'صفحه %1$s از %2$s', 'techrato' ), esc_html( $techrato_paged ), esc_html( $techrato_max_pages ) );
 							?>
 						</div>
 						<div><?php echo get_next_posts_link( esc_html__( 'بعد', 'techrato' ) . ' »' ); ?></div>
