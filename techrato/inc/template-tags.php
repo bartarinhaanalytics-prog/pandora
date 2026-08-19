@@ -208,7 +208,8 @@ function techrato_query_by_flag( $meta_key, $count = 5, $exclude = array() ) {
  * @param string   $size    Image size.
  * @return string Ready-to-print <img> markup, or '' when the term has no image.
  */
-function techrato_term_image( $term_id = null, $size = 'large' ) {
+function techrato_term_image( $term_id = null, $size = 'large', &$found_via = null ) {
+	$found_via = '';
 	$term_id = $term_id ? (int) $term_id : (int) get_queried_object_id();
 	if ( ! $term_id ) {
 		return '';
@@ -237,6 +238,7 @@ function techrato_term_image( $term_id = null, $size = 'large' ) {
 				'loading' => 'lazy',
 			) );
 			if ( $html ) {
+				$found_via = 'term meta "' . $key . '"';
 				return $html;
 			}
 		}
@@ -254,15 +256,22 @@ function techrato_term_image( $term_id = null, $size = 'large' ) {
 	foreach ( $url_keys as $key ) {
 		$value = get_term_meta( $term_id, $key, true );
 		if ( is_string( $value ) && '' !== $value ) {
-			$url = $value;
+			$url   = $value;
+			$found_via = 'term meta "' . $key . '"';
 			break;
 		}
 	}
 	if ( ! $url && function_exists( 'z_taxonomy_image_url' ) ) {
 		$url = (string) z_taxonomy_image_url( $term_id, $size, false );
+		if ( $url ) {
+			$found_via = 'the Categories Images plugin';
+		}
 	}
 	if ( ! $url ) {
 		$url = (string) get_option( 'z_taxonomy_image' . $term_id, '' );
+		if ( $url ) {
+			$found_via = 'option "z_taxonomy_image' . $term_id . '"';
+		}
 	}
 
 	$url = apply_filters( 'techrato_term_image_url', $url, $term_id );
@@ -279,12 +288,45 @@ function techrato_term_image( $term_id = null, $size = 'large' ) {
 }
 
 /**
+ * Pull the first <img> out of a block of HTML.
+ *
+ * Sites often put the category picture inside the category description rather
+ * than in a plugin field, which lands it above the text. Lifting it out lets
+ * the header place it beside the description instead.
+ *
+ * @param string $html
+ * @return array array( image markup, remaining html )
+ */
+function techrato_extract_first_image( $html ) {
+	if ( ! $html || false === strpos( $html, '<img' ) ) {
+		return array( '', $html );
+	}
+
+	if ( ! preg_match( '#<img\b[^>]*>#i', $html, $match ) ) {
+		return array( '', $html );
+	}
+
+	$image = $match[0];
+	$quoted = preg_quote( $image, '#' );
+
+	// Take the surrounding link with it, then clear the paragraph it leaves
+	// behind, so the description doesn't start with an empty gap.
+	$rest = preg_replace( '#<a\b[^>]*>\s*' . $quoted . '\s*</a>#i', '', $html, 1 );
+	if ( null === $rest || $rest === $html ) {
+		$rest = preg_replace( '#' . $quoted . '#', '', $html, 1 );
+	}
+	$rest = preg_replace( '#<p>(\s|&nbsp;|<br\s*/?>)*</p>#i', '', (string) $rest );
+
+	return array( $image, trim( (string) $rest ) );
+}
+
+/**
  * Administrator-only hint listing what a term actually has stored, shown when
  * ?techrato_debug=1 is on the URL and no category image could be found. Which
  * key holds the image depends on the plugin the site uses, and this is the
  * quickest way to see it.
  */
-function techrato_term_image_debug() {
+function techrato_term_image_debug( $found_via = '' ) {
 	if ( ! isset( $_GET['techrato_debug'] ) || ! current_user_can( 'manage_options' ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		return;
 	}
@@ -294,9 +336,15 @@ function techrato_term_image_debug() {
 		return;
 	}
 
-	$meta = get_term_meta( $term_id );
+	$description = term_description( $term_id );
+
 	echo '<pre style="direction:ltr;text-align:left;background:#111;color:#0f0;padding:14px;border-radius:8px;overflow:auto;font-size:12px;">';
-	echo 'TERM ' . (int) $term_id . " — no image found. Stored term meta:\n\n";
+	echo 'TERM ' . (int) $term_id . "\n";
+	echo 'image found via   : ' . esc_html( $found_via ? $found_via : 'NOTHING — no image is being rendered by the theme' ) . "\n";
+	echo 'description has an <img>: ' . ( false !== strpos( (string) $description, '<img' ) ? 'YES' : 'no' ) . "\n\n";
+	echo "stored term meta:\n";
+
+	$meta = get_term_meta( $term_id );
 	if ( $meta ) {
 		foreach ( $meta as $key => $values ) {
 			$value = is_array( $values ) ? reset( $values ) : $values;

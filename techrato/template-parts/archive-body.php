@@ -13,21 +13,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<?php techrato_breadcrumbs(); ?>
 
-		<?php $term_image = ( is_category() || is_tag() || is_tax() ) ? techrato_term_image() : ''; ?>
+		<?php
+		$is_term    = is_category() || is_tag() || is_tax();
+		$term_desc  = $is_term ? term_description() : '';
+		$found_via  = '';
+		$term_image = $is_term ? techrato_term_image( null, 'large', $found_via ) : '';
+
+		// No plugin field? The picture is often pasted into the category
+		// description itself, which puts it above the text — lift it out so it
+		// can sit beside the description like every other source.
+		if ( $is_term && ! $term_image ) {
+			list( $term_image, $term_desc ) = techrato_extract_first_image( $term_desc );
+			if ( $term_image ) {
+				$found_via = 'the category description';
+			}
+		}
+		?>
 		<div class="archive-header<?php echo $term_image ? ' has-image' : ''; ?>">
-			<?php if ( is_category() || is_tag() || is_tax() ) : ?>
+			<?php if ( $is_term ) : ?>
 				<div class="archive-header-text">
 					<span class="pill"><?php esc_html_e( 'دسته بندی', 'techrato' ); ?></span>
 					<h1><?php single_term_title(); ?></h1>
-					<?php $desc = term_description(); ?>
-					<?php if ( $desc ) : ?>
-						<p><?php echo wp_kses_post( $desc ); ?></p>
+					<?php if ( $term_desc ) : ?>
+						<div class="archive-header-desc"><?php echo wp_kses_post( $term_desc ); ?></div>
 					<?php endif; ?>
+					<?php techrato_term_image_debug( $found_via ); ?>
 				</div>
 				<?php if ( $term_image ) : ?>
-					<div class="archive-header-image"><?php echo $term_image; // phpcs:ignore WordPress.Security.EscapeOutput — built by techrato_term_image(). ?></div>
-				<?php else : ?>
-					<?php techrato_term_image_debug(); ?>
+					<div class="archive-header-image"><?php echo wp_kses_post( $term_image ); ?></div>
 				<?php endif; ?>
 			<?php elseif ( is_search() ) : ?>
 				<span class="pill"><?php esc_html_e( 'جستجو', 'techrato' ); ?></span>
