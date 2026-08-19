@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.25.0' );
+define( 'TECHRATO_VERSION', '1.26.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -329,7 +329,17 @@ add_action( 'http_api_debug', 'techrato_http_finish', 10, 5 );
  * the noisy ones are gone.
  */
 function techrato_print_http_log() {
-	if ( ! current_user_can( 'manage_options' ) || empty( $GLOBALS['techrato_http_log'] ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	// Always print, even with zero requests: an empty panel proves the code
+	// ran and found nothing, which is a different conclusion from no panel
+	// at all (theme not active, or the hook never fired).
+	if ( empty( $GLOBALS['techrato_http_log'] ) ) {
+		echo '<div style="background:#111;color:#0f0;padding:14px;margin:20px;direction:ltr;text-align:left;font:13px monospace;">';
+		echo 'OUTBOUND HTTP ON THIS PAGE: 0 requests (theme v' . esc_html( TECHRATO_VERSION ) . ')';
+		echo '</div>';
 		return;
 	}
 
