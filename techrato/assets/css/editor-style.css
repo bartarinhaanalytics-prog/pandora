@@ -86,3 +86,34 @@ body.mce-content-body th, body.mce-content-body td {
 	border-radius: 4px;
 	font-size: 13px;
 }
+
+/* Named styles from the "قالب‌ها" dropdown. Kept in step with the same
+   classes under .article-content in style.css, so what a writer picks here is
+   what a reader sees. */
+.editor-styles-wrapper .is-lead, body.mce-content-body .is-lead {
+	font-size: 16px;
+	font-weight: 500;
+	color: #0b1613;
+	line-height: 1.95;
+}
+.editor-styles-wrapper .is-note, body.mce-content-body .is-note {
+	background: #eaf7f3;
+	border-right: 3px solid #14b89c;
+	border-radius: 10px;
+	padding: 14px 16px;
+	margin-block: 20px;
+}
+.editor-styles-wrapper .is-note p:last-child, body.mce-content-body .is-note p:last-child { margin-bottom: 0; }
+.editor-styles-wrapper .is-pull-quote, body.mce-content-body .is-pull-quote {
+	font-size: 17px;
+	font-weight: 700;
+	color: #0b1613;
+	border: none;
+	border-top: 1px solid #d9e2de;
+	border-bottom: 1px solid #d9e2de;
+	padding: 18px 0;
+	margin-block: 24px;
+	text-align: center;
+}
+.editor-styles-wrapper .is-small, body.mce-content-body .is-small { font-size: 12.5px; color: #5a6b64; }
+.editor-styles-wrapper .is-ltr, body.mce-content-body .is-ltr { direction: ltr; display: inline-block; unicode-bidi: isolate; }
