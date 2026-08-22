@@ -151,29 +151,5 @@ function techrato_customize_register( $wp_customize ) {
 		'type'        => 'textarea',
 	) );
 
-	/* Categories behind the homepage boxes */
-	$wp_customize->add_section( 'techrato_boxes', array(
-		'title'       => __( 'باکس‌های صفحه اصلی', 'techrato' ),
-		'description' => __( 'تعیین کنید هر باکس مطالبش را از کدام دسته بخواند. اگر روی «خودکار» بماند، قالب خودش دنبال دسته‌ی مناسب می‌گردد.', 'techrato' ),
-		'panel'       => 'techrato_options',
-	) );
-
-	$boxes = array(
-		'box_sidebar_cat' => __( 'باکس نوار کناری (موبایل)', 'techrato' ),
-		'box_apps_cat'    => __( 'باکس «معرفی نرم‌افزار و اپلیکیشن»', 'techrato' ),
-	);
-	foreach ( $boxes as $id => $label ) {
-		$wp_customize->add_setting( $id, array(
-			'default'           => 0,
-			'sanitize_callback' => 'absint',
-		) );
-		$wp_customize->add_control( $id, array(
-			'label'   => $label,
-			'section' => 'techrato_boxes',
-			'type'    => 'select',
-			'choices' => $choices,
-		) );
-	}
-
 }
 add_action( 'customize_register', 'techrato_customize_register' );

@@ -370,39 +370,29 @@ function techrato_archive_tabs() {
 		return array();
 	}
 
+	// Only this category's own sub-categories. Falling back to its siblings
+	// put another branch's sub-categories on the page — a sub-category of
+	// موبایل showing up under تکنولوژی — which is just confusing.
 	$children = get_terms( array(
 		'taxonomy'   => $term->taxonomy,
 		'parent'     => $term->term_id,
 		'hide_empty' => true,
 	) );
 
-	if ( ! is_wp_error( $children ) && $children ) {
-		$root     = $term;
-		$siblings = $children;
-	} elseif ( $term->parent ) {
-		$root     = get_term( $term->parent, $term->taxonomy );
-		$siblings = get_terms( array(
-			'taxonomy'   => $term->taxonomy,
-			'parent'     => $term->parent,
-			'hide_empty' => true,
-		) );
-		if ( is_wp_error( $siblings ) || ! $siblings || ! $root instanceof WP_Term ) {
-			return array();
-		}
-	} else {
+	if ( is_wp_error( $children ) || ! $children ) {
 		return array();
 	}
 
 	$tabs = array(
 		array(
-			'term_id' => (int) $root->term_id,
-			'label'   => sprintf( __( 'همه %s', 'techrato' ), $root->name ),
-			'url'     => get_term_link( $root ),
-			'current' => (int) $root->term_id === (int) $term->term_id,
+			'term_id' => (int) $term->term_id,
+			'label'   => sprintf( __( 'همه %s', 'techrato' ), $term->name ),
+			'url'     => get_term_link( $term ),
+			'current' => true,
 		),
 	);
 
-	foreach ( $siblings as $child ) {
+	foreach ( $children as $child ) {
 		$tabs[] = array(
 			'term_id' => (int) $child->term_id,
 			'label'   => $child->name,
@@ -412,36 +402,6 @@ function techrato_archive_tabs() {
 	}
 
 	return $tabs;
-}
-
-/**
- * The category a homepage box should read from.
- *
- * The category picked in the Customizer wins. With none picked, try the slugs
- * the box is normally built around — the theme can't know a site's taxonomy in
- * advance, and guessing wrong is worse than showing the newest posts instead.
- *
- * @param string $mod_key   Theme-mod key holding a category ID.
- * @param array  $fallbacks Slugs to try when nothing is chosen.
- * @return WP_Term|null
- */
-function techrato_box_term( $mod_key, $fallbacks = array() ) {
-	$chosen = (int) get_theme_mod( $mod_key, 0 );
-	if ( $chosen ) {
-		$term = get_term( $chosen, 'category' );
-		if ( $term instanceof WP_Term ) {
-			return $term;
-		}
-	}
-
-	foreach ( (array) $fallbacks as $slug ) {
-		$term = get_category_by_slug( $slug );
-		if ( $term ) {
-			return $term;
-		}
-	}
-
-	return null;
 }
 
 /**

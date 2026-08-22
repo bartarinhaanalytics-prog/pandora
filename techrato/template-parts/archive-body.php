@@ -109,17 +109,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<aside>
 				<?php
-				$side_term  = techrato_box_term( 'box_sidebar_cat', array( 'smartphone', 'mobile' ) );
+				$side_term  = techrato_home_term( 'sidebar', 'cat', array( 'smartphone', 'mobile' ) );
 				$side_id    = $side_term ? (int) $side_term->term_id : 0;
+				$side_title = techrato_home_option( 'sidebar', 'title' );
 				$side_query = new WP_Query( array(
-					'posts_per_page'      => 3,
+					'posts_per_page'      => techrato_home_option( 'sidebar', 'count' ),
 					'post_status'         => 'publish',
 					'ignore_sticky_posts' => true,
 					'cat'                 => $side_id ? $side_id : '',
 				) );
 				?>
 				<div class="widget">
-					<h3 class="widget-title"><?php echo esc_html( $side_term ? $side_term->name : __( 'موبایل', 'techrato' ) ); ?></h3>
+					<h3 class="widget-title"><?php echo esc_html( $side_title ? $side_title : ( $side_term ? $side_term->name : __( 'موبایل', 'techrato' ) ) ); ?></h3>
 					<?php
 					get_template_part( 'template-parts/feed-box', null, array(
 						'query'    => $side_query,

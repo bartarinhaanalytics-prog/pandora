@@ -7,12 +7,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Reads only the application category, chosen in
-// Customizer > تنظیمات تکراتو > باکس‌های صفحه اصلی.
-$techrato_apps_term = techrato_box_term( 'box_apps_cat', array( 'app-software', 'application', 'app' ) );
+// Category, title and count come from
+// Customizer > صفحه نخست تکراتو > معرفی نرم‌افزار و اپلیکیشن.
+$techrato_apps_term = techrato_home_term( 'apps', 'cat', array( 'app-software', 'application', 'app' ) );
 
 $techrato_apps_query = new WP_Query( array(
-	'posts_per_page'      => 4,
+	'posts_per_page'      => techrato_home_option( 'apps', 'count' ),
 	'post_status'         => 'publish',
 	'ignore_sticky_posts' => true,
 	'cat'                 => $techrato_apps_term ? (int) $techrato_apps_term->term_id : '',
@@ -23,7 +23,7 @@ $techrato_apps_query = new WP_Query( array(
 	<div class="container">
 		<div class="section-title">
 			<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/></svg></span>
-			<h2><?php esc_html_e( 'معرفی نرم افزار و اپلیکیشن', 'techrato' ); ?></h2>
+			<h2><?php echo esc_html( techrato_home_option( 'apps', 'title' ) ); ?></h2>
 			<span class="bar"></span>
 		</div>
 

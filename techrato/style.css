@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.38.0
+Version: 1.39.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -187,6 +187,10 @@ body.no-scroll { overflow: hidden; }
 	/* Static children let the panel span the whole bar, not just the item. */
 	.main-nav > li { position: static; }
 
+	/* The panel opens on a click of the arrow and stays open until the arrow
+	   is clicked again, a click lands outside, or Escape is pressed — hovering
+	   it shut made the sub-items impossible to reach. */
+	.main-nav > li.menu-item-has-children { display: flex; align-items: center; gap: 4px; }
 	.main-nav > li.menu-item-has-children > a::after {
 		content: "";
 		display: inline-block;
@@ -195,15 +199,23 @@ body.no-scroll { overflow: hidden; }
 		border-left: 1.5px solid currentColor;
 		border-bottom: 1.5px solid currentColor;
 		transform: translateY(-2px) rotate(-45deg);
-		transition: transform .2s ease;
 	}
-	.main-nav > li.menu-item-has-children:hover > a::after { transform: translateY(1px) rotate(135deg); }
-	.main-nav > li.menu-item-has-children:hover > a { color: var(--accent); }
+	/* Once the real button exists the CSS arrow is redundant. */
+	.main-nav > li.has-toggle > a::after { display: none; }
 
-	.main-nav > li.menu-item-has-children:hover > .sub-menu,
-	.main-nav > li.menu-item-has-children:focus-within > .sub-menu {
-		display: grid;
+	.submenu-toggle {
+		display: flex; align-items: center; justify-content: center;
+		width: 22px; height: 22px; padding: 0;
+		background: none; border: none; border-radius: 50%;
+		color: var(--text-muted);
+		transition: color .2s ease, background .2s ease, transform .2s ease;
 	}
+	.submenu-toggle svg { width: 11px; height: 11px; }
+	.submenu-toggle:hover { color: var(--accent); background: var(--accent-tint); }
+	.main-nav > li.is-open > .submenu-toggle { color: var(--accent); transform: rotate(180deg); }
+	.main-nav > li.is-open > a { color: var(--accent); }
+
+	.main-nav > li.menu-item-has-children.is-open > .sub-menu { display: grid; }
 
 	.main-nav .sub-menu {
 		position: absolute;

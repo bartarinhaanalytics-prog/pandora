@@ -69,6 +69,85 @@
 
 	window.addEventListener( 'resize', updateScrollLock );
 
+	/* ---- Desktop mega menu: click the arrow to open, and it stays open ----
+	   Hover-opening meant the panel closed the moment the pointer left the
+	   menu item, so the sub-items could never be reached. */
+	( function () {
+		var DESKTOP = '(min-width: 961px)';
+		var nav = document.querySelector( '.main-nav-wrap' );
+		if ( ! nav ) {
+			return;
+		}
+
+		function closeAll( except ) {
+			nav.querySelectorAll( '.main-nav > li.is-open' ).forEach( function ( li ) {
+				if ( li === except ) {
+					return;
+				}
+				li.classList.remove( 'is-open' );
+				var btn = li.querySelector( ':scope > .submenu-toggle' );
+				if ( btn ) {
+					btn.setAttribute( 'aria-expanded', 'false' );
+				}
+			} );
+		}
+
+		function addToggles() {
+			if ( ! window.matchMedia( DESKTOP ).matches ) {
+				return;
+			}
+			nav.querySelectorAll( '.main-nav > li.menu-item-has-children' ).forEach( function ( li ) {
+				if ( li.classList.contains( 'has-toggle' ) ) {
+					return;
+				}
+				var link = li.querySelector( ':scope > a' );
+				if ( ! link ) {
+					return;
+				}
+
+				var btn = document.createElement( 'button' );
+				btn.type = 'button';
+				btn.className = 'submenu-toggle';
+				btn.setAttribute( 'aria-expanded', 'false' );
+				btn.setAttribute( 'aria-label', 'نمایش زیرشاخه‌ها' );
+				btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+
+				link.insertAdjacentElement( 'afterend', btn );
+				li.classList.add( 'has-toggle' );
+
+				btn.addEventListener( 'click', function ( e ) {
+					e.preventDefault();
+					e.stopPropagation();
+					var open = li.classList.contains( 'is-open' );
+					closeAll( li );
+					li.classList.toggle( 'is-open', ! open );
+					btn.setAttribute( 'aria-expanded', open ? 'false' : 'true' );
+				} );
+			} );
+		}
+
+		// A click inside the open panel is someone choosing an item; only
+		// clicks outside it close the menu.
+		document.addEventListener( 'click', function ( e ) {
+			var openLi = nav.querySelector( '.main-nav > li.is-open' );
+			if ( openLi && ! openLi.contains( e.target ) ) {
+				closeAll();
+			}
+		} );
+
+		document.addEventListener( 'keydown', function ( e ) {
+			if ( 'Escape' === e.key ) {
+				closeAll();
+			}
+		} );
+
+		addToggles();
+		window.addEventListener( 'resize', function () {
+			closeAll();
+			addToggles();
+		} );
+	} )();
+
 	/* ---- Mobile drawer accordion: tap a parent item to reveal its sub-categories (desktop nav is untouched) ---- */
 	if ( mobileNav ) {
 		mobileNav.querySelectorAll( '.main-nav > li.menu-item-has-children > a' ).forEach( function ( link ) {
