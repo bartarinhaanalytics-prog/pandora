@@ -317,6 +317,19 @@
 		var label    = loadMore ? loadMore.textContent : '';
 		var busy     = false;
 
+		// On phones the tab strip scrolls; keep the selected tab in sight.
+		function revealTab( tab ) {
+			if ( ! tabs || tabs.scrollWidth <= tabs.clientWidth ) {
+				return;
+			}
+			var strip = tabs.getBoundingClientRect();
+			var rect  = tab.getBoundingClientRect();
+			tabs.scrollBy( {
+				left: rect.left - strip.left - ( strip.width - rect.width ) / 2,
+				behavior: 'smooth'
+			} );
+		}
+
 		function fetchPosts( term, paged ) {
 			var body = new URLSearchParams();
 			body.append( 'action', 'techrato_load_posts' );
@@ -401,6 +414,7 @@
 						} );
 						tab.classList.add( 'is-active' );
 						tab.setAttribute( 'aria-current', 'page' );
+						revealTab( tab );
 
 						if ( loadMore ) {
 							loadMore.href = tab.href;
@@ -422,6 +436,14 @@
 					} );
 				} );
 			} );
+		}
+
+		// A tab that is active on load may be off-screen in the strip.
+		if ( tabs ) {
+			var active = tabs.querySelector( '.is-active' );
+			if ( active ) {
+				revealTab( active );
+			}
 		}
 
 		// Append the next page under the posts already on screen.

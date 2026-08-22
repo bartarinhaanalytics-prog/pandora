@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.40.0
+Version: 1.41.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -300,6 +300,32 @@ section.block.hero-section { padding-top: 34px; }
 .tabs a.is-active, .tabs button.is-active { background: var(--accent); color: #06231d; font-weight: 700; }
 .tabs a:hover:not(.is-active) { color: var(--text); }
 
+/* On phones the sub-category tabs become a swipeable carousel instead of
+   wrapping onto four rows. The scrolling happens inside this strip — the page
+   itself never scrolls sideways. */
+@media (max-width: 960px) {
+	.tabs.js-archive-tabs {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		-webkit-overflow-scrolling: touch;
+		scroll-snap-type: x proximity;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		/* Bleed to the edges of the padded box so the strip reads as a rail. */
+		margin-inline: -16px;
+		padding-inline: 16px;
+		padding-bottom: 2px;
+	}
+	.tabs.js-archive-tabs::-webkit-scrollbar { display: none; }
+	.tabs.js-archive-tabs > a {
+		flex: 0 0 auto;
+		scroll-snap-align: start;
+		border: 1px solid var(--border);
+	}
+	.tabs.js-archive-tabs > a.is-active { border-color: var(--accent); }
+}
+
 /* Only the selected tab's posts are shown; the rest stay in the page so
    switching tabs needs no round trip. */
 /* Feed boxes load more posts in place when scripts run. The more control is a
@@ -430,6 +456,11 @@ section.block.hero-section { padding-top: 34px; }
 .hero-grid .hero-thumbs .card-vertical--compact { display: flex; flex-direction: column; }
 .hero-grid .hero-thumbs .card-vertical--compact .thumb-frame { flex: 1; }
 .layout-with-sidebar { display: grid; grid-template-columns: 1fr 340px; gap: 26px; align-items: start; }
+/* Grid and flex children default to min-width:auto, which lets wide content —
+   the scrolling tab strip — stretch the column instead of scrolling inside it,
+   and that pushes the whole page sideways. */
+.layout-with-sidebar > * { min-width: 0; }
+.feed-box { min-width: 0; }
 .layout-with-sidebar.layout-reverse { grid-template-columns: 340px 1fr; }
 .split-feature { display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px; align-items: start; }
 

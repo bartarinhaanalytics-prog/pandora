@@ -218,6 +218,7 @@ function techrato_term_image( $term_id = null, $size = 'large', &$found_via = nu
 
 	// Attachment IDs kept in term meta.
 	$id_keys = apply_filters( 'techrato_term_image_meta_keys', array(
+		'techrato_term_image_id', // the theme's own field, set on the category screen
 		'thumbnail_id',
 		'z_taxonomy_image_id',
 		'category_image_id',
