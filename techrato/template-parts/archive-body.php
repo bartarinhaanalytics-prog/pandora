@@ -109,7 +109,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<aside>
 				<?php
-				$side_term  = techrato_box_term( 'box_sidebar_cat', array( 'mobile', 'mobiles', 'phone', 'smartphone' ) );
+				$side_term  = techrato_box_term( 'box_sidebar_cat', array( 'smartphone', 'mobile' ) );
 				$side_id    = $side_term ? (int) $side_term->term_id : 0;
 				$side_query = new WP_Query( array(
 					'posts_per_page'      => 3,

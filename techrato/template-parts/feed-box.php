@@ -7,7 +7,7 @@
  * the JavaScript stays generic and several boxes can live on one page.
  *
  * $args:
- *   'tabs'       array  Tabs from techrato_archive_tabs()/techrato_news_tabs().
+ *   'tabs'       array  Tabs from techrato_archive_tabs().
  *   'query'      WP_Query  Posts for the first render.
  *   'term_id'    int    Category the box is showing (0 = every category).
  *   'card'       string  Card template slug: list-row, horizontal, vertical…

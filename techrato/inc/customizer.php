@@ -175,25 +175,5 @@ function techrato_customize_register( $wp_customize ) {
 		) );
 	}
 
-	/* Tabs on the "جدیدترین اخبار تکنولوژی" box */
-	$wp_customize->add_section( 'techrato_news_tabs', array(
-		'title'       => __( 'تب‌های بخش «جدیدترین اخبار»', 'techrato' ),
-		'description' => __( 'تب اول همیشه «همه» است. چهار تب بعدی را می‌توانید اینجا انتخاب کنید. اگر همه را روی «خودکار» بگذارید، پرمطلب‌ترین دسته‌های سایت نشان داده می‌شوند.', 'techrato' ),
-		'panel'       => 'techrato_options',
-	) );
-
-	for ( $i = 1; $i <= 4; $i++ ) {
-		$wp_customize->add_setting( 'news_tab_' . $i, array(
-			'default'           => 0,
-			'sanitize_callback' => 'absint',
-		) );
-		$wp_customize->add_control( 'news_tab_' . $i, array(
-			/* translators: %d: tab number. */
-			'label'   => sprintf( __( 'تب شماره %d', 'techrato' ), $i ),
-			'section' => 'techrato_news_tabs',
-			'type'    => 'select',
-			'choices' => $choices,
-		) );
-	}
 }
 add_action( 'customize_register', 'techrato_customize_register' );

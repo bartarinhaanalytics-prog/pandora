@@ -494,60 +494,6 @@ function techrato_query_popular( $count = 3, $days = 7, $exclude = array() ) {
 	return $query;
 }
 
-/**
- * Tabs for the "جدیدترین اخبار تکنولوژی" box.
- *
- * The first tab always lists every recent post; the rest are categories,
- * either the four picked in Customizer > تنظیمات تکراتو > تب‌ها, or — when
- * none are picked — the site's four busiest categories, so the tabs are
- * never labelled with categories the site doesn't have.
- *
- * @return array List of array( key, label, term ) with term null for "همه".
- */
-function techrato_news_tabs() {
-	$tabs = array(
-		array(
-			'key'   => 'all',
-			'label' => __( 'همه', 'techrato' ),
-			'term'  => null,
-		),
-	);
-
-	$chosen = array();
-	for ( $i = 1; $i <= 4; $i++ ) {
-		$term_id = (int) get_theme_mod( 'news_tab_' . $i, 0 );
-		if ( ! $term_id ) {
-			continue;
-		}
-		$term = get_term( $term_id, 'category' );
-		if ( $term instanceof WP_Term ) {
-			$chosen[] = $term;
-		}
-	}
-
-	if ( ! $chosen ) {
-		$chosen = get_categories( array(
-			'orderby'    => 'count',
-			'order'      => 'DESC',
-			'number'     => 4,
-			'hide_empty' => true,
-		) );
-	}
-
-	foreach ( $chosen as $term ) {
-		if ( 'uncategorized' === $term->slug ) {
-			continue;
-		}
-		$tabs[] = array(
-			'key'   => 'cat-' . $term->term_id,
-			'label' => $term->name,
-			'term'  => $term,
-		);
-	}
-
-	return $tabs;
-}
-
 function techrato_more_url( $setting = '', $query = null, $slug_hint = '' ) {
 
 	if ( $setting ) {

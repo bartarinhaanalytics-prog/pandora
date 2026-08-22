@@ -105,40 +105,21 @@ $shown_ids = array();
 						<span class="bar"></span>
 					</div>
 					<?php
-					// Tabs and load-more are handled by the shared feed box, the
-					// same one the category archive uses.
-					$news_tabs  = techrato_news_tabs();
-					$news_first = $news_tabs[0];
-					$news_term  = $news_first['term'] ? (int) $news_first['term']->term_id : 0;
-
+					// Newest posts from every category — no tabs, by request.
 					$news_query = new WP_Query( array(
 						'posts_per_page'      => 4,
 						'post_status'         => 'publish',
 						'ignore_sticky_posts' => true,
-						'cat'                 => $news_term ? $news_term : '',
 					) );
-
-					$news_feed_tabs = array();
-					foreach ( $news_tabs as $tab ) {
-						$news_feed_tabs[] = array(
-							'term_id' => $tab['term'] ? (int) $tab['term']->term_id : 0,
-							'label'   => $tab['label'],
-							'url'     => $tab['term']
-								? get_category_link( $tab['term']->term_id )
-								: techrato_more_url( 'more_link_latest', $news_query ),
-							'current' => $tab === $news_first,
-						);
-					}
 					?>
 					<div class="widget list-widget">
 						<?php
 						get_template_part( 'template-parts/feed-box', null, array(
-							'tabs'      => $news_feed_tabs,
 							'query'     => $news_query,
-							'term_id'   => $news_term,
+							'term_id'   => 0,
 							'card'      => 'list-row',
 							'card_args' => array( 'tags' => true, 'excerpt' => true ),
-							'more_url'  => $news_feed_tabs[0]['url'],
+							'more_url'  => techrato_more_url( 'more_link_latest', $news_query ),
 						) );
 						?>
 					</div>
@@ -148,7 +129,7 @@ $shown_ids = array();
 					<?php
 					// Newest posts from the category chosen for the sidebar
 					// (Customizer > تنظیمات تکراتو > باکس‌های صفحه اصلی).
-					$side_term  = techrato_box_term( 'box_sidebar_cat', array( 'mobile', 'mobiles', 'phone', 'smartphone' ) );
+					$side_term  = techrato_box_term( 'box_sidebar_cat', array( 'smartphone', 'mobile' ) );
 					$side_id    = $side_term ? (int) $side_term->term_id : 0;
 					$side_query = new WP_Query( array(
 						'posts_per_page'      => 3,
