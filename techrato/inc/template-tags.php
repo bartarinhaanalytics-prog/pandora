@@ -377,27 +377,34 @@ function techrato_archive_tabs() {
 		'taxonomy'   => $term->taxonomy,
 		'parent'     => $term->term_id,
 		'hide_empty' => true,
+		'orderby'    => 'name',
+		'order'      => 'ASC',
 	) );
 
 	if ( is_wp_error( $children ) || ! $children ) {
 		return array();
 	}
 
+	// The first tab is the category itself. Its term_id drives the query
+	// through WordPress's `cat` parameter, which includes posts filed under
+	// the sub-categories too — so "همه" really does mean all of them.
 	$tabs = array(
 		array(
 			'term_id' => (int) $term->term_id,
-			'label'   => sprintf( __( 'همه %s', 'techrato' ), $term->name ),
+			'label'   => __( 'همه', 'techrato' ),
 			'url'     => get_term_link( $term ),
 			'current' => true,
 		),
 	);
 
+	// Tabs only render on a category that has children, so a child tab is
+	// never the page currently being viewed.
 	foreach ( $children as $child ) {
 		$tabs[] = array(
 			'term_id' => (int) $child->term_id,
 			'label'   => $child->name,
 			'url'     => get_term_link( $child ),
-			'current' => (int) $child->term_id === (int) $term->term_id,
+			'current' => false,
 		);
 	}
 
