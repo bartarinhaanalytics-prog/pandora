@@ -81,10 +81,10 @@ $shown_ids = array();
 				<span class="bar"></span>
 			</div>
 			<?php
-			$editors = techrato_query_by_flag( '_editor_suggestion_tc', 5, $shown_ids );
+			$editors = techrato_query_by_flag( '_editor_suggestion_tc', 6, $shown_ids );
 			if ( $editors->have_posts() ) :
 				?>
-				<div class="grid-5">
+				<div class="grid-6">
 					<?php while ( $editors->have_posts() ) : $editors->the_post(); $shown_ids[] = get_the_ID(); ?>
 						<?php get_template_part( 'template-parts/card', 'vertical' ); ?>
 					<?php endwhile; wp_reset_postdata(); ?>
@@ -101,72 +101,72 @@ $shown_ids = array();
 				<div>
 					<div class="section-title">
 						<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></span>
-						<h2><?php esc_html_e( 'جدیدترین اخبار تکنولوژی', 'techrato' ); ?></h2>
+						<h2><?php esc_html_e( 'آخرین اخبار', 'techrato' ); ?></h2>
 						<span class="bar"></span>
 					</div>
-					<?php $news_tabs = techrato_news_tabs(); ?>
-					<div class="widget list-widget">
-						<div class="tabs" style="margin-bottom:16px;" role="tablist">
-							<?php foreach ( $news_tabs as $i => $tab ) : ?>
-								<button type="button" role="tab"
-									id="news-tab-<?php echo esc_attr( $tab['key'] ); ?>"
-									class="<?php echo 0 === $i ? 'is-active' : ''; ?>"
-									aria-selected="<?php echo 0 === $i ? 'true' : 'false'; ?>"
-									aria-controls="news-panel-<?php echo esc_attr( $tab['key'] ); ?>"
-									data-panel="news-panel-<?php echo esc_attr( $tab['key'] ); ?>"><?php echo esc_html( $tab['label'] ); ?></button>
-							<?php endforeach; ?>
-						</div>
+					<?php
+					// Tabs and load-more are handled by the shared feed box, the
+					// same one the category archive uses.
+					$news_tabs  = techrato_news_tabs();
+					$news_first = $news_tabs[0];
+					$news_term  = $news_first['term'] ? (int) $news_first['term']->term_id : 0;
 
-						<?php foreach ( $news_tabs as $i => $tab ) : ?>
-							<?php
-							// Every tab is rendered up front and toggled in the
-							// browser: the homepage is page-cached, so this costs
-							// visitors nothing and switching tabs is instant.
-							$tab_args = array( 'posts_per_page' => 4, 'ignore_sticky_posts' => true );
-							if ( $tab['term'] ) {
-								$tab_args['cat'] = $tab['term']->term_id;
-							}
-							$tab_query = new WP_Query( $tab_args );
+					$news_query = new WP_Query( array(
+						'posts_per_page'      => 4,
+						'post_status'         => 'publish',
+						'ignore_sticky_posts' => true,
+						'cat'                 => $news_term ? $news_term : '',
+					) );
 
-							$tab_more = $tab['term']
+					$news_feed_tabs = array();
+					foreach ( $news_tabs as $tab ) {
+						$news_feed_tabs[] = array(
+							'term_id' => $tab['term'] ? (int) $tab['term']->term_id : 0,
+							'label'   => $tab['label'],
+							'url'     => $tab['term']
 								? get_category_link( $tab['term']->term_id )
-								: techrato_more_url( 'more_link_latest', $tab_query );
-							?>
-							<div class="news-tab-panel<?php echo 0 === $i ? ' is-active' : ''; ?>"
-								id="news-panel-<?php echo esc_attr( $tab['key'] ); ?>"
-								role="tabpanel"
-								aria-labelledby="news-tab-<?php echo esc_attr( $tab['key'] ); ?>">
-								<?php
-								if ( $tab_query->have_posts() ) :
-									while ( $tab_query->have_posts() ) : $tab_query->the_post();
-										get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true, 'excerpt' => true ) );
-									endwhile;
-									wp_reset_postdata();
-									?>
-									<a class="more-link" href="<?php echo esc_url( $tab_more ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
-								<?php else : ?>
-									<?php techrato_empty_card_notice(); ?>
-								<?php endif; ?>
-							</div>
-						<?php endforeach; ?>
+								: techrato_more_url( 'more_link_latest', $news_query ),
+							'current' => $tab === $news_first,
+						);
+					}
+					?>
+					<div class="widget list-widget">
+						<?php
+						get_template_part( 'template-parts/feed-box', null, array(
+							'tabs'      => $news_feed_tabs,
+							'query'     => $news_query,
+							'term_id'   => $news_term,
+							'card'      => 'list-row',
+							'card_args' => array( 'tags' => true, 'excerpt' => true ),
+							'more_url'  => $news_feed_tabs[0]['url'],
+						) );
+						?>
 					</div>
 				</div>
 
 				<aside>
+					<?php
+					// Newest posts from the category chosen for the sidebar
+					// (Customizer > تنظیمات تکراتو > باکس‌های صفحه اصلی).
+					$side_term  = techrato_box_term( 'box_sidebar_cat', array( 'mobile', 'mobiles', 'phone', 'smartphone' ) );
+					$side_id    = $side_term ? (int) $side_term->term_id : 0;
+					$side_query = new WP_Query( array(
+						'posts_per_page'      => 3,
+						'post_status'         => 'publish',
+						'ignore_sticky_posts' => true,
+						'cat'                 => $side_id ? $side_id : '',
+					) );
+					?>
 					<div class="widget">
-						<h3 class="widget-title"><?php esc_html_e( 'مقالات آموزشی تکراتو', 'techrato' ); ?></h3>
+						<h3 class="widget-title"><?php echo esc_html( $side_term ? $side_term->name : __( 'موبایل', 'techrato' ) ); ?></h3>
 						<?php
-						$learning = techrato_query_by_slug( 'learning', 3 );
-						if ( $learning->have_posts() ) :
-							while ( $learning->have_posts() ) : $learning->the_post();
-								get_template_part( 'template-parts/card', 'horizontal' );
-							endwhile;
-							wp_reset_postdata();
-							?>
-							<a class="more-link" href="<?php echo esc_url( techrato_more_url( 'more_link_learning', $learning, 'learning' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
-						<?php else : ?>
-							<?php techrato_empty_card_notice(); ?>
-						<?php endif; ?>
+						get_template_part( 'template-parts/feed-box', null, array(
+							'query'    => $side_query,
+							'term_id'  => $side_id,
+							'card'     => 'horizontal',
+							'more_url' => $side_term ? get_category_link( $side_id ) : techrato_more_url( 'more_link_learning', $side_query ),
+						) );
+						?>
 					</div>
 
 					<?php get_template_part( 'template-parts/promo-follow' ); ?>
@@ -181,26 +181,20 @@ $shown_ids = array();
 					<svg viewBox="0 0 24 24" width="16" height="16" style="display:inline-block;vertical-align:-3px;margin-inline-start:6px;" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8M21 7v6M21 7h-6"/></svg>
 					<?php esc_html_e( 'پربازدید ترین مطالب', 'techrato' ); ?>
 				</h3>
-				<div class="most-viewed-grid">
-					<?php
-					$popular = new WP_Query( array(
-						'posts_per_page'      => 3,
-						'post__not_in'        => $shown_ids,
-						'ignore_sticky_posts' => true,
-						'orderby'             => 'comment_count',
-						'order'               => 'DESC',
-					) );
-					if ( $popular->have_posts() ) :
-						while ( $popular->have_posts() ) : $popular->the_post(); $shown_ids[] = get_the_ID();
-							get_template_part( 'template-parts/card', 'horizontal' );
-						endwhile;
-						wp_reset_postdata();
-					else :
-						techrato_empty_card_notice();
-					endif;
-					?>
-				</div>
-				<a class="more-link" href="<?php echo esc_url( techrato_more_url( 'more_link_popular', $popular ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+				<?php
+				$popular = techrato_query_popular( 3, 7, $shown_ids );
+				$shown_ids = array_merge( $shown_ids, wp_list_pluck( $popular->posts, 'ID' ) );
+
+				get_template_part( 'template-parts/feed-box', null, array(
+					'query'      => $popular,
+					'term_id'    => 0,
+					'card'       => 'horizontal',
+					'list_class' => 'most-viewed-grid',
+					'days'       => 7,
+					'sort'       => 'views',
+					'more_url'   => techrato_more_url( 'more_link_popular', $popular ),
+				) );
+				?>
 			</div>
 		</section>
 

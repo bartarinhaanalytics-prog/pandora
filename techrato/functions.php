@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.36.0' );
+define( 'TECHRATO_VERSION', '1.37.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -70,6 +70,7 @@ function techrato_assets() {
 	wp_localize_script( 'techrato-main', 'techratoData', array(
 		'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 		'nonce'   => wp_create_nonce( 'techrato_like' ),
+		'postId'  => is_singular( 'post' ) ? get_queried_object_id() : 0,
 	) );
 
 	if ( is_singular() && comments_open() ) {
@@ -421,11 +422,22 @@ function techrato_ajax_load_posts() {
 	$term_id = isset( $_POST['term'] ) ? absint( $_POST['term'] ) : 0;
 	$paged   = isset( $_POST['paged'] ) ? absint( $_POST['paged'] ) : 1;
 	$paged   = max( 1, $paged );
+	$per     = isset( $_POST['per'] ) ? absint( $_POST['per'] ) : 0;
+	$days    = isset( $_POST['days'] ) ? absint( $_POST['days'] ) : 0;
+	$sort    = isset( $_POST['sort'] ) ? sanitize_key( $_POST['sort'] ) : 'date';
+
+	// Only cards the theme actually ships, so the request cannot ask the
+	// server to include an arbitrary file.
+	$cards = array( 'list-row', 'horizontal', 'vertical', 'avatar-row' );
+	$card  = isset( $_POST['card'] ) ? sanitize_key( $_POST['card'] ) : 'list-row';
+	if ( ! in_array( $card, $cards, true ) ) {
+		$card = 'list-row';
+	}
 
 	$args = array(
 		'post_status'         => 'publish',
 		'paged'               => $paged,
-		'posts_per_page'      => (int) get_option( 'posts_per_page', 10 ),
+		'posts_per_page'      => $per ? $per : (int) get_option( 'posts_per_page', 10 ),
 		'ignore_sticky_posts' => true,
 	);
 
@@ -437,12 +449,22 @@ function techrato_ajax_load_posts() {
 		$args['cat'] = $term_id;
 	}
 
+	if ( $days ) {
+		$args['date_query'] = array( array( 'after' => $days . ' days ago' ) );
+	}
+
+	if ( 'views' === $sort ) {
+		$args['meta_key'] = 'techrato_views';
+		$args['orderby']  = 'meta_value_num';
+		$args['order']    = 'DESC';
+	}
+
 	$query = new WP_Query( $args );
 
 	ob_start();
 	while ( $query->have_posts() ) {
 		$query->the_post();
-		get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true ) );
+		get_template_part( 'template-parts/card', $card, array( 'tags' => true ) );
 	}
 	wp_reset_postdata();
 	$html = ob_get_clean();

@@ -7,9 +7,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Reads only the application category, chosen in
+// Customizer > تنظیمات تکراتو > باکس‌های صفحه اصلی.
+$techrato_apps_term = techrato_box_term( 'box_apps_cat', array( 'application', 'applications', 'app', 'apps', 'software' ) );
+
 $techrato_apps_query = new WP_Query( array(
 	'posts_per_page'      => 4,
+	'post_status'         => 'publish',
 	'ignore_sticky_posts' => true,
+	'cat'                 => $techrato_apps_term ? (int) $techrato_apps_term->term_id : '',
 	'post__not_in'        => isset( $args['exclude'] ) ? (array) $args['exclude'] : array(),
 ) );
 ?>

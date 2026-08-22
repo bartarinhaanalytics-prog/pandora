@@ -66,46 +66,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 
 				<?php
-				$techrato_has_posts = have_posts();
-				// Real links to the sub-categories of this category (or, on a
-				// sub-category, to its siblings). A category with neither gets
-				// no tabs rather than buttons that lead nowhere.
-				$archive_tabs = techrato_archive_tabs();
-				?>
-				<?php
+				$techrato_has_posts    = have_posts();
 				$techrato_current_term = ( is_category() || is_tag() || is_tax() ) ? get_queried_object() : null;
 				$techrato_term_id      = $techrato_current_term instanceof WP_Term ? (int) $techrato_current_term->term_id : 0;
 				$techrato_paged        = max( 1, (int) get_query_var( 'paged' ) );
 				$techrato_max_pages    = (int) $GLOBALS['wp_query']->max_num_pages;
+
+				// Real links to this category's sub-categories (or, on a
+				// sub-category, its siblings). A category with neither gets no
+				// tabs rather than buttons that lead nowhere.
+				$archive_tabs = techrato_archive_tabs();
 				?>
 				<div class="widget list-widget">
-					<?php if ( $archive_tabs ) : ?>
-						<div class="tabs js-archive-tabs" style="margin-bottom:16px;" role="tablist">
-							<?php foreach ( $archive_tabs as $tab ) : ?>
-								<a href="<?php echo esc_url( $tab['url'] ); ?>"
-									data-term="<?php echo esc_attr( $tab['term_id'] ); ?>"
-									<?php echo $tab['current'] ? ' class="is-active" aria-current="page"' : ''; ?>><?php echo esc_html( $tab['label'] ); ?></a>
-							<?php endforeach; ?>
-						</div>
-					<?php endif; ?>
-
-					<div class="js-post-list"
-						data-term="<?php echo esc_attr( $techrato_term_id ); ?>"
-						data-paged="<?php echo esc_attr( $techrato_paged ); ?>"
-						data-max="<?php echo esc_attr( $techrato_max_pages ); ?>"
-						aria-live="polite">
-						<?php if ( $techrato_has_posts ) : ?>
-							<?php while ( have_posts() ) : the_post(); ?>
-								<?php get_template_part( 'template-parts/card', 'list-row', array( 'tags' => true ) ); ?>
-							<?php endwhile; ?>
-						<?php else : ?>
-							<?php techrato_empty_card_notice( __( 'مطلبی برای نمایش یافت نشد.', 'techrato' ) ); ?>
-						<?php endif; ?>
-					</div>
-
-					<?php if ( $techrato_has_posts && $techrato_max_pages > $techrato_paged ) : ?>
-						<button type="button" class="more-link js-load-more"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></button>
-					<?php endif; ?>
+					<?php
+					get_template_part( 'template-parts/feed-box', null, array(
+						'tabs'       => $archive_tabs,
+						'query'      => $GLOBALS['wp_query'],
+						'term_id'    => $techrato_term_id,
+						'card'       => 'list-row',
+						'card_args'  => array( 'tags' => true ),
+						'more_url'   => $techrato_term_id ? get_category_link( $techrato_term_id ) : techrato_more_url( '', $GLOBALS['wp_query'] ),
+						'empty_text' => __( 'مطلبی برای نمایش یافت نشد.', 'techrato' ),
+						'push_url'   => true,
+					) );
+					?>
 				</div>
 
 				<?php if ( $techrato_has_posts ) : ?>
@@ -124,20 +108,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 
 			<aside>
+				<?php
+				$side_term  = techrato_box_term( 'box_sidebar_cat', array( 'mobile', 'mobiles', 'phone', 'smartphone' ) );
+				$side_id    = $side_term ? (int) $side_term->term_id : 0;
+				$side_query = new WP_Query( array(
+					'posts_per_page'      => 3,
+					'post_status'         => 'publish',
+					'ignore_sticky_posts' => true,
+					'cat'                 => $side_id ? $side_id : '',
+				) );
+				?>
 				<div class="widget">
-					<h3 class="widget-title"><?php esc_html_e( 'مقالات آموزشی تکراتو', 'techrato' ); ?></h3>
+					<h3 class="widget-title"><?php echo esc_html( $side_term ? $side_term->name : __( 'موبایل', 'techrato' ) ); ?></h3>
 					<?php
-					$learning = techrato_query_by_slug( 'learning', 3 );
-					if ( $learning->have_posts() ) :
-						while ( $learning->have_posts() ) : $learning->the_post();
-							get_template_part( 'template-parts/card', 'horizontal' );
-						endwhile;
-						wp_reset_postdata();
-						?>
-						<a class="more-link" href="<?php echo esc_url( techrato_more_url( 'more_link_learning', $learning, 'learning' ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
-					<?php else : ?>
-						<?php techrato_empty_card_notice(); ?>
-					<?php endif; ?>
+					get_template_part( 'template-parts/feed-box', null, array(
+						'query'    => $side_query,
+						'term_id'  => $side_id,
+						'card'     => 'horizontal',
+						'more_url' => $side_term ? get_category_link( $side_id ) : techrato_more_url( 'more_link_learning', $side_query ),
+					) );
+					?>
 				</div>
 
 				<?php get_template_part( 'template-parts/promo-follow' ); ?>

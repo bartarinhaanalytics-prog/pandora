@@ -194,15 +194,47 @@
 		} );
 	} );
 
-	/* ---- Archive: sub-category tabs and load-more, both without a reload ---- */
+	/* ---- Count one read of this post ----
+	   Sent from the browser rather than during the render, so the count keeps
+	   working while WP Rocket serves the page from its cache. Marked in
+	   sessionStorage so a refresh does not inflate it. */
 	( function () {
-		var list = document.querySelector( '.js-post-list' );
+		if ( typeof techratoData === 'undefined' || ! techratoData.postId ) {
+			return;
+		}
+
+		var key = 'techrato-viewed-' + techratoData.postId;
+		try {
+			if ( sessionStorage.getItem( key ) ) {
+				return;
+			}
+			sessionStorage.setItem( key, '1' );
+		} catch ( e ) {}
+
+		var body = new URLSearchParams();
+		body.append( 'action', 'techrato_count_view' );
+		body.append( 'post', techratoData.postId );
+
+		fetch( techratoData.ajaxUrl, {
+			method: 'POST',
+			credentials: 'same-origin',
+			keepalive: true,
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: body.toString()
+		} ).catch( function () {} );
+	} )();
+
+	/* ---- Feed boxes: category tabs and load-more, without a reload ----
+	   Every box on the page is handled independently, so the homepage can
+	   run several at once. All settings come from the list's data attributes. */
+	document.querySelectorAll( '.js-feed' ).forEach( function ( feed ) {
+		var list = feed.querySelector( '.js-post-list' );
 		if ( ! list || typeof techratoData === 'undefined' ) {
 			return;
 		}
 
-		var tabs     = document.querySelector( '.js-archive-tabs' );
-		var loadMore = document.querySelector( '.js-load-more' );
+		var tabs     = feed.querySelector( '.js-archive-tabs' );
+		var loadMore = feed.querySelector( '.js-load-more' );
 		var label    = loadMore ? loadMore.textContent : '';
 		var busy     = false;
 
@@ -211,6 +243,10 @@
 			body.append( 'action', 'techrato_load_posts' );
 			body.append( 'term', term );
 			body.append( 'paged', paged );
+			body.append( 'per', list.getAttribute( 'data-per' ) || '' );
+			body.append( 'card', list.getAttribute( 'data-card' ) || 'list-row' );
+			body.append( 'days', list.getAttribute( 'data-days' ) || '0' );
+			body.append( 'sort', list.getAttribute( 'data-sort' ) || 'date' );
 
 			return fetch( techratoData.ajaxUrl, {
 				method: 'POST',
@@ -231,17 +267,17 @@
 		}
 
 		function showError( message ) {
-			var note = list.parentNode.querySelector( '.load-more-error' );
+			var note = feed.querySelector( '.load-more-error' );
 			if ( ! note ) {
 				note = document.createElement( 'p' );
 				note.className = 'load-more-error';
-				list.parentNode.appendChild( note );
+				feed.appendChild( note );
 			}
 			note.textContent = message;
 		}
 
 		function clearError() {
-			var note = list.parentNode.querySelector( '.load-more-error' );
+			var note = feed.querySelector( '.load-more-error' );
 			if ( note ) {
 				note.parentNode.removeChild( note );
 			}
@@ -251,13 +287,13 @@
 			if ( ! loadMore ) {
 				return;
 			}
-			loadMore.disabled = false;
 			loadMore.textContent = label;
+			loadMore.classList.remove( 'is-loading' );
 			loadMore.hidden = paged >= maxPages;
 		}
 
-		// Switch to another sub-category in place. The tab stays a real link,
-		// so middle-click and no-JS visitors still get the normal page.
+		// Switch category in place. Tabs stay real links, so middle-click and
+		// visitors without JavaScript still get the normal page.
 		if ( tabs ) {
 			tabs.querySelectorAll( 'a[data-term]' ).forEach( function ( tab ) {
 				tab.addEventListener( 'click', function ( e ) {
@@ -287,13 +323,15 @@
 						tab.classList.add( 'is-active' );
 						tab.setAttribute( 'aria-current', 'page' );
 
+						if ( loadMore ) {
+							loadMore.href = tab.href;
+						}
 						updateLoadMore( 1, data.maxPages );
 
-						// The posts are already on screen at this point — a
-						// history failure must not undo that and send the
-						// visitor to a full page load.
+						// The posts are already on screen — a history failure
+						// must not undo that and force a full page load.
 						try {
-							if ( window.history && window.history.pushState ) {
+							if ( feed.hasAttribute( 'data-push-url' ) && window.history && window.history.pushState ) {
 								window.history.pushState( {}, '', tab.href );
 							}
 						} catch ( err ) {}
@@ -309,17 +347,21 @@
 
 		// Append the next page under the posts already on screen.
 		if ( loadMore ) {
-			loadMore.addEventListener( 'click', function () {
+			loadMore.addEventListener( 'click', function ( e ) {
+				if ( e.metaKey || e.ctrlKey || e.shiftKey || e.button ) {
+					return;
+				}
+				e.preventDefault();
 				if ( busy ) {
 					return;
 				}
 				busy = true;
 				clearError();
 
-				var term  = list.getAttribute( 'data-term' ) || '0';
-				var next  = parseInt( list.getAttribute( 'data-paged' ) || '1', 10 ) + 1;
+				var term = list.getAttribute( 'data-term' ) || '0';
+				var next = parseInt( list.getAttribute( 'data-paged' ) || '1', 10 ) + 1;
 
-				loadMore.disabled = true;
+				loadMore.classList.add( 'is-loading' );
 				loadMore.textContent = 'در حال بارگذاری…';
 
 				fetchPosts( term, next ).then( function ( data ) {
@@ -330,15 +372,14 @@
 					list.setAttribute( 'data-max', data.maxPages );
 					updateLoadMore( next, data.maxPages );
 				} ).catch( function () {
-					loadMore.disabled = false;
-					loadMore.textContent = label;
+					updateLoadMore( 1, 2 );
 					showError( 'بارگذاری انجام نشد. دوباره تلاش کنید.' );
 				} ).finally( function () {
 					busy = false;
 				} );
 			} );
 		}
-	} )();
+	} );
 
 	/* ---- Tabs: highlight the tab and show its panel ---- */
 	document.querySelectorAll( '.tabs' ).forEach( function ( group ) {

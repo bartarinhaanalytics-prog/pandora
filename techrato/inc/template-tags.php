@@ -415,6 +415,86 @@ function techrato_archive_tabs() {
 }
 
 /**
+ * The category a homepage box should read from.
+ *
+ * The category picked in the Customizer wins. With none picked, try the slugs
+ * the box is normally built around — the theme can't know a site's taxonomy in
+ * advance, and guessing wrong is worse than showing the newest posts instead.
+ *
+ * @param string $mod_key   Theme-mod key holding a category ID.
+ * @param array  $fallbacks Slugs to try when nothing is chosen.
+ * @return WP_Term|null
+ */
+function techrato_box_term( $mod_key, $fallbacks = array() ) {
+	$chosen = (int) get_theme_mod( $mod_key, 0 );
+	if ( $chosen ) {
+		$term = get_term( $chosen, 'category' );
+		if ( $term instanceof WP_Term ) {
+			return $term;
+		}
+	}
+
+	foreach ( (array) $fallbacks as $slug ) {
+		$term = get_category_by_slug( $slug );
+		if ( $term ) {
+			return $term;
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Posts ordered by how often they were read, limited to a recent window.
+ *
+ * Views are counted by a small browser beacon rather than in PHP, because the
+ * homepage and posts are served from WP Rocket's page cache — PHP never runs
+ * for most visitors, so counting server-side would miss almost everyone.
+ *
+ * Falls back to comment count while no views have been recorded yet, so the
+ * box is never empty on a fresh install.
+ *
+ * @param int   $count   How many posts.
+ * @param int   $days    Only posts published within this many days (0 = any).
+ * @param array $exclude Post IDs already shown.
+ * @return WP_Query
+ */
+function techrato_query_popular( $count = 3, $days = 7, $exclude = array() ) {
+	$args = array(
+		'posts_per_page'      => $count,
+		'post_status'         => 'publish',
+		'ignore_sticky_posts' => true,
+		'post__not_in'        => $exclude,
+		'meta_key'            => 'techrato_views',
+		'orderby'             => 'meta_value_num',
+		'order'               => 'DESC',
+	);
+
+	if ( $days > 0 ) {
+		$args['date_query'] = array(
+			array( 'after' => $days . ' days ago' ),
+		);
+	}
+
+	$query = new WP_Query( $args );
+
+	// No view data yet: keep the window, drop the view ordering.
+	if ( ! $query->have_posts() ) {
+		unset( $args['meta_key'] );
+		$args['orderby'] = 'comment_count';
+		$query = new WP_Query( $args );
+	}
+
+	// Still nothing published in the window: widen to the newest posts.
+	if ( ! $query->have_posts() ) {
+		unset( $args['date_query'] );
+		$query = new WP_Query( $args );
+	}
+
+	return $query;
+}
+
+/**
  * Tabs for the "جدیدترین اخبار تکنولوژی" box.
  *
  * The first tab always lists every recent post; the rest are categories,
