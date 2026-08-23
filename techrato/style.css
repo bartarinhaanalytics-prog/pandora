@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.42.0
+Version: 1.43.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -260,22 +260,30 @@ body.no-scroll { overflow: hidden; }
 	.mega-posts {
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
-		gap: 18px;
+		gap: 14px 20px;
 	}
-	.mega-post { display: block; }
+	/* The headline is what someone is scanning for, so the picture is a small
+	   thumbnail beside it rather than a banner above it. */
+	.mega-post {
+		display: grid;
+		grid-template-columns: 58px minmax(0, 1fr);
+		gap: 10px;
+		align-items: center;
+	}
 	.mega-post-thumb {
 		display: block;
-		aspect-ratio: 16 / 10;
+		width: 58px;
+		height: 44px;
 		border-radius: var(--radius-sm);
 		overflow: hidden;
 		background: var(--card-soft);
-		margin-bottom: 8px;
+		flex: 0 0 auto;
 	}
 	.mega-post-thumb img { width: 100%; height: 100%; object-fit: cover; }
 	.mega-post-title {
 		display: block;
 		font-size: 12.5px;
-		line-height: 1.75;
+		line-height: 1.7;
 		color: var(--text);
 		font-weight: 500;
 	}

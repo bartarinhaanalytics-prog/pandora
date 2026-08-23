@@ -91,15 +91,17 @@ function techrato_mega_posts_row( $term ) {
 		while ( $query->have_posts() ) {
 			$query->the_post();
 
+			// A thumbnail this small only needs the square crop, not the
+			// 260px list image.
 			$thumb = has_post_thumbnail()
-				? get_the_post_thumbnail( null, 'techrato-list', array( 'loading' => 'lazy', 'alt' => '' ) )
+				? get_the_post_thumbnail( null, 'techrato-square', array( 'loading' => 'lazy', 'alt' => '' ) )
 				: '<img src="' . esc_url( TECHRATO_URI . '/assets/images/placeholder.svg' ) . '" alt="">';
 
 			$html .= sprintf(
 				'<a class="mega-post" href="%s"><span class="mega-post-thumb">%s</span><span class="mega-post-title">%s</span></a>',
 				esc_url( get_permalink() ),
 				$thumb,
-				esc_html( wp_trim_words( get_the_title(), 9, '…' ) )
+				esc_html( wp_trim_words( get_the_title(), 11, '…' ) )
 			);
 		}
 		$html .= '</div>';
