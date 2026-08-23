@@ -101,7 +101,7 @@ function techrato_mega_posts_row( $term ) {
 				'<a class="mega-post" href="%s"><span class="mega-post-thumb">%s</span><span class="mega-post-title">%s</span></a>',
 				esc_url( get_permalink() ),
 				$thumb,
-				esc_html( wp_trim_words( get_the_title(), 11, '…' ) )
+				esc_html( wp_trim_words( get_the_title(), 14, '…' ) )
 			);
 		}
 		$html .= '</div>';

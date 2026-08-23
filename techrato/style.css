@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.43.0
+Version: 1.44.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -260,16 +260,24 @@ body.no-scroll { overflow: hidden; }
 	.mega-posts {
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
-		gap: 14px 20px;
+		gap: 10px;
 	}
-	/* The headline is what someone is scanning for, so the picture is a small
-	   thumbnail beside it rather than a banner above it. */
+	/* Each post sits in its own card. The headline is what someone is
+	   scanning for, so the picture is a small thumbnail beside it rather than
+	   a banner above it. */
 	.mega-post {
 		display: grid;
 		grid-template-columns: 58px minmax(0, 1fr);
 		gap: 10px;
 		align-items: center;
+		padding: 8px;
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-sm);
+		transition: border-color .2s ease, background .2s ease;
 	}
+	.mega-post:hover { border-color: var(--accent); background: var(--card-soft); }
+	.mega-post, .mega-panel .sub-menu > li > a { white-space: normal; }
 	.mega-post-thumb {
 		display: block;
 		width: 58px;
@@ -277,13 +285,23 @@ body.no-scroll { overflow: hidden; }
 		border-radius: var(--radius-sm);
 		overflow: hidden;
 		background: var(--card-soft);
-		flex: 0 0 auto;
 	}
 	.mega-post-thumb img { width: 100%; height: 100%; object-fit: cover; }
+	/* Two lines, then an ellipsis — a long headline must not make one card
+	   taller than the rest of the row. */
 	.mega-post-title {
-		display: block;
+		/* .main-nav a sets white-space: nowrap for the bar itself; without
+		   undoing it here a headline never wraps and the two-line clamp has
+		   nothing to clamp. */
+		white-space: normal;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 		font-size: 12.5px;
-		line-height: 1.7;
+		line-height: 1.65;
+		max-height: 3.3em;
 		color: var(--text);
 		font-weight: 500;
 	}
