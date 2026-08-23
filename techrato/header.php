@@ -134,6 +134,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					'container'      => false,
 					'menu_class'     => 'main-nav',
 					'depth'          => 0,
+					'walker'         => new Techrato_Mega_Menu_Walker(),
 				) );
 			} else {
 				techrato_fallback_primary_menu();

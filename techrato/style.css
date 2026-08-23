@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.41.0
+Version: 1.42.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -215,42 +215,72 @@ body.no-scroll { overflow: hidden; }
 	.main-nav > li.is-open > .submenu-toggle { color: var(--accent); transform: rotate(180deg); }
 	.main-nav > li.is-open > a { color: var(--accent); }
 
-	.main-nav > li.menu-item-has-children.is-open > .sub-menu { display: grid; }
+	/* The panel is one block: a row of sub-category links, then a row of that
+	   category's newest posts. */
+	.main-nav > li.menu-item-has-children > .mega-panel { display: none; }
+	.main-nav > li.menu-item-has-children.is-open > .mega-panel { display: block; }
 
-	.main-nav .sub-menu {
+	.mega-panel {
 		position: absolute;
 		inset-inline: 0;
 		top: 100%;
 		z-index: 70;
-		grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-		gap: 4px 28px;
-		/* Line the items up with the container instead of the viewport edge. */
-		padding: 22px max(24px, calc((100% - var(--container)) / 2 + 24px));
+		/* Line the contents up with the container, not the viewport edge. */
+		padding: 20px max(24px, calc((100% - var(--container)) / 2 + 24px)) 24px;
 		background: var(--bg-soft);
 		border-top: 1px solid var(--border);
 		border-bottom: 1px solid var(--border);
 		box-shadow: var(--shadow);
 	}
-	.main-nav .sub-menu > li > a {
+
+	.mega-panel .sub-menu {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px 6px;
+		padding: 0 0 16px;
+		margin-bottom: 16px;
+		border-bottom: 1px solid var(--border);
+		background: none;
+		border-top: none;
+		box-shadow: none;
+		position: static;
+	}
+	.mega-panel .sub-menu > li > a {
 		display: block;
-		padding: 9px 12px;
-		border-radius: var(--radius-sm);
+		padding: 7px 14px;
+		border-radius: var(--radius-pill);
 		font-size: 12.5px;
 		font-weight: 500;
 		color: var(--text-muted);
 	}
-	.main-nav .sub-menu > li > a:hover { background: var(--accent-tint); color: var(--accent); }
+	.mega-panel .sub-menu > li > a:hover { background: var(--accent-tint); color: var(--accent); }
+	/* A third level reads as plain text under its parent. */
+	.mega-panel .sub-menu .sub-menu { display: none; }
 
-	/* A third level reads as a plain list under its parent. */
-	.main-nav .sub-menu .sub-menu {
-		display: block;
-		position: static;
-		padding: 0 12px 8px;
-		background: none;
-		border: none;
-		box-shadow: none;
+	.mega-posts {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 18px;
 	}
-	.main-nav .sub-menu .sub-menu > li > a { padding: 5px 0; font-size: 12px; color: var(--text-dim); }
+	.mega-post { display: block; }
+	.mega-post-thumb {
+		display: block;
+		aspect-ratio: 16 / 10;
+		border-radius: var(--radius-sm);
+		overflow: hidden;
+		background: var(--card-soft);
+		margin-bottom: 8px;
+	}
+	.mega-post-thumb img { width: 100%; height: 100%; object-fit: cover; }
+	.mega-post-title {
+		display: block;
+		font-size: 12.5px;
+		line-height: 1.75;
+		color: var(--text);
+		font-weight: 500;
+	}
+	.mega-post:hover .mega-post-title { color: var(--accent); }
+
 }
 
 .trending-bar { border-top: 1px solid var(--border); background: var(--bg-soft); }
@@ -686,6 +716,10 @@ button.action { cursor: pointer; }
 	.grid-3 { grid-template-columns: 1fr; }
 	.most-viewed-grid { grid-template-columns: 1fr; }
 
+	/* The mega panel's post row belongs to desktop; the drawer is a list. */
+	.mega-posts { display: none; }
+	.mega-panel { display: contents; }
+
 	/* ---- Full-screen nav drawer ---- */
 	.main-nav-wrap .main-nav { display: none; }
 	.main-nav-wrap.is-open {
@@ -712,7 +746,8 @@ button.action { cursor: pointer; }
 		background: rgba(255, 255, 255, 0.03);
 	}
 	[data-theme="light"] .main-nav-wrap.is-open .main-nav .sub-menu { background: rgba(0, 0, 0, 0.025); }
-	.main-nav-wrap.is-open .main-nav > li.is-expanded > .sub-menu { display: block; }
+	.main-nav-wrap.is-open .main-nav > li.is-expanded > .sub-menu,
+	.main-nav-wrap.is-open .main-nav > li.is-expanded > .mega-panel > .sub-menu { display: block; }
 	.main-nav-wrap.is-open .main-nav .sub-menu > li > a {
 		display: block; padding: 12px 4px; font-size: 12.5px; color: var(--text-muted);
 		border-bottom: 1px solid var(--border);

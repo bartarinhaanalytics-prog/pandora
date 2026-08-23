@@ -79,12 +79,17 @@
 			return;
 		}
 
-		function closeAll( except ) {
+		function closeAll( except, force ) {
 			nav.querySelectorAll( '.main-nav > li.is-open' ).forEach( function ( li ) {
 				if ( li === except ) {
 					return;
 				}
-				li.classList.remove( 'is-open' );
+				// A pinned panel was opened by a deliberate click; only an
+				// explicit close should take it away.
+				if ( li.classList.contains( 'is-pinned' ) && ! force ) {
+					return;
+				}
+				li.classList.remove( 'is-open', 'is-pinned' );
 				var btn = li.querySelector( ':scope > .submenu-toggle' );
 				if ( btn ) {
 					btn.setAttribute( 'aria-expanded', 'false' );
@@ -115,15 +120,67 @@
 				link.insertAdjacentElement( 'afterend', btn );
 				li.classList.add( 'has-toggle' );
 
+				// Kept for touch screens and keyboards, where there is no hover.
+				// On a mouse the panel may already be open from hovering, so a
+				// click pins it open rather than closing what just appeared.
 				btn.addEventListener( 'click', function ( e ) {
 					e.preventDefault();
 					e.stopPropagation();
-					var open = li.classList.contains( 'is-open' );
-					closeAll( li );
-					li.classList.toggle( 'is-open', ! open );
-					btn.setAttribute( 'aria-expanded', open ? 'false' : 'true' );
+					cancelClose();
+
+					var pinned = li.classList.contains( 'is-pinned' );
+					closeAll( li, true );
+
+					if ( pinned ) {
+						li.classList.remove( 'is-open', 'is-pinned' );
+						btn.setAttribute( 'aria-expanded', 'false' );
+					} else {
+						li.classList.add( 'is-open', 'is-pinned' );
+						btn.setAttribute( 'aria-expanded', 'true' );
+					}
 				} );
+
+				addHover( li );
 			} );
+		}
+
+		// Hover opens the panel, the way digiato does. The panel sits directly
+		// under the item with no gap, and closing waits a moment — otherwise
+		// the pointer crossing the boundary snaps it shut before it arrives.
+		var closeTimer = null;
+
+		function cancelClose() {
+			if ( closeTimer ) {
+				clearTimeout( closeTimer );
+				closeTimer = null;
+			}
+		}
+
+		function scheduleClose() {
+			cancelClose();
+			closeTimer = setTimeout( closeAll, 220 );
+		}
+
+		function addHover( li ) {
+			if ( li.dataset.hoverBound ) {
+				return;
+			}
+			li.dataset.hoverBound = '1';
+
+			li.addEventListener( 'mouseenter', function () {
+				if ( ! window.matchMedia( DESKTOP ).matches ) {
+					return;
+				}
+				cancelClose();
+				closeAll( li );
+				li.classList.add( 'is-open' );
+				var btn = li.querySelector( ':scope > .submenu-toggle' );
+				if ( btn ) {
+					btn.setAttribute( 'aria-expanded', 'true' );
+				}
+			} );
+
+			li.addEventListener( 'mouseleave', scheduleClose );
 		}
 
 		// A click inside the open panel is someone choosing an item; only
@@ -131,19 +188,19 @@
 		document.addEventListener( 'click', function ( e ) {
 			var openLi = nav.querySelector( '.main-nav > li.is-open' );
 			if ( openLi && ! openLi.contains( e.target ) ) {
-				closeAll();
+				closeAll( null, true );
 			}
 		} );
 
 		document.addEventListener( 'keydown', function ( e ) {
 			if ( 'Escape' === e.key ) {
-				closeAll();
+				closeAll( null, true );
 			}
 		} );
 
 		addToggles();
 		window.addEventListener( 'resize', function () {
-			closeAll();
+			closeAll( null, true );
 			addToggles();
 		} );
 	} )();
