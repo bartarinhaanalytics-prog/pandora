@@ -69,6 +69,86 @@
 
 	window.addEventListener( 'resize', updateScrollLock );
 
+	/* ---- Hero slider ---- */
+	document.querySelectorAll( '.js-hero-slider' ).forEach( function ( slider ) {
+		var slides = [].slice.call( slider.querySelectorAll( '.hero-slide' ) );
+		if ( slides.length < 2 ) {
+			return;
+		}
+
+		var dots    = [].slice.call( slider.querySelectorAll( '.hero-dots button' ) );
+		var current = 0;
+		var timer   = null;
+		var DELAY   = 6000;
+
+		function show( index ) {
+			current = ( index + slides.length ) % slides.length;
+			slides.forEach( function ( slide, i ) {
+				slide.classList.toggle( 'is-active', i === current );
+			} );
+			dots.forEach( function ( dot, i ) {
+				dot.classList.toggle( 'is-active', i === current );
+				dot.setAttribute( 'aria-selected', i === current ? 'true' : 'false' );
+			} );
+		}
+
+		function start() {
+			// Someone who asked for less motion should not get a carousel that
+			// moves on its own.
+			if ( window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
+				return;
+			}
+			stop();
+			timer = setInterval( function () { show( current + 1 ); }, DELAY );
+		}
+
+		function stop() {
+			if ( timer ) {
+				clearInterval( timer );
+				timer = null;
+			}
+		}
+
+		function goTo( index ) {
+			show( index );
+			start();
+		}
+
+		dots.forEach( function ( dot, i ) {
+			dot.addEventListener( 'click', function () { goTo( i ); } );
+		} );
+
+		var prev = slider.querySelector( '.hero-prev' );
+		var next = slider.querySelector( '.hero-next' );
+		if ( prev ) { prev.addEventListener( 'click', function () { goTo( current - 1 ); } ); }
+		if ( next ) { next.addEventListener( 'click', function () { goTo( current + 1 ); } ); }
+
+		slider.addEventListener( 'mouseenter', stop );
+		slider.addEventListener( 'mouseleave', start );
+
+		// Swipe on touch screens. A short drag is a swipe; anything less is a
+		// tap and must still open the post.
+		var startX = null;
+		slider.addEventListener( 'touchstart', function ( e ) {
+			startX = e.touches[0].clientX;
+			stop();
+		}, { passive: true } );
+		slider.addEventListener( 'touchend', function ( e ) {
+			if ( null === startX ) {
+				return;
+			}
+			var delta = e.changedTouches[0].clientX - startX;
+			if ( Math.abs( delta ) > 45 ) {
+				e.preventDefault();
+				show( delta < 0 ? current + 1 : current - 1 );
+			}
+			startX = null;
+			start();
+		} );
+
+		start();
+	} );
+
 	/* ---- Desktop mega menu: click the arrow to open, and it stays open ----
 	   Hover-opening meant the panel closed the moment the pointer left the
 	   menu item, so the sub-items could never be reached. */

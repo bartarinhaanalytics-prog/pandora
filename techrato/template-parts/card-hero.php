@@ -14,9 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<img src="<?php echo esc_url( TECHRATO_URI . '/assets/images/placeholder.svg' ); ?>" alt="">
 	<?php endif; ?>
 	<div class="card-hero-body">
-		<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+		<h2><?php the_title(); ?></h2>
 		<p><?php echo esc_html( wp_trim_words( get_the_excerpt(), 18 ) ); ?></p>
 		<?php techrato_card_meta(); ?>
-		<span class="hero-dots" aria-hidden="true"><span class="is-active"></span><span></span><span></span></span>
 	</div>
+	<?php // Covers the whole card, so a click anywhere on the slide opens the post. ?>
+	<a class="card-hero-link" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>"></a>
 </article>

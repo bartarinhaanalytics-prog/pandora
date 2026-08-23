@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.44.0
+Version: 1.45.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -413,7 +413,7 @@ section.block.hero-section { padding-top: 34px; }
 }
 .card-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
 .card-hero::after { content: ""; position: absolute; inset: 0; background: var(--overlay-strong); z-index: 1; }
-.card-hero-body { position: relative; z-index: 2; padding: 28px; color: #fff; }
+.card-hero-body { position: relative; z-index: 2; padding: 28px 28px 42px; color: #fff; }
 .card-hero-body h3, .card-hero-body h2 { color: #fff; font-size: 19px; margin-bottom: 12px; }
 .card-hero-body .meta { color: rgba(255,255,255,.75); }
 .card-hero-body .meta a { color: rgba(255,255,255,.75); }
@@ -506,6 +506,58 @@ section.block.hero-section { padding-top: 34px; }
 .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; align-items: stretch; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: stretch; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; align-items: stretch; }
+/* ---- Text link ads, above the footer ---- */
+.link-ads-wrap { padding-block: 0 22px; }
+.link-ads {
+	display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+	padding: 14px 18px;
+	background: var(--card);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-md);
+}
+.link-ads-title { font-size: 12.5px; font-weight: 700; color: var(--text-muted); }
+.link-ads-list { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0; padding: 0; }
+.link-ads-list a {
+	display: block;
+	padding: 6px 14px;
+	border-radius: var(--radius-pill);
+	border: 1px solid var(--border);
+	font-size: 12.5px;
+	color: var(--text-muted);
+}
+.link-ads-list a:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---- Hero slider ---- */
+.hero-slider { position: relative; height: 100%; }
+.hero-slides, .hero-slide { height: 100%; }
+.hero-slide { display: none; }
+.hero-slide.is-active { display: block; }
+/* Covers the whole slide, so a click anywhere opens the post. The dots and
+   arrows sit above it. */
+.card-hero-link { position: absolute; inset: 0; z-index: 3; }
+.hero-arrow {
+	position: absolute; top: 50%; transform: translateY(-50%); z-index: 4;
+	width: 38px; height: 38px; border-radius: 50%;
+	display: flex; align-items: center; justify-content: center;
+	background: rgba(8, 18, 15, .55); border: 1px solid rgba(255, 255, 255, .22); color: #fff;
+	backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+	opacity: 0; transition: opacity .2s ease, background .2s ease;
+}
+.hero-arrow svg { width: 16px; height: 16px; }
+.hero-arrow:hover { background: var(--accent); color: #06231d; border-color: var(--accent); }
+.hero-prev { inset-inline-end: 14px; }
+.hero-next { inset-inline-start: 14px; }
+.hero-slider:hover .hero-arrow, .hero-arrow:focus-visible { opacity: 1; }
+.hero-dots {
+	position: absolute; z-index: 4; inset-inline-end: 28px; bottom: 22px;
+	display: flex; gap: 7px;
+}
+.hero-dots button {
+	width: 8px; height: 8px; padding: 0; border: none; border-radius: 50%;
+	background: rgba(255, 255, 255, .45); transition: width .2s ease, background .2s ease;
+}
+.hero-dots button.is-active { width: 22px; border-radius: var(--radius-pill); background: var(--accent); }
+
 .hero-grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 20px; align-items: stretch; }
 .hero-grid > div { height: 100%; }
 .hero-grid .hero-thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }

@@ -35,6 +35,7 @@ function techrato_home_blocks() {
 			'description' => __( 'مطلب بزرگ از تیک «تیتر اصلی صفحه نخست» و کارت‌های کناری از تیک «نوشته شاخص» خوانده می‌شوند.', 'techrato' ),
 			'fields'      => array(
 				'enabled' => array( 'type' => 'toggle', 'label' => __( 'نمایش این بخش', 'techrato' ), 'default' => 1 ),
+				'slides'  => array( 'type' => 'number', 'label' => __( 'تعداد اسلایدها', 'techrato' ), 'default' => 3, 'min' => 1, 'max' => 8 ),
 				'count'   => array( 'type' => 'number', 'label' => __( 'تعداد کارت‌های کناری', 'techrato' ), 'default' => 4, 'min' => 1, 'max' => 8 ),
 			),
 		),

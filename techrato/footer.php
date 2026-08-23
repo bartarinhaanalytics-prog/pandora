@@ -6,6 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
+	<?php // Text link ads — above the footer, on every page. ?>
+	<?php techrato_link_ads_render(); ?>
+
 	<footer class="site-footer">
 		<div class="container">
 

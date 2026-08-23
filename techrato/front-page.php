@@ -41,7 +41,7 @@ $shown_ids = array();
 			// The big hero card uses "تیتر اصلی صفحه نخست"; the smaller cards
 			// beside it use "نوشته شاخص". Both come from the editorial
 			// checkboxes on the post editor screen.
-			$hero_featured = techrato_query_by_flag( '_featured_one_post_tc', 1, $shown_ids );
+			$hero_featured = techrato_query_by_flag( '_featured_one_post_tc', techrato_home_option( 'hero', 'slides' ), $shown_ids );
 			$shown_ids     = array_merge( $shown_ids, wp_list_pluck( $hero_featured->posts, 'ID' ) );
 
 			$hero_thumbs = techrato_query_by_flag( '_featured_post_tc', techrato_home_option( 'hero', 'count' ), $shown_ids );
@@ -49,16 +49,45 @@ $shown_ids = array();
 			?>
 			<div class="hero-grid">
 				<div>
-					<?php
-					if ( $hero_featured->have_posts() ) :
-						while ( $hero_featured->have_posts() ) : $hero_featured->the_post();
-							get_template_part( 'template-parts/card', 'hero' );
-						endwhile;
-						wp_reset_postdata();
-					else :
-						techrato_empty_card_notice();
-					endif;
-					?>
+					<?php if ( $hero_featured->have_posts() ) : ?>
+						<?php $hero_total = $hero_featured->post_count; ?>
+						<div class="hero-slider js-hero-slider" data-count="<?php echo esc_attr( $hero_total ); ?>">
+							<div class="hero-slides">
+								<?php
+								$hero_index = 0;
+								while ( $hero_featured->have_posts() ) :
+									$hero_featured->the_post();
+									?>
+									<div class="hero-slide<?php echo 0 === $hero_index ? ' is-active' : ''; ?>">
+										<?php get_template_part( 'template-parts/card', 'hero' ); ?>
+									</div>
+									<?php
+									$hero_index++;
+								endwhile;
+								wp_reset_postdata();
+								?>
+							</div>
+
+							<?php if ( $hero_total > 1 ) : ?>
+								<button type="button" class="hero-arrow hero-prev" aria-label="<?php esc_attr_e( 'اسلاید قبلی', 'techrato' ); ?>">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg>
+								</button>
+								<button type="button" class="hero-arrow hero-next" aria-label="<?php esc_attr_e( 'اسلاید بعدی', 'techrato' ); ?>">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m9 6 6 6-6 6"/></svg>
+								</button>
+								<div class="hero-dots" role="tablist">
+									<?php for ( $hero_dot = 0; $hero_dot < $hero_total; $hero_dot++ ) : ?>
+										<button type="button" role="tab"
+											class="<?php echo 0 === $hero_dot ? 'is-active' : ''; ?>"
+											aria-selected="<?php echo 0 === $hero_dot ? 'true' : 'false'; ?>"
+											aria-label="<?php /* translators: %d: slide number */ printf( esc_attr__( 'اسلاید %d', 'techrato' ), $hero_dot + 1 ); ?>"></button>
+									<?php endfor; ?>
+								</div>
+							<?php endif; ?>
+						</div>
+					<?php else : ?>
+						<?php techrato_empty_card_notice(); ?>
+					<?php endif; ?>
 				</div>
 				<div class="hero-thumbs">
 					<?php if ( $hero_thumbs->have_posts() ) : ?>
