@@ -6,8 +6,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
+	<?php // The native block belongs above the app showcase; templates without a
+	// showcase still have to show it, so it is printed here. It knows whether it
+	// already ran on this page and stays quiet if it did. ?>
+	<?php techrato_ads_render_apps_native( true ); ?>
+
 	<?php // Text link ads — above the footer, on every page. ?>
 	<?php techrato_link_ads_render(); ?>
+
+	<?php // Banner pair under the text link ads, on every page. ?>
+	<?php techrato_ads_render_footer_banners(); ?>
 
 	<footer class="site-footer">
 		<div class="container">

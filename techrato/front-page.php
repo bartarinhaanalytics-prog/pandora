@@ -106,6 +106,9 @@ $shown_ids = array();
 		</section>
 		<?php endif; ?>
 
+		<!-- ===== AD: UNDER THE SLIDESHOW ===== -->
+		<?php techrato_ads_render_banners( 'home_top' ); ?>
+
 		<!-- ===== EDITOR'S PICKS ===== -->
 		<?php if ( techrato_home_shows( 'editors' ) ) : ?>
 		<section class="block">
@@ -156,6 +159,7 @@ $shown_ids = array();
 								'term_id'   => 0,
 								'card'      => 'list-row',
 								'card_args' => array( 'tags' => true, 'excerpt' => true ),
+								'ads'       => 'latest_native',
 								'more_url'  => techrato_more_url( 'more_link_latest', $news_query ),
 							) );
 							?>
@@ -163,7 +167,7 @@ $shown_ids = array();
 					<?php endif; ?>
 				</div>
 
-				<aside>
+				<aside<?php echo techrato_ads_has( 'sidebar' ) ? ' class="has-side-ads"' : ''; ?>>
 					<?php if ( techrato_home_shows( 'sidebar' ) ) : ?>
 						<?php
 						$side_term  = techrato_home_term( 'sidebar', 'cat', array( 'smartphone', 'mobile' ) );
@@ -188,6 +192,9 @@ $shown_ids = array();
 							?>
 						</div>
 					<?php endif; ?>
+
+					<?php // Two 300x120 banners, under the sidebar box. ?>
+					<?php techrato_ads_render_banners( 'sidebar' ); ?>
 
 					<?php if ( techrato_home_shows( 'follow' ) ) : ?>
 						<?php get_template_part( 'template-parts/promo-follow' ); ?>

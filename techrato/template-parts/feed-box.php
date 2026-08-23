@@ -17,6 +17,7 @@
  *   'days'       int    Restrict to posts from the last N days.
  *   'sort'       string 'date' or 'views'.
  *   'empty_text' string Notice shown when there is nothing to list.
+ *   'ads'        string Ad slot key whose native ads are placed in the list.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -37,6 +38,7 @@ $feed = wp_parse_args(
 		'sort'       => 'date',
 		'empty_text' => '',
 		'push_url'   => false,
+		'ads'        => '',
 	)
 );
 
@@ -52,6 +54,12 @@ $feed_max   = (int) $feed_query->max_num_pages;
 $feed_has   = $feed_query->have_posts();
 $feed_more  = $feed_has && $feed_max > 1 && $feed['more_url'];
 $feed_uid   = wp_unique_id( 'feed-' );
+
+// Native ads sit at fixed places in the first render only. Load-more appends
+// posts underneath, so re-inserting them there would stack ads down the page.
+$feed_ads = ( 'latest_native' === $feed['ads'] && function_exists( 'techrato_ads_latest_map' ) )
+	? techrato_ads_latest_map()
+	: array();
 ?>
 <div class="js-feed feed-box"<?php echo $feed['push_url'] ? ' data-push-url="1"' : ''; ?>>
 
@@ -77,11 +85,27 @@ $feed_uid   = wp_unique_id( 'feed-' );
 		aria-live="polite">
 		<?php
 		if ( $feed_has ) {
+			$feed_slot = 0;
 			while ( $feed_query->have_posts() ) {
 				$feed_query->the_post();
+
+				// The ad takes the slot it was sold, and the post that would
+				// have been there moves down one — no article is lost.
+				$feed_slot++;
+				while ( isset( $feed_ads[ $feed_slot ] ) ) {
+					techrato_ads_native_row( $feed_ads[ $feed_slot ] );
+					unset( $feed_ads[ $feed_slot ] );
+					$feed_slot++;
+				}
+
 				get_template_part( 'template-parts/card', $feed['card'], $feed['card_args'] );
 			}
 			wp_reset_postdata();
+
+			// A short list still shows the ads that were sold for it.
+			foreach ( $feed_ads as $feed_ad ) {
+				techrato_ads_native_row( $feed_ad );
+			}
 		} else {
 			techrato_empty_card_notice( $feed['empty_text'] ? $feed['empty_text'] : null );
 		}

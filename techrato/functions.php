@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '1.45.0' );
+define( 'TECHRATO_VERSION', '1.46.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -515,6 +515,7 @@ require TECHRATO_DIR . '/inc/home-settings.php';
 require TECHRATO_DIR . '/inc/category-image.php';
 require TECHRATO_DIR . '/inc/mega-menu.php';
 require TECHRATO_DIR . '/inc/link-ads.php';
+require TECHRATO_DIR . '/inc/ads.php';
 require TECHRATO_DIR . '/inc/seo.php';
 require TECHRATO_DIR . '/inc/editor.php';
 

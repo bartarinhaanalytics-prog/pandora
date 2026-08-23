@@ -21,6 +21,9 @@ $techrato_apps_query = new WP_Query( array(
 ?>
 <section class="block app-showcase-wrap">
 	<div class="container">
+		<?php // Native ads belong above the box, not inside it. ?>
+		<?php techrato_ads_render_apps_native(); ?>
+
 		<div class="section-title">
 			<span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/></svg></span>
 			<h2><?php echo esc_html( techrato_home_option( 'apps', 'title' ) ); ?></h2>

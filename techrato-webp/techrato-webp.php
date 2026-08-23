@@ -2,7 +2,7 @@
 /**
  * Plugin Name: تبدیل خودکار تصاویر به WebP
  * Description: هر عکسی که از این پس آپلود شود، پیش از ساخته‌شدن اندازه‌های مختلف به WebP تبدیل می‌شود. کیفیت به‌صورت پیش‌فرض ۸۵ درصد است و از تنظیمات قابل تغییر است.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Author: Techrato
@@ -26,9 +26,13 @@ const TECHRATO_WEBP_OPTIONS = 'techrato_webp_options';
  */
 function techrato_webp_settings() {
 	$defaults = array(
-		'enabled'       => 1,
-		'quality'       => 85,
-		'keep_original' => 0,
+		'enabled'         => 1,
+		'quality'         => 85,
+		'keep_original'   => 0,
+		// Off by default: a JPEG that a camera or another tool already
+		// compressed often grows when re-encoded to WebP, and refusing those
+		// would leave most photos on the site as JPEG.
+		'only_if_smaller' => 0,
 	);
 
 	$saved = get_option( TECHRATO_WEBP_OPTIONS, array() );
@@ -36,9 +40,10 @@ function techrato_webp_settings() {
 
 	$settings = array_merge( $defaults, $saved );
 
-	$settings['enabled']       = ! empty( $settings['enabled'] ) ? 1 : 0;
-	$settings['keep_original'] = ! empty( $settings['keep_original'] ) ? 1 : 0;
-	$settings['quality']       = min( 100, max( 1, (int) $settings['quality'] ) );
+	$settings['enabled']         = ! empty( $settings['enabled'] ) ? 1 : 0;
+	$settings['keep_original']   = ! empty( $settings['keep_original'] ) ? 1 : 0;
+	$settings['only_if_smaller'] = ! empty( $settings['only_if_smaller'] ) ? 1 : 0;
+	$settings['quality']         = min( 100, max( 1, (int) $settings['quality'] ) );
 
 	return $settings;
 }
@@ -117,8 +122,11 @@ function techrato_webp_convert_upload( $upload ) {
 		return $upload;
 	}
 
-	// A WebP that came out larger than the original helps nobody.
-	if ( filesize( $saved['path'] ) >= filesize( $source ) ) {
+	// Only when the site owner asked for it. Left on unconditionally this
+	// rejects most JPEG uploads: a photo saved at quality 70-80 is already
+	// compressed, so a WebP of it at quality 85 comes out larger even though
+	// the picture is fine. That is why JPEGs appeared not to convert at all.
+	if ( $settings['only_if_smaller'] && filesize( $saved['path'] ) >= filesize( $source ) ) {
 		wp_delete_file( $saved['path'] );
 		return $upload;
 	}
@@ -192,9 +200,10 @@ function techrato_webp_sanitize( $input ) {
 	$input = is_array( $input ) ? $input : array();
 
 	return array(
-		'enabled'       => empty( $input['enabled'] ) ? 0 : 1,
-		'keep_original' => empty( $input['keep_original'] ) ? 0 : 1,
-		'quality'       => min( 100, max( 1, (int) ( $input['quality'] ?? 85 ) ) ),
+		'enabled'         => empty( $input['enabled'] ) ? 0 : 1,
+		'keep_original'   => empty( $input['keep_original'] ) ? 0 : 1,
+		'only_if_smaller' => empty( $input['only_if_smaller'] ) ? 0 : 1,
+		'quality'         => min( 100, max( 1, (int) ( $input['quality'] ?? 85 ) ) ),
 	);
 }
 
@@ -255,6 +264,16 @@ function techrato_webp_settings_page() {
 						<p class="description"><?php esc_html_e( 'پیشنهاد: خاموش. روشن بودنش فضای هاست را دو برابر می‌کند و سایت هم از آن استفاده نمی‌کند.', 'techrato-webp' ); ?></p>
 					</td>
 				</tr>
+				<tr>
+					<th scope="row"><?php esc_html_e( 'فقط وقتی حجم کمتر شد', 'techrato-webp' ); ?></th>
+					<td>
+						<label>
+							<input type="checkbox" name="<?php echo esc_attr( TECHRATO_WEBP_OPTIONS ); ?>[only_if_smaller]" value="1" <?php checked( $settings['only_if_smaller'], 1 ); ?>>
+							<?php esc_html_e( 'اگر فایل WebP از فایل اصلی بزرگ‌تر شد، تبدیل انجام نشود', 'techrato-webp' ); ?>
+						</label>
+						<p class="description"><?php esc_html_e( 'پیشنهاد: خاموش. اگر روشنش کنید بیشتر عکس‌های JPG تبدیل نمی‌شوند، چون عکسی که قبلاً فشرده شده معمولاً در WebP کمی بزرگ‌تر درمی‌آید.', 'techrato-webp' ); ?></p>
+					</td>
+				</tr>
 			</table>
 			<?php submit_button(); ?>
 		</form>
@@ -263,7 +282,7 @@ function techrato_webp_settings_page() {
 		<ul class="ul-disc">
 			<li><?php esc_html_e( 'فقط روی عکس‌هایی اثر دارد که از این به بعد آپلود می‌شوند. عکس‌های قبلی سایت دست‌نخورده می‌مانند.', 'techrato-webp' ); ?></li>
 			<li><?php esc_html_e( 'فایل‌های GIF تبدیل نمی‌شوند تا متحرک‌بودنشان از بین نرود.', 'techrato-webp' ); ?></li>
-			<li><?php esc_html_e( 'اگر نسخه‌ی WebP از فایل اصلی بزرگ‌تر شود، تبدیل انجام نمی‌شود و همان فایل اصلی می‌ماند.', 'techrato-webp' ); ?></li>
+			<li><?php esc_html_e( 'هر سه نوع JPG و JPEG و PNG تبدیل می‌شوند.', 'techrato-webp' ); ?></li>
 			<li><?php esc_html_e( 'بعد از تغییر تنظیمات، کش سایت را خالی کنید.', 'techrato-webp' ); ?></li>
 		</ul>
 	</div>
