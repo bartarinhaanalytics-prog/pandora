@@ -28,8 +28,11 @@ const TECHRATO_ADS_OPTION = 'techrato_ads';
  */
 function techrato_ads_slots() {
 	return array(
+
+		/* ---- صفحه نخست ---- */
 		'home_top' => array(
-			'label'  => __( 'صفحه نخست — زیر اسلایدشو', 'techrato' ),
+			'group'  => 'home',
+			'label'  => __( 'زیر اسلایدشو', 'techrato' ),
 			'type'   => 'banner',
 			'size'   => '728',
 			'count'  => 2,
@@ -37,7 +40,8 @@ function techrato_ads_slots() {
 			'note'   => __( 'دو بنر ۷۲۸×۹۰ کنار هم. در موبایل به دو بنر ۴۶۸×۶۰ زیر هم تبدیل می‌شوند.', 'techrato' ),
 		),
 		'latest_native' => array(
-			'label'     => __( 'باکس آخرین اخبار — تبلیغ نیتیو', 'techrato' ),
+			'group'     => 'home',
+			'label'     => __( 'داخل باکس آخرین اخبار — تبلیغ نیتیو', 'techrato' ),
 			'type'      => 'native-row',
 			'count'     => 2,
 			'positions' => array( 2, 5 ),
@@ -45,6 +49,7 @@ function techrato_ads_slots() {
 			'note'      => __( 'تبلیغ اول در جایگاه دوم و تبلیغ دوم در جایگاه پنجم فهرست نمایش داده می‌شود.', 'techrato' ),
 		),
 		'sidebar' => array(
+			'group'  => 'home',
 			'label'  => __( 'ستون کناری — زیر باکس موبایل', 'techrato' ),
 			'type'   => 'banner',
 			'size'   => '300',
@@ -52,21 +57,80 @@ function techrato_ads_slots() {
 			'fields' => array( 'image', 'url', 'rel', 'code' ),
 			'note'   => __( 'دو بنر ۳۰۰×۱۲۰ زیر هم. در موبایل هم در همان جایگاه نمایش داده می‌شوند.', 'techrato' ),
 		),
-		'apps_native' => array(
-			'label'  => __( 'بالای باکس معرفی نرم‌افزار — نیتیو (همه‌ی صفحات)', 'techrato' ),
-			'type'   => 'native-grid',
-			'count'  => 6,
-			'fields' => array( 'image', 'title', 'url', 'rel' ),
-			'note'   => __( 'شش تبلیغ: در دسکتاپ دو ردیف سه‌تایی و در موبایل سه ردیف دوتایی.', 'techrato' ),
-		),
-		'footer_banner' => array(
-			'label'  => __( 'زیر تبلیغات لینکی (همه‌ی صفحات)', 'techrato' ),
+
+		/* ---- صفحه دسته‌بندی ---- */
+		'cat_top' => array(
+			'group'  => 'category',
+			'label'  => __( 'بالای باکس آخرین مطالب', 'techrato' ),
 			'type'   => 'banner',
 			'size'   => '728',
 			'count'  => 2,
 			'fields' => array( 'image', 'url', 'rel', 'code' ),
 			'note'   => __( 'دو بنر ۷۲۸×۹۰ کنار هم. در موبایل به دو بنر ۴۶۸×۶۰ زیر هم تبدیل می‌شوند.', 'techrato' ),
 		),
+		'cat_native' => array(
+			'group'     => 'category',
+			'label'     => __( 'داخل لیست مطالب — تبلیغ نیتیو', 'techrato' ),
+			'type'      => 'native-row',
+			'count'     => 2,
+			'positions' => array( 2, 5 ),
+			'fields'    => array( 'image', 'title', 'desc', 'url', 'button', 'rel' ),
+			'note'      => __( 'تبلیغ اول در جایگاه دوم و تبلیغ دوم در جایگاه پنجم فهرست نمایش داده می‌شود.', 'techrato' ),
+		),
+
+		/* ---- صفحه مطلب ---- */
+		'single_top' => array(
+			'group'  => 'single',
+			'label'  => __( 'بالای مطلب — زیر لایک و دیدگاه', 'techrato' ),
+			'type'   => 'banner',
+			'size'   => '728',
+			'count'  => 1,
+			'fields' => array( 'image', 'url', 'rel', 'code' ),
+			'note'   => __( 'یک بنر ۷۲۸×۹۰ که در موبایل ۴۶۸×۶۰ می‌شود.', 'techrato' ),
+		),
+		'single_bottom' => array(
+			'group'  => 'single',
+			'label'  => __( 'انتهای مطلب — زیر تگ‌ها', 'techrato' ),
+			'type'   => 'banner',
+			'size'   => '728',
+			'count'  => 2,
+			'fields' => array( 'image', 'url', 'rel', 'code' ),
+			'note'   => __( 'دو بنر ۷۲۸×۹۰ کنار هم. در موبایل به دو بنر ۴۶۸×۶۰ زیر هم تبدیل می‌شوند.', 'techrato' ),
+		),
+
+		/* ---- همه‌ی صفحات ---- */
+		'apps_native' => array(
+			'group'  => 'global',
+			'label'  => __( 'بالای باکس معرفی نرم‌افزار — نیتیو', 'techrato' ),
+			'type'   => 'native-grid',
+			'count'  => 6,
+			'fields' => array( 'image', 'title', 'url', 'rel' ),
+			'note'   => __( 'شش تبلیغ: در دسکتاپ دو ردیف سه‌تایی و در موبایل سه ردیف دوتایی.', 'techrato' ),
+		),
+		'footer_banner' => array(
+			'group'  => 'global',
+			'label'  => __( 'زیر تبلیغات لینکی', 'techrato' ),
+			'type'   => 'banner',
+			'size'   => '728',
+			'count'  => 2,
+			'fields' => array( 'image', 'url', 'rel', 'code' ),
+			'note'   => __( 'دو بنر ۷۲۸×۹۰ کنار هم. در موبایل به دو بنر ۴۶۸×۶۰ زیر هم تبدیل می‌شوند.', 'techrato' ),
+		),
+	);
+}
+
+/**
+ * The panel is grouped by the page each slot belongs to, so nobody has to
+ * remember which of nine positions lives where.
+ *
+ * @return array group key => heading
+ */
+function techrato_ads_groups() {
+	return array(
+		'home'     => __( 'صفحه نخست', 'techrato' ),
+		'category' => __( 'صفحه دسته‌بندی', 'techrato' ),
+		'single'   => __( 'صفحه مطلب', 'techrato' ),
+		'global'   => __( 'همه‌ی صفحات', 'techrato' ),
 	);
 }
 
@@ -329,21 +393,26 @@ function techrato_ads_native_row( $item ) {
 }
 
 /**
- * Which list positions the native ads take, keyed by position.
+ * Which list positions the native ads of a slot take, keyed by position.
  *
  * Position 2 means "shown as the second item", so the ad is inserted before the
  * post that would otherwise be second; no post is lost.
  *
+ * @param string $key Slot key of a native-row slot.
  * @return array position => item
  */
-function techrato_ads_latest_map() {
-	$items = techrato_ads_items( 'latest_native' );
+function techrato_ads_native_map( $key ) {
+	$slots = techrato_ads_slots();
+	if ( ! isset( $slots[ $key ]['positions'] ) ) {
+		return array();
+	}
+
+	$items = techrato_ads_items( $key );
 	if ( ! $items ) {
 		return array();
 	}
 
-	$slots     = techrato_ads_slots();
-	$positions = $slots['latest_native']['positions'];
+	$positions = $slots[ $key ]['positions'];
 	$map       = array();
 
 	foreach ( array_values( $items ) as $index => $item ) {
@@ -640,21 +709,31 @@ function techrato_ads_page() {
 				</tr>
 			</table>
 
-			<?php foreach ( techrato_ads_slots() as $key => $slot ) : ?>
-				<?php $stored = $settings['slots'][ $key ]; ?>
-				<h2 style="margin-top:32px;"><?php echo esc_html( $slot['label'] ); ?></h2>
-				<p class="description" style="margin-bottom:10px;"><?php echo esc_html( $slot['note'] ); ?></p>
-				<p>
-					<label>
-						<input type="checkbox" name="<?php echo esc_attr( TECHRATO_ADS_OPTION . '[slots][' . $key . '][enabled]' ); ?>" value="1" <?php checked( $stored['enabled'], 1 ); ?>>
-						<?php esc_html_e( 'این جایگاه فعال باشد', 'techrato' ); ?>
-					</label>
-				</p>
-				<div class="techrato-ad-grid">
-					<?php for ( $i = 0; $i < $slot['count']; $i++ ) : ?>
-						<?php techrato_ads_admin_row( $slot, $key, isset( $stored['items'][ $i ] ) ? (array) $stored['items'][ $i ] : array(), $i ); ?>
-					<?php endfor; ?>
-				</div>
+			<?php $all_slots = techrato_ads_slots(); ?>
+			<?php foreach ( techrato_ads_groups() as $group => $group_label ) : ?>
+				<h2 class="techrato-ad-group"><?php echo esc_html( $group_label ); ?></h2>
+
+				<?php foreach ( $all_slots as $key => $slot ) : ?>
+					<?php
+					if ( $group !== $slot['group'] ) {
+						continue;
+					}
+					$stored = $settings['slots'][ $key ];
+					?>
+					<h3 style="margin-bottom:4px;"><?php echo esc_html( $slot['label'] ); ?></h3>
+					<p class="description" style="margin-bottom:8px;"><?php echo esc_html( $slot['note'] ); ?></p>
+					<p>
+						<label>
+							<input type="checkbox" name="<?php echo esc_attr( TECHRATO_ADS_OPTION . '[slots][' . $key . '][enabled]' ); ?>" value="1" <?php checked( $stored['enabled'], 1 ); ?>>
+							<?php esc_html_e( 'این جایگاه فعال باشد', 'techrato' ); ?>
+						</label>
+					</p>
+					<div class="techrato-ad-grid">
+						<?php for ( $i = 0; $i < $slot['count']; $i++ ) : ?>
+							<?php techrato_ads_admin_row( $slot, $key, isset( $stored['items'][ $i ] ) ? (array) $stored['items'][ $i ] : array(), $i ); ?>
+						<?php endfor; ?>
+					</div>
+				<?php endforeach; ?>
 			<?php endforeach; ?>
 
 			<?php submit_button(); ?>
@@ -666,6 +745,10 @@ function techrato_ads_page() {
 	.techrato-ad-card { background: #fff; border: 1px solid #dcdcde; border-radius: 6px; padding: 12px 16px; }
 	.techrato-ad-card h4 { margin: 0 0 10px; }
 	.techrato-ad-preview:empty { display: none; }
+	.techrato-ad-group {
+		margin: 34px 0 6px; padding: 8px 14px;
+		background: #1d2327; color: #fff; border-radius: 4px; font-size: 15px;
+	}
 	.techrato-ad-preview { margin-bottom: 8px; }
 	</style>
 

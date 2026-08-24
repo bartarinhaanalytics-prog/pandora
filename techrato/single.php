@@ -62,6 +62,11 @@ get_header();
 					</div>
 				</header>
 
+				<?php // A single banner right under the like/comment row. It sits
+				// below the header block rather than inside it, so it gets the
+				// full width of the article column instead of half of it. ?>
+				<?php techrato_ads_render_banners( 'single_top' ); ?>
+
 				<div class="article-content">
 					<?php
 					the_content();
@@ -82,6 +87,9 @@ get_header();
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
+
+				<?php // Two banners at the end of the article, under the tags. ?>
+				<?php techrato_ads_render_banners( 'single_bottom' ); ?>
 
 				<div class="author-box">
 					<div class="avatar"><?php echo get_avatar( get_the_author_meta( 'ID' ), 56 ); ?></div>

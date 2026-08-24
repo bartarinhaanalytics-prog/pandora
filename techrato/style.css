@@ -3,7 +3,7 @@ Theme Name: Techrato
 Theme URI: https://techrato.com
 Author: Techrato Team
 Description: قالب اختصاصی وردپرس برای وب‌سایت خبری-تکنولوژی تکراتو. طراحی شده بر اساس فایل فیگما با تم تیره و لهجه‌ی رنگی فیروزه‌ای.
-Version: 1.46.0
+Version: 1.47.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 6.6
@@ -917,7 +917,9 @@ button.action { cursor: pointer; }
 	border: 1px solid var(--border); background: var(--card);
 	font-size: 11px; font-weight: 700; color: var(--text-muted);
 }
-.ad-row { display: flex; align-items: flex-start; justify-content: center; gap: 16px; }
+/* Aligned to the start, not centred: when one of a pair is removed the survivor
+   should stay where it was rather than slide into the middle of the page. */
+.ad-row { display: flex; align-items: flex-start; justify-content: flex-start; gap: 16px; }
 .ad-unit {
 	display: block; flex: 1 1 0; min-width: 0;
 	border: 1px solid var(--border); border-radius: var(--radius-md);

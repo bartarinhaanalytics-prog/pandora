@@ -56,6 +56,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php endif; ?>
 		</div>
 
+		<?php // Two banners above the listing box. They sit above the whole
+		// two-column layout rather than inside the narrower content column, so
+		// a pair of 728px banners still fits side by side. ?>
+		<?php techrato_ads_render_banners( 'cat_top' ); ?>
+
 		<div class="layout-with-sidebar">
 
 			<div>
@@ -85,6 +90,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						'term_id'    => $techrato_term_id,
 						'card'       => 'list-row',
 						'card_args'  => array( 'tags' => true ),
+						'ads'        => 'cat_native',
 						'more_url'   => $techrato_term_id ? get_category_link( $techrato_term_id ) : techrato_more_url( '', $GLOBALS['wp_query'] ),
 						'empty_text' => __( 'مطلبی برای نمایش یافت نشد.', 'techrato' ),
 						'push_url'   => true,

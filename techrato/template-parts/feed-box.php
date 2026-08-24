@@ -57,8 +57,8 @@ $feed_uid   = wp_unique_id( 'feed-' );
 
 // Native ads sit at fixed places in the first render only. Load-more appends
 // posts underneath, so re-inserting them there would stack ads down the page.
-$feed_ads = ( 'latest_native' === $feed['ads'] && function_exists( 'techrato_ads_latest_map' ) )
-	? techrato_ads_latest_map()
+$feed_ads = ( $feed['ads'] && function_exists( 'techrato_ads_native_map' ) )
+	? techrato_ads_native_map( $feed['ads'] )
 	: array();
 ?>
 <div class="js-feed feed-box"<?php echo $feed['push_url'] ? ' data-push-url="1"' : ''; ?>>
