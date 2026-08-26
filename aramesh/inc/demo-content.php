@@ -79,6 +79,16 @@ function aramesh_seed_identity() {
 	set_theme_mod( 'aramesh_doctor_experience', '15' );
 	set_theme_mod( 'aramesh_doctor_bio', 'دکترای روانشناسی عمومی؛ با ارائه هزاران مشاوره فردی و خانوادگی و برگزاری بیش از ۳۰ عنوان کارگاه درمان ماهانه به‌صورت آنلاین و حضوری.' );
 
+	// عکس دکتر (از مدیا لایبرری همین سایت). قابل تغییر در سفارشی‌سازی.
+	$uploads = wp_upload_dir();
+	$photo   = trailingslashit( $uploads['baseurl'] ) . '2026/08/ChatGPT-Image-Aug-13-2026-04_12_55-PM.png';
+	if ( ! get_theme_mod( 'aramesh_hero_image' ) ) {
+		set_theme_mod( 'aramesh_hero_image', $photo );
+	}
+	if ( ! get_theme_mod( 'aramesh_about_image' ) ) {
+		set_theme_mod( 'aramesh_about_image', $photo );
+	}
+
 	// محتوای صفحه درباره.
 	$pages = get_option( 'aramesh_pages', array() );
 	if ( ! empty( $pages['about'] ) && get_post( $pages['about'] ) ) {
