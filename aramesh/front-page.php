@@ -16,8 +16,8 @@ $telegram    = aramesh_option( 'telegram' );
 <section class="hero">
 	<div class="container">
 		<div class="row align-items-center g-5">
-			<div class="col-lg-6 order-lg-2 text-center text-lg-end">
-				<span class="eyebrow"><?php esc_html_e( 'دوره‌های تخصصی روان‌شناسی', 'aramesh' ); ?></span>
+			<div class="col-lg-6 text-center text-lg-start">
+				<span class="eyebrow"><?php esc_html_e( 'کارگاه‌های تخصصی روان‌شناسی', 'aramesh' ); ?></span>
 				<h1 class="hero__title">
 					<?php esc_html_e( 'برای حال بهتر،', 'aramesh' ); ?><br>
 					<span class="accent"><?php esc_html_e( 'از شناخت عمیق‌تر شروع کن.', 'aramesh' ); ?></span>
@@ -41,7 +41,7 @@ $telegram    = aramesh_option( 'telegram' );
 					<span class="hero__pill"><?php esc_html_e( 'محتوای تخصصی و کاربردی', 'aramesh' ); ?></span>
 				</div>
 			</div>
-			<div class="col-lg-6 order-lg-1">
+			<div class="col-lg-6">
 				<div class="hero__media mx-auto" style="max-width:460px">
 					<?php
 					$hero_img = aramesh_doctor_image( 'hero_image' );

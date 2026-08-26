@@ -204,6 +204,13 @@ function aramesh_doctor_image( $option = 'hero_image' ) {
 	if ( $val ) {
 		return $val;
 	}
+	// «درباره» در نبود عکس اختصاصی، از عکس هیرو استفاده می‌کند.
+	if ( 'about_image' === $option ) {
+		$hero = aramesh_option( 'hero_image' );
+		if ( $hero ) {
+			return $hero;
+		}
+	}
 	foreach ( array( 'doctor.jpg', 'doctor.png', 'doctor.webp' ) as $name ) {
 		if ( file_exists( ARAMESH_DIR . '/assets/images/' . $name ) ) {
 			return ARAMESH_URI . '/assets/images/' . $name;

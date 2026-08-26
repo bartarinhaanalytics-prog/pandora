@@ -46,6 +46,33 @@ function aramesh_customize_register( $wp_customize ) {
 		$wp_customize->add_control( 'aramesh_' . $key, array( 'label' => $data[0], 'section' => 'aramesh_identity', 'type' => $is_textarea ? 'textarea' : 'text' ) );
 	}
 
+	// عکس دکتر برای هیرو صفحه اصلی و صفحه درباره (آپلود از همین‌جا).
+	$wp_customize->add_setting( 'aramesh_hero_image', array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control(
+		new WP_Customize_Image_Control(
+			$wp_customize,
+			'aramesh_hero_image',
+			array(
+				'label'       => __( 'عکس دکتر — هیرو صفحه اصلی', 'aramesh' ),
+				'description' => __( 'عکس شما در بخش بالای صفحه اصلی نمایش داده می‌شود.', 'aramesh' ),
+				'section'     => 'aramesh_identity',
+			)
+		)
+	);
+
+	$wp_customize->add_setting( 'aramesh_about_image', array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control(
+		new WP_Customize_Image_Control(
+			$wp_customize,
+			'aramesh_about_image',
+			array(
+				'label'       => __( 'عکس دکتر — بخش «درباره من»', 'aramesh' ),
+				'description' => __( 'اگر خالی بماند، از همان عکس هیرو استفاده می‌شود.', 'aramesh' ),
+				'section'     => 'aramesh_identity',
+			)
+		)
+	);
+
 	// لوگو متنی/تصویری از قابلیت custom-logo هم پشتیبانی می‌شود.
 	add_theme_support( 'custom-logo', array( 'height' => 48, 'width' => 200, 'flex-width' => true, 'flex-height' => true ) );
 

@@ -16,7 +16,7 @@ $experience  = aramesh_option( 'doctor_experience', '10' );
 	<div class="container">
 		<?php aramesh_breadcrumb(); ?>
 		<div class="row align-items-center g-5 mt-1">
-			<div class="col-lg-7 order-lg-2 text-center text-lg-end">
+			<div class="col-lg-7 text-center text-lg-start">
 				<span class="eyebrow"><?php echo esc_html( aramesh_option( 'doctor_title', 'روانشناس و درمانگر' ) ); ?></span>
 				<h1 class="mb-3"><?php echo esc_html( $doctor_name ); ?></h1>
 				<p class="lead-soft"><?php echo esc_html( aramesh_option( 'doctor_tagline', 'همراه شما در مسیر شناخت خود' ) ); ?></p>
@@ -25,7 +25,7 @@ $experience  = aramesh_option( 'doctor_experience', '10' );
 					<a class="btn btn-outline-primary" href="<?php echo esc_url( aramesh_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'تماس با من', 'aramesh' ); ?></a>
 				</div>
 			</div>
-			<div class="col-lg-5 order-lg-1">
+			<div class="col-lg-5">
 				<div class="hero__media mx-auto" style="max-width:420px">
 					<?php if ( has_post_thumbnail() ) : ?>
 						<?php the_post_thumbnail( 'aramesh-wide', array( 'class' => 'w-100 h-100', 'style' => 'object-fit:cover' ) ); ?>

@@ -33,7 +33,7 @@ while ( have_posts() ) :
 			<div class="row g-5 align-items-start mt-1">
 
 				<!-- media -->
-				<div class="col-lg-6">
+				<div class="col-lg-6 order-lg-2">
 					<div class="trailer ratio ratio-16x9">
 						<?php if ( has_post_thumbnail() ) : ?>
 							<?php the_post_thumbnail( 'aramesh-cover', array( 'style' => 'object-fit:cover;width:100%;height:100%' ) ); ?>
@@ -48,8 +48,8 @@ while ( have_posts() ) :
 				</div>
 
 				<!-- summary + price -->
-				<div class="col-lg-6">
-					<span class="eyebrow"><?php esc_html_e( 'دوره تخصصی', 'aramesh' ); ?></span>
+				<div class="col-lg-6 order-lg-1">
+					<span class="eyebrow"><?php esc_html_e( 'کارگاه تخصصی', 'aramesh' ); ?></span>
 					<h1 class="mb-3"><?php the_title(); ?></h1>
 					<?php if ( $short ) : ?><p class="lead-soft"><?php echo esc_html( $short ); ?></p><?php endif; ?>
 
@@ -94,7 +94,7 @@ while ( have_posts() ) :
 	<section class="section-sm">
 		<div class="container">
 			<div class="card-flat p-4">
-				<div class="row g-4 text-center text-md-end">
+				<div class="row g-4 text-center text-md-start">
 					<?php
 					$benefits = array(
 						array( 'infinity', __( 'دسترسی همیشگی', 'aramesh' ), __( 'به محتوای دوره', 'aramesh' ) ),
