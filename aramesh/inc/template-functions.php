@@ -101,15 +101,18 @@ function aramesh_format_toman( $amount ) {
  * @return array{price:int,sale:int,has_sale:bool,effective:int,is_free:bool}
  */
 function aramesh_course_price( $course_id ) {
-	$price = (int) get_post_meta( $course_id, '_aramesh_price', true );
-	$sale  = (int) get_post_meta( $course_id, '_aramesh_sale_price', true );
-	$has   = $sale > 0 && $sale < $price;
+	$raw_price  = get_post_meta( $course_id, '_aramesh_price', true );
+	$on_request = ( '' === $raw_price || false === $raw_price || null === $raw_price );
+	$price      = (int) $raw_price;
+	$sale       = (int) get_post_meta( $course_id, '_aramesh_sale_price', true );
+	$has        = $sale > 0 && $sale < $price;
 	return array(
-		'price'     => $price,
-		'sale'      => $sale,
-		'has_sale'  => $has,
-		'effective' => $has ? $sale : $price,
-		'is_free'   => 0 === $price,
+		'price'      => $price,
+		'sale'       => $sale,
+		'has_sale'   => $has,
+		'effective'  => $has ? $sale : $price,
+		'is_free'    => ! $on_request && 0 === $price,
+		'on_request' => $on_request,
 	);
 }
 
@@ -118,6 +121,9 @@ function aramesh_course_price( $course_id ) {
  */
 function aramesh_price_html( $course_id ) {
 	$p = aramesh_course_price( $course_id );
+	if ( ! empty( $p['on_request'] ) ) {
+		return '<span class="course-price course-price--request">' . esc_html__( 'ثبت‌نام کارگاه', 'aramesh' ) . '</span>';
+	}
 	if ( $p['is_free'] ) {
 		return '<span class="course-price course-price--free">' . esc_html__( 'رایگان', 'aramesh' ) . '</span>';
 	}
@@ -184,6 +190,26 @@ function aramesh_courses_url() {
 function aramesh_brand_name() {
 	$name = aramesh_option( 'doctor_name', get_bloginfo( 'name' ) );
 	return $name ? $name : get_bloginfo( 'name' );
+}
+
+/**
+ * آدرس عکس دکتر برای هیرو/درباره.
+ * ترتیب: گزینه Customizer ($option) ← فایل باندل‌شده assets/images/doctor.jpg ← خالی.
+ *
+ * @param string $option کلید گزینه (hero_image یا about_image).
+ * @return string
+ */
+function aramesh_doctor_image( $option = 'hero_image' ) {
+	$val = aramesh_option( $option );
+	if ( $val ) {
+		return $val;
+	}
+	foreach ( array( 'doctor.jpg', 'doctor.png', 'doctor.webp' ) as $name ) {
+		if ( file_exists( ARAMESH_DIR . '/assets/images/' . $name ) ) {
+			return ARAMESH_URI . '/assets/images/' . $name;
+		}
+	}
+	return '';
 }
 
 /**

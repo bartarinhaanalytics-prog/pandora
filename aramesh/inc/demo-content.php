@@ -1,7 +1,8 @@
 <?php
 /**
- * بارگذار محتوای نمونه (اختیاری) — از پیشخوان: ابزارها » محتوای نمونه Aramesh.
- * محتوای placeholder و قابل‌جایگزین ایجاد می‌کند تا جریان‌ها قابل تست باشند.
+ * بارگذار محتوای سایت — از پیشخوان: ابزارها » محتوای سایت (Aramesh).
+ * اطلاعات دکتر، صفحه درباره، و فهرست کارگاه‌های برگزارشده را می‌سازد.
+ * عملیات idempotent است و محتوای تکراری نمی‌سازد.
  *
  * @package Aramesh
  */
@@ -13,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function aramesh_demo_menu() {
 	add_management_page(
-		__( 'محتوای نمونه Aramesh', 'aramesh' ),
-		__( 'محتوای نمونه Aramesh', 'aramesh' ),
+		__( 'محتوای سایت (Aramesh)', 'aramesh' ),
+		__( 'محتوای سایت (Aramesh)', 'aramesh' ),
 		'manage_options',
 		'aramesh-demo',
 		'aramesh_demo_page'
@@ -28,15 +29,15 @@ add_action( 'admin_menu', 'aramesh_demo_menu' );
 function aramesh_demo_page() {
 	if ( isset( $_POST['aramesh_demo_seed'] ) && check_admin_referer( 'aramesh_demo', 'aramesh_demo_nonce' ) ) {
 		$result = aramesh_seed_demo_content();
-		echo '<div class="notice notice-success"><p>' . esc_html( sprintf( __( 'محتوای نمونه ساخته شد: %d دوره، %d جلسه، %d مقاله، %d نظر.', 'aramesh' ), $result['courses'], $result['lessons'], $result['articles'], $result['testimonials'] ) ) . '</p></div>';
+		echo '<div class="notice notice-success"><p>' . esc_html( sprintf( __( 'انجام شد: %d کارگاه ساخته/به‌روزرسانی شد و اطلاعات دکتر و صفحه درباره تنظیم شد.', 'aramesh' ), $result['courses'] ) ) . '</p></div>';
 	}
 	?>
 	<div class="wrap">
-		<h1><?php esc_html_e( 'محتوای نمونه Aramesh', 'aramesh' ); ?></h1>
-		<p><?php esc_html_e( 'با این ابزار چند دوره، جلسه، مقاله و نظر نمونه ساخته می‌شود تا صفحات و جریان‌ها را تست کنید. محتوا idempotent است و دوباره‌سازی نمی‌کند.', 'aramesh' ); ?></p>
+		<h1><?php esc_html_e( 'محتوای سایت (Aramesh)', 'aramesh' ); ?></h1>
+		<p><?php esc_html_e( 'با این دکمه، اطلاعات دکتر مرتضی توکلی، صفحه «درباره»، و فهرست کارگاه‌های برگزارشده ساخته می‌شود تا سایت آماده نمایش باشد. این عملیات idempotent است.', 'aramesh' ); ?></p>
 		<form method="post">
 			<?php wp_nonce_field( 'aramesh_demo', 'aramesh_demo_nonce' ); ?>
-			<p><button type="submit" name="aramesh_demo_seed" value="1" class="button button-primary"><?php esc_html_e( 'ساخت / به‌روزرسانی محتوای نمونه', 'aramesh' ); ?></button></p>
+			<p><button type="submit" name="aramesh_demo_seed" value="1" class="button button-primary"><?php esc_html_e( 'ساخت / به‌روزرسانی محتوای سایت', 'aramesh' ); ?></button></p>
 		</form>
 	</div>
 	<?php
@@ -64,15 +65,60 @@ function aramesh_find_by_title( $title, $post_type ) {
 }
 
 /**
- * ساخت محتوای نمونه.
+ * تنظیم هویت دکتر و صفحه درباره.
+ */
+function aramesh_seed_identity() {
+	// عنوان و توضیح سایت.
+	update_option( 'blogname', 'دکتر مرتضی توکلی' );
+	update_option( 'blogdescription', 'دکترای روانشناسی عمومی' );
+
+	// theme_modهای هویت.
+	set_theme_mod( 'aramesh_doctor_name', 'دکتر مرتضی توکلی' );
+	set_theme_mod( 'aramesh_doctor_title', 'دکترای روانشناسی عمومی' );
+	set_theme_mod( 'aramesh_doctor_tagline', 'همراه شما در مسیر شناخت خود و حال بهتر' );
+	set_theme_mod( 'aramesh_doctor_experience', '15' );
+	set_theme_mod( 'aramesh_doctor_bio', 'دکترای روانشناسی عمومی؛ با ارائه هزاران مشاوره فردی و خانوادگی و برگزاری بیش از ۳۰ عنوان کارگاه درمان ماهانه به‌صورت آنلاین و حضوری.' );
+
+	// محتوای صفحه درباره.
+	$pages = get_option( 'aramesh_pages', array() );
+	if ( ! empty( $pages['about'] ) && get_post( $pages['about'] ) ) {
+		$about_content =
+			'<h2>درباره دکتر مرتضی توکلی</h2>' .
+			'<p>دکترای روانشناسی عمومی، متولد خرداد ۱۳۵۹.</p>' .
+			'<ul>' .
+			'<li>ارائه هزاران مشاوره فردی و خانوادگی طی سال‌های گذشته</li>' .
+			'<li>برگزاری بیش از ۳۰ عنوان کارگاه درمان ماهانه به‌صورت آنلاین و حضوری</li>' .
+			'<li>برگزاری جلسات آموزش رایگان فرزندپروری در شهرستان‌های سراسر ایران</li>' .
+			'<li>هزاران مشاوره فردی و خانوادگی تخصصی با مهاجران ایرانی سراسر دنیا طی ده سال گذشته</li>' .
+			'<li>ریاست فرهنگسرای ارسباران، سال ۹۱–۹۲</li>' .
+			'<li>مدیرمسئول و سردبیر سایت نی‌نی‌بان از ۱۳۹۲</li>' .
+			'<li>سردبیر مجله فرزندپروری شهرزاد از سال ۱۳۸۸</li>' .
+			'</ul>';
+		wp_update_post( array( 'ID' => (int) $pages['about'], 'post_content' => $about_content ) );
+	}
+}
+
+/**
+ * توضیح مشترک نحوه ارائه کارگاه‌ها.
+ */
+function aramesh_workshop_delivery_note() {
+	return 'این کارگاه به‌صورت صوتی (ویس) در یک کانال اختصاصی تلگرام ارائه می‌شود. ' .
+		'پس از انتخاب و واریز وجه، به کانال کارگاه اضافه می‌شوید و بدون محدودیت زمانی به فایل‌ها دسترسی دارید. ' .
+		'هر کارگاه حداقل ۴ جلسه‌ی دوساعته (مجموعاً ۸ ساعت) است.';
+}
+
+/**
+ * ساخت محتوای سایت (کارگاه‌ها + هویت + درباره).
  *
  * @return array
  */
 function aramesh_seed_demo_content() {
-	$counts = array( 'courses' => 0, 'lessons' => 0, 'articles' => 0, 'testimonials' => 0 );
+	$counts = array( 'courses' => 0 );
 
-	// دسته‌بندی دوره‌ها و موضوعات.
-	$cats = array( 'اضطراب و نگرانی', 'اعتمادبه‌نفس', 'روابط عاطفی', 'رشد فردی', 'شناخت خود' );
+	aramesh_seed_identity();
+
+	// دسته‌بندی‌ها و موضوعات.
+	$cats = array( 'هیجانات', 'روابط', 'خودشناسی و رشد' );
 	foreach ( $cats as $c ) {
 		if ( ! term_exists( $c, 'course_category' ) ) {
 			wp_insert_term( $c, 'course_category' );
@@ -82,53 +128,36 @@ function aramesh_seed_demo_content() {
 		}
 	}
 
-	$courses = array(
-		array(
-			'title'    => 'مدیریت اضطراب و ذهن ناآرام',
-			'short'    => 'راهکارهای علمی و کاربردی برای شناخت و کاهش اضطراب در زندگی روزمره.',
-			'price'    => 2890000,
-			'sale'     => 0,
-			'cat'      => 'اضطراب و نگرانی',
-			'featured' => '1',
-			'best'     => '1',
-			'level'    => 'همه سطوح',
-			'duration' => '۸ ساعت',
-			'outcomes' => "شناخت انواع اضطراب و علل بروز آن\nتکنیک‌های موثر برای کاهش استرس و آرام‌سازی ذهن\nمدیریت افکار منفی و نگرانی‌های مداوم\nبهبود تمرکز و افزایش بهره‌وری\nتقویت اعتماد به نفس و احساس امنیت درونی",
-			'suitable' => "کسانی که اضطراب و نگرانی‌های مداوم دارند\nافرادی که دچار استرس روزمره و فشار ذهنی هستند\nکسانی که به‌دنبال آرامش ذهنی و کنترل بهتر هیجانات هستند",
-			'faq'      => "بعد از خرید چگونه به دوره دسترسی دارم؟ | بلافاصله پس از پرداخت در «دوره‌های من».\nآیا امکان دانلود ویدیوها وجود دارد؟ | خیر، ویدیوها فقط از حساب کاربری و محافظت‌شده قابل مشاهده‌اند.\nمدت زمان دسترسی به دوره چقدر است؟ | دسترسی دائمی است.",
-		),
-		array(
-			'title'    => 'اعتماد به‌نفس و عزت نفس',
-			'short'    => 'تقویت خودباوری و ساختن ذهنیت مثبت از خودتان.',
-			'price'    => 2490000,
-			'sale'     => 1990000,
-			'cat'      => 'اعتمادبه‌نفس',
-			'featured' => '1',
-			'best'     => '',
-			'level'    => 'مقدماتی',
-			'duration' => '۵.۵ ساعت',
-			'outcomes' => "شناخت ریشه‌های کمبود اعتماد به نفس\nتمرین‌های عملی خودباوری\nمدیریت مقایسه اجتماعی\nگفت‌وگوی درونی سالم",
-			'suitable' => "کسانی که در تصمیم‌گیری تردید دارند\nافرادی که خود را دست‌کم می‌گیرند",
-			'faq'      => "آیا این دوره جایگزین روان‌درمانی است؟ | خیر، آموزشی و مکمل است.",
-		),
-		array(
-			'title'    => 'روابط عاطفی سالم',
-			'short'    => 'یادگیری مهارت‌های ارتباطی و ایجاد روابط عمیق و پایدار.',
-			'price'    => 3490000,
-			'sale'     => 0,
-			'cat'      => 'روابط عاطفی',
-			'featured' => '',
-			'best'     => '1',
-			'level'    => 'همه سطوح',
-			'duration' => '۱۰ ساعت',
-			'outcomes' => "مهارت گفت‌وگوی موثر\nمدیریت تعارض\nمرزهای سالم\nهمدلی و گوش دادن فعال",
-			'suitable' => "زوج‌ها و افرادی که به‌دنبال بهبود روابط هستند",
-			'faq'      => "برای شرکت نیاز به همراه دارم؟ | خیر، به‌تنهایی هم قابل استفاده است.",
-		),
+	// فهرست کارگاه‌های برگزارشده.
+	// [ عنوان, دسته, تاریخ برگزاری, توضیح کوتاه, featured, bestseller ]
+	$workshops = array(
+		array( 'کارگاه سوگ', 'هیجانات', 'اسفند ۱۴۰۳', 'همراهی با سوگ و عبور آگاهانه از فقدان و اندوه.', '', '1' ),
+		array( 'کارگاه مهرطلبی', 'روابط', 'آذر ۱۴۰۴', 'رهایی از الگوی مهرطلبی و «نه» گفتن سالم.', '1', '1' ),
+		array( 'کارگاه تنهایی باشکوه', 'خودشناسی و رشد', 'بهمن ۱۴۰۳', 'تبدیل تنهایی به فرصتی برای رشد و آرامش.', '', '' ),
+		array( 'کارگاه با افسردگی', 'هیجانات', 'فروردین ۱۴۰۴', 'شناخت افسردگی و راهکارهای عملی برای حال بهتر.', '', '' ),
+		array( 'کارگاه مرزبندی‌های مهم', 'روابط', 'مهر ۱۴۰۴', 'یادگیری مرزبندی سالم در روابط.', '', '1' ),
+		array( 'کارگاه تقویت حافظه', 'خودشناسی و رشد', 'شهریور ۱۴۰۳', 'تکنیک‌های عملی برای تقویت حافظه و تمرکز.', '', '' ),
+		array( 'کارگاه با خشمم چه کنم', 'هیجانات', 'بهمن ۱۴۰۴', 'مدیریت خشم و تبدیل آن به انرژی سازنده.', '', '1' ),
+		array( 'کارگاه جعبه ابزار آرامش', 'خودشناسی و رشد', 'آبان ۱۴۰۴', 'ابزارهای کاربردی برای آرام‌سازی ذهن.', '', '' ),
+		array( 'کارگاه فرمول رابطه پایدار', 'روابط', 'تیر ۱۴۰۵', 'اصول ساختن رابطه‌ای عمیق و پایدار.', '1', '' ),
+		array( 'کارگاه ترمیم اعتماد به‌نفس', 'خودشناسی و رشد', 'مرداد ۱۴۰۴', 'بازسازی خودباوری و اعتماد به نفس.', '', '1' ),
+		array( 'کارگاه شناخت من ارزشمند', 'خودشناسی و رشد', 'اسفند ۱۴۰۴', 'کشف ارزش‌های درونی و پذیرش خود.', '1', '' ),
+		array( 'کارگاه ما اهمالکار نیستیم!', 'خودشناسی و رشد', 'شهریور ۱۴۰۴', 'ریشه‌یابی و درمان اهمال‌کاری.', '', '' ),
+		array( 'کارگاه درمان دردهای زندگی', 'هیجانات', 'دی ۱۴۰۳', 'همراهی با دردهای زندگی و التیام آن‌ها.', '', '1' ),
+		array( 'کارگاه مهربون باش با خودت', 'خودشناسی و رشد', 'آذر ۱۴۰۳', 'شفقت به خود و گفت‌وگوی درونی مهربان.', '', '' ),
+		array( 'کارگاه سبک دلبستگی من چیه', 'روابط', 'دی ۱۴۰۴', 'شناخت سبک دلبستگی و تأثیر آن بر روابط.', '', '' ),
+		array( 'کارگاه نمی‌خوام از فردا بترسم', 'هیجانات', 'مرداد ۱۴۰۵', 'مدیریت اضطراب آینده و ترس از فردا.', '1', '' ),
+		array( 'کارگاه خشم، اضطراب، افسردگی', 'هیجانات', 'آبان ۱۴۰۳', 'شناخت و مدیریت سه‌گانه‌ی هیجانی خشم، اضطراب و افسردگی.', '', '' ),
+		array( 'کارگاه چرا حالم خوش نیست', 'هیجانات', 'اردیبهشت ۱۴۰۴', 'ریشه‌یابی حال ناخوش و مسیر بهبود.', '', '' ),
+		array( 'کارگاه چرا دستکاری روانی می‌شم', 'روابط', 'خرداد ۱۴۰۴', 'شناخت دستکاری روانی و محافظت از خود.', '', '' ),
 	);
 
-	foreach ( $courses as $cdata ) {
-		$existing = aramesh_find_by_title( $cdata["title"], "course" );
+	$delivery = aramesh_workshop_delivery_note();
+
+	foreach ( $workshops as $w ) {
+		list( $title, $cat, $date, $short, $featured, $best ) = $w;
+
+		$existing = aramesh_find_by_title( $title, 'course' );
 		if ( $existing ) {
 			$course_id = $existing->ID;
 		} else {
@@ -136,119 +165,39 @@ function aramesh_seed_demo_content() {
 				array(
 					'post_type'    => 'course',
 					'post_status'  => 'publish',
-					'post_title'   => $cdata['title'],
-					'post_excerpt' => $cdata['short'],
-					'post_content' => '<p>' . esc_html( $cdata['short'] ) . '</p><p>در این دوره با رویکردی علمی و کاربردی، گام‌به‌گام مسیر تغییر را طی می‌کنید.</p>',
+					'post_title'   => $title,
+					'post_excerpt' => $short,
+					'post_content' => '<p>' . esc_html( $short ) . '</p>' .
+						'<p class="text-secondary">برگزارشده: ' . esc_html( $date ) . '</p>' .
+						'<p>' . esc_html( $delivery ) . '</p>',
 				)
 			);
-			$counts['courses']++;
-		}
-		update_post_meta( $course_id, '_aramesh_short_desc', $cdata['short'] );
-		update_post_meta( $course_id, '_aramesh_price', $cdata['price'] );
-		update_post_meta( $course_id, '_aramesh_sale_price', $cdata['sale'] );
-		update_post_meta( $course_id, '_aramesh_teacher', 'دکتر سارا احمدی' );
-		update_post_meta( $course_id, '_aramesh_duration', $cdata['duration'] );
-		update_post_meta( $course_id, '_aramesh_level', $cdata['level'] );
-		update_post_meta( $course_id, '_aramesh_featured', $cdata['featured'] );
-		update_post_meta( $course_id, '_aramesh_bestseller', $cdata['best'] );
-		update_post_meta( $course_id, '_aramesh_outcomes', $cdata['outcomes'] );
-		update_post_meta( $course_id, '_aramesh_suitable', $cdata['suitable'] );
-		update_post_meta( $course_id, '_aramesh_faq', $cdata['faq'] );
-		wp_set_object_terms( $course_id, $cdata['cat'], 'course_category' );
-		wp_set_object_terms( $course_id, $cdata['cat'], 'topic' );
-
-		// جلسه‌ها.
-		$lessons = array(
-			array( 'مقدمه و آشنایی با دوره', 'فصل ۱: شروع', '۰۸:۳۰', '1' ),
-			array( 'شناخت ریشه‌ها', 'فصل ۱: شروع', '۱۴:۱۰', '' ),
-			array( 'تکنیک‌های عملی', 'فصل ۲: مهارت‌ها', '۱۹:۴۵', '' ),
-			array( 'تمرین و جمع‌بندی', 'فصل ۲: مهارت‌ها', '۱۱:۲۰', '' ),
-		);
-		$order = 0;
-		$lesson_count = 0;
-		foreach ( $lessons as $ldata ) {
-			$order++;
-			$lesson_title = $cdata['title'] . ' — ' . $ldata[0];
-			$existing_l   = aramesh_find_by_title( $lesson_title, "lesson" );
-			if ( $existing_l ) {
-				$lesson_id = $existing_l->ID;
-			} else {
-				$lesson_id = wp_insert_post(
-					array(
-						'post_type'   => 'lesson',
-						'post_status' => 'publish',
-						'post_title'  => $lesson_title,
-						'menu_order'  => $order,
-						'post_content'=> '<p>خلاصه این جلسه در اینجا قرار می‌گیرد.</p>',
-						'post_excerpt'=> 'خلاصه کوتاه جلسه ' . $ldata[0],
-					)
-				);
-				$counts['lessons']++;
+			if ( $course_id && ! is_wp_error( $course_id ) ) {
+				$counts['courses']++;
 			}
-			update_post_meta( $lesson_id, '_aramesh_course_id', $course_id );
-			update_post_meta( $lesson_id, '_aramesh_chapter', $ldata[1] );
-			update_post_meta( $lesson_id, '_aramesh_lesson_duration', $ldata[2] );
-			update_post_meta( $lesson_id, '_aramesh_is_preview', $ldata[3] );
-			wp_update_post( array( 'ID' => $lesson_id, 'menu_order' => $order ) );
-			$lesson_count++;
 		}
-		update_post_meta( $course_id, '_aramesh_lesson_count', $lesson_count );
-	}
-
-	// مقالات مجله.
-	$articles = array(
-		array( 'چگونه روابط عاطفی سالم و پایدار داشته باشیم', 'روابط عاطفی' ),
-		array( '۱۰ راهکار عملی برای مدیریت اضطراب روزانه', 'اضطراب و نگرانی' ),
-		array( 'چطور عادت‌های مثبت را در زندگی شکل دهیم', 'رشد فردی' ),
-	);
-	foreach ( $articles as $adata ) {
-		$existing = aramesh_find_by_title( $adata[0], "post" );
-		if ( $existing ) {
+		if ( ! $course_id || is_wp_error( $course_id ) ) {
 			continue;
 		}
-		if ( ! term_exists( $adata[1], 'category' ) ) {
-			wp_insert_term( $adata[1], 'category' );
-		}
-		$cat = get_term_by( 'name', $adata[1], 'category' );
-		$pid = wp_insert_post(
-			array(
-				'post_type'    => 'post',
-				'post_status'  => 'publish',
-				'post_title'   => $adata[0],
-				'post_excerpt' => 'خلاصه‌ای کوتاه و جذاب درباره ' . $adata[0] . '.',
-				'post_content' => "<h2>مقدمه</h2><p>متن نمونه مقاله برای تست صفحه مقاله و مجله. این متن قابل جایگزینی است.</p><h2>بخش اول</h2><p>محتوای بیشتر…</p><h2>جمع‌بندی</h2><p>نتیجه‌گیری کوتاه.</p>",
-				'post_category'=> $cat ? array( $cat->term_id ) : array(),
-			)
-		);
-		if ( $pid && ! is_wp_error( $pid ) ) {
-			$counts['articles']++;
-		}
-	}
 
-	// نظرات.
-	$testimonials = array(
-		array( 'نیلوفر اکبری', 'شرکت‌کننده دوره', 'بعد از شرکت در دوره مدیریت استرس، آرامش بیشتری در زندگی روزمره‌ام تجربه کردم.', 5 ),
-		array( 'امیرحسین رضایی', 'شرکت‌کننده دوره', 'از نحوه بیان دکتر احمدی و تمرین‌های عملی دوره واقعاً راضی هستم.', 5 ),
-		array( 'سارا محمدی', 'شرکت‌کننده دوره', 'رویکرد علمی و در عین حال صمیمی دکتر، مفاهیم را قابل‌فهم می‌کند.', 5 ),
-	);
-	foreach ( $testimonials as $t ) {
-		$existing = aramesh_find_by_title( $t[0], "testimonial" );
-		if ( $existing ) {
-			continue;
-		}
-		$tid = wp_insert_post(
-			array(
-				'post_type'   => 'testimonial',
-				'post_status' => 'publish',
-				'post_title'  => $t[0],
-				'post_content'=> $t[2],
-			)
+		update_post_meta( $course_id, '_aramesh_short_desc', $short );
+		update_post_meta( $course_id, '_aramesh_price', '' ); // بدون قیمت ثابت → «ثبت‌نام کارگاه» (هماهنگی در تلگرام).
+		update_post_meta( $course_id, '_aramesh_teacher', 'دکتر مرتضی توکلی' );
+		update_post_meta( $course_id, '_aramesh_duration', '۸ ساعت (۴ جلسه دوساعته)' );
+		update_post_meta( $course_id, '_aramesh_lesson_count', 4 );
+		update_post_meta( $course_id, '_aramesh_level', 'همه سطوح' );
+		update_post_meta( $course_id, '_aramesh_featured', $featured );
+		update_post_meta( $course_id, '_aramesh_bestseller', $best );
+		update_post_meta( $course_id, '_aramesh_workshop_date', $date );
+		update_post_meta(
+			$course_id,
+			'_aramesh_faq',
+			'دسترسی به کارگاه چگونه است؟ | پس از واریز وجه، به کانال صوتی کارگاه در تلگرام اضافه می‌شوید و بدون محدودیت زمانی دسترسی دارید.' . "\n" .
+			'هر کارگاه چند جلسه است؟ | حداقل ۴ جلسه‌ی دوساعته، مجموعاً ۸ ساعت.'
 		);
-		if ( $tid && ! is_wp_error( $tid ) ) {
-			update_post_meta( $tid, '_aramesh_person_role', $t[1] );
-			update_post_meta( $tid, '_aramesh_rating', $t[3] );
-			$counts['testimonials']++;
-		}
+
+		wp_set_object_terms( $course_id, $cat, 'course_category' );
+		wp_set_object_terms( $course_id, $cat, 'topic' );
 	}
 
 	return $counts;

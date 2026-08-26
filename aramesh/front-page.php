@@ -23,7 +23,7 @@ $telegram    = aramesh_option( 'telegram' );
 					<span class="accent"><?php esc_html_e( 'از شناخت عمیق‌تر شروع کن.', 'aramesh' ); ?></span>
 				</h1>
 				<p class="lead-soft mb-4">
-					<?php esc_html_e( 'دوره‌های علمی و کاربردی برای کمک به شناخت خود، پیامبر و ساختن زندگی آگاهانه‌تر.', 'aramesh' ); ?>
+					<?php esc_html_e( 'کارگاه‌های علمی و کاربردی برای شناخت خود، بهبود حال و ساختن زندگی آگاهانه‌تر.', 'aramesh' ); ?>
 				</p>
 				<div class="d-flex flex-wrap gap-2 justify-content-center justify-content-lg-end">
 					<a class="btn btn-primary btn-lg" href="<?php echo esc_url( aramesh_courses_url() ); ?>">
@@ -44,7 +44,7 @@ $telegram    = aramesh_option( 'telegram' );
 			<div class="col-lg-6 order-lg-1">
 				<div class="hero__media mx-auto" style="max-width:460px">
 					<?php
-					$hero_img = aramesh_option( 'hero_image' );
+					$hero_img = aramesh_doctor_image( 'hero_image' );
 					if ( $hero_img ) :
 						?>
 						<img src="<?php echo esc_url( $hero_img ); ?>" alt="<?php echo esc_attr( $doctor_name ); ?>">
@@ -118,7 +118,7 @@ $telegram    = aramesh_option( 'telegram' );
 			<div class="col-lg-6">
 				<div class="hero__media mx-auto" style="max-width:460px;aspect-ratio:1/1;border-radius:var(--radius-card)">
 					<?php
-					$about_img = aramesh_option( 'about_image' );
+					$about_img = aramesh_doctor_image( 'about_image' );
 					if ( $about_img ) : ?>
 						<img src="<?php echo esc_url( $about_img ); ?>" alt="<?php echo esc_attr( $doctor_name ); ?>">
 					<?php else : ?>

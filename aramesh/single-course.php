@@ -54,6 +54,8 @@ while ( have_posts() ) :
 					<?php if ( $short ) : ?><p class="lead-soft"><?php echo esc_html( $short ); ?></p><?php endif; ?>
 
 					<div class="meta-row my-3">
+						<?php $workshop_date = get_post_meta( $course_id, '_aramesh_workshop_date', true ); ?>
+						<?php if ( $workshop_date ) : ?><span><?php echo aramesh_icon( 'calendar', 18 ); ?> <?php echo esc_html( $workshop_date ); ?></span><?php endif; ?>
 						<?php if ( $lesson_ct ) : ?><span><?php echo aramesh_icon( 'video', 18 ); ?> <?php echo esc_html( $lesson_ct ); ?> <?php esc_html_e( 'جلسه', 'aramesh' ); ?></span><?php endif; ?>
 						<?php if ( $level ) : ?><span><?php echo aramesh_icon( 'layers', 18 ); ?> <?php echo esc_html( $level ); ?></span><?php endif; ?>
 						<?php if ( $duration ) : ?><span><?php echo aramesh_icon( 'clock', 18 ); ?> <?php echo esc_html( $duration ); ?></span><?php endif; ?>
@@ -64,6 +66,13 @@ while ( have_posts() ) :
 						<?php if ( $owned ) : ?>
 							<p class="text-primary-dark fw-bold mb-2"><?php echo aramesh_icon( 'check', 18 ); ?> <?php esc_html_e( 'شما به این دوره دسترسی دارید.', 'aramesh' ); ?></p>
 							<a class="btn btn-primary w-100 btn-lg" href="<?php echo esc_url( aramesh_page_url( 'my_courses' ) ); ?>"><?php esc_html_e( 'ورود به دوره', 'aramesh' ); ?></a>
+						<?php elseif ( ! empty( $price['on_request'] ) ) : ?>
+							<?php $telegram = aramesh_option( 'telegram' ); ?>
+							<p class="text-secondary mb-3"><?php esc_html_e( 'برای ثبت‌نام و اطلاع از شهریه، در تلگرام پیام دهید. پس از هماهنگی و واریز وجه، به کانال صوتی کارگاه اضافه می‌شوید.', 'aramesh' ); ?></p>
+							<a class="btn btn-primary w-100 btn-lg mb-2" href="<?php echo esc_url( $telegram ? $telegram : aramesh_page_url( 'register_path' ) ); ?>" <?php echo $telegram ? 'target="_blank" rel="noopener"' : ''; ?>>
+								<?php echo aramesh_icon( 'telegram', 20 ); ?> <?php esc_html_e( 'ثبت‌نام و هماهنگی در تلگرام', 'aramesh' ); ?>
+							</a>
+							<a class="btn btn-outline-primary w-100" href="<?php echo esc_url( aramesh_page_url( 'register_path' ) ); ?>"><?php echo aramesh_icon( 'heart', 18 ); ?> <?php esc_html_e( 'راهنمای ثبت‌نام (داخل/خارج ایران)', 'aramesh' ); ?></a>
 						<?php else : ?>
 							<div class="d-flex align-items-baseline gap-2 mb-3">
 								<span class="amount"><?php echo esc_html( aramesh_format_toman( $price['effective'] ) ); ?></span>
@@ -248,8 +257,14 @@ while ( have_posts() ) :
 		<!-- sticky mobile CTA -->
 		<div class="sticky-cta d-lg-none">
 			<div class="d-flex align-items-center justify-content-between gap-2">
-				<div><span class="fw-bold"><?php echo esc_html( aramesh_format_toman( $price['effective'] ) ); ?></span> <span class="text-secondary small"><?php esc_html_e( 'تومان', 'aramesh' ); ?></span></div>
-				<button class="btn btn-primary flex-grow-1" data-buy-course="<?php echo (int) $course_id; ?>" data-login-url="<?php echo esc_url( aramesh_page_url( 'register_path' ) ); ?>"><?php esc_html_e( 'ثبت‌نام و خرید', 'aramesh' ); ?></button>
+				<?php if ( ! empty( $price['on_request'] ) ) : ?>
+					<?php $sticky_tg = aramesh_option( 'telegram' ); ?>
+					<div><span class="fw-bold"><?php esc_html_e( 'ثبت‌نام کارگاه', 'aramesh' ); ?></span></div>
+					<a class="btn btn-primary flex-grow-1" href="<?php echo esc_url( $sticky_tg ? $sticky_tg : aramesh_page_url( 'register_path' ) ); ?>" <?php echo $sticky_tg ? 'target="_blank" rel="noopener"' : ''; ?>><?php esc_html_e( 'ثبت‌نام در تلگرام', 'aramesh' ); ?></a>
+				<?php else : ?>
+					<div><span class="fw-bold"><?php echo esc_html( aramesh_format_toman( $price['effective'] ) ); ?></span> <span class="text-secondary small"><?php esc_html_e( 'تومان', 'aramesh' ); ?></span></div>
+					<button class="btn btn-primary flex-grow-1" data-buy-course="<?php echo (int) $course_id; ?>" data-login-url="<?php echo esc_url( aramesh_page_url( 'register_path' ) ); ?>"><?php esc_html_e( 'ثبت‌نام و خرید', 'aramesh' ); ?></button>
+				<?php endif; ?>
 			</div>
 		</div>
 	<?php endif; ?>

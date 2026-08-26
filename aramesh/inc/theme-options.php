@@ -34,11 +34,11 @@ function aramesh_customize_register( $wp_customize ) {
 	);
 
 	$identity_fields = array(
-		'doctor_name'     => array( __( 'نام دکتر', 'aramesh' ), 'دکتر سارا احمدی' ),
-		'doctor_title'    => array( __( 'عنوان زیر نام', 'aramesh' ), 'روانشناس و درمانگر' ),
-		'doctor_tagline'  => array( __( 'شعار کوتاه', 'aramesh' ), 'همراه شما در مسیر شناخت خود' ),
-		'doctor_bio'      => array( __( 'بیوگرافی کوتاه (فوتر/درباره)', 'aramesh' ), '' ),
-		'doctor_experience' => array( __( 'سال‌های تجربه (عدد)', 'aramesh' ), '10' ),
+		'doctor_name'     => array( __( 'نام دکتر', 'aramesh' ), 'دکتر مرتضی توکلی' ),
+		'doctor_title'    => array( __( 'عنوان زیر نام', 'aramesh' ), 'دکترای روانشناسی عمومی' ),
+		'doctor_tagline'  => array( __( 'شعار کوتاه', 'aramesh' ), 'همراه شما در مسیر شناخت خود و حال بهتر' ),
+		'doctor_bio'      => array( __( 'بیوگرافی کوتاه (فوتر/درباره)', 'aramesh' ), 'دکترای روانشناسی عمومی؛ با ارائه هزاران مشاوره فردی و خانوادگی و برگزاری بیش از ۳۰ عنوان کارگاه درمان ماهانه به‌صورت آنلاین و حضوری.' ),
+		'doctor_experience' => array( __( 'سال‌های تجربه (عدد)', 'aramesh' ), '15' ),
 	);
 	foreach ( $identity_fields as $key => $data ) {
 		$is_textarea = ( 'doctor_bio' === $key );
