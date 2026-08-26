@@ -216,7 +216,13 @@ function aramesh_doctor_image( $option = 'hero_image' ) {
 			return ARAMESH_URI . '/assets/images/' . $name;
 		}
 	}
-	return '';
+	// پیش‌فرض: عکس دکتر در مدیا لایبرری همین سایت (قابل تغییر در سفارشی‌سازی یا با فیلتر).
+	$uploads = wp_upload_dir();
+	$default = '';
+	if ( empty( $uploads['error'] ) && ! empty( $uploads['baseurl'] ) ) {
+		$default = trailingslashit( $uploads['baseurl'] ) . '2026/08/ChatGPT-Image-Aug-13-2026-04_12_55-PM.png';
+	}
+	return apply_filters( 'aramesh_default_doctor_image', $default, $option );
 }
 
 /**
