@@ -1,0 +1,27 @@
+/*
+ * فونت فارسی قالب Aramesh.
+ *
+ * فایل فونت به‌دلیل مسائل مجوز داخل بسته نیست. برای بهترین نتیجه یکی از فونت‌های
+ * دارای مجوز (Peyda یا IRANSansX) را در assets/fonts/ قرار دهید و بلوک @font-face
+ * زیر را از حالت کامنت خارج کنید. تا آن زمان از فونت‌های نصب‌شده سیستم و Tahoma
+ * به‌عنوان fallback استفاده می‌شود.
+ */
+
+/*
+@font-face {
+	font-family: "Peyda";
+	src: url("../fonts/Peyda-Regular.woff2") format("woff2");
+	font-weight: 400;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Peyda";
+	src: url("../fonts/Peyda-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-display: swap;
+}
+*/
+
+:root {
+	--aramesh-font: "Peyda", "IRANSansX", "Vazirmatn", "IRANSans", "Segoe UI", Tahoma, system-ui, -apple-system, sans-serif;
+}
