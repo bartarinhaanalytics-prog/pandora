@@ -10,6 +10,29 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * یک‌بار خودکار: با اولین ورود مدیر به پیشخوان پس از نصب/فعال‌سازی،
+ * اطلاعات دکتر، دوره‌ها و مقاله‌های نمونه ساخته می‌شود (بدون نیاز به زدن دکمه).
+ * با گزینهٔ aramesh_autoseeded فقط یک‌بار اجرا می‌شود.
+ */
+function aramesh_maybe_autoseed() {
+	if ( wp_doing_ajax() || ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
+		return;
+	}
+	if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	if ( '1' === get_option( 'aramesh_autoseeded' ) ) {
+		return;
+	}
+	// پرچم را پیش از اجرا ست می‌کنیم تا در صورت خطا دوباره اجرا نشود.
+	update_option( 'aramesh_autoseeded', '1' );
+	if ( function_exists( 'aramesh_seed_demo_content' ) ) {
+		aramesh_seed_demo_content();
+	}
+}
+add_action( 'admin_init', 'aramesh_maybe_autoseed', 20 );
+
+/**
  * افزودن صفحه ابزار.
  */
 function aramesh_demo_menu() {

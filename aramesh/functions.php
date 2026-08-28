@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'ARAMESH_VERSION', '1.0.0' );
+define( 'ARAMESH_VERSION', '1.6.0' );
 define( 'ARAMESH_DIR', get_template_directory() );
 define( 'ARAMESH_URI', get_template_directory_uri() );
 
