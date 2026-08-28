@@ -28,6 +28,14 @@
 }
 .aramesh-player__state:empty { display: none; }
 
+.aramesh-player__video { user-select: none; -webkit-user-select: none; }
+.aramesh-player__badge {
+	position: absolute; inset-block-start: 12px; inset-inline-start: 12px;
+	background: rgba(120,137,120,.92); color: #fff; font-size: .8rem; font-weight: 700;
+	padding: .3rem .7rem; border-radius: 8px; z-index: 3; pointer-events: none;
+}
+.aramesh-player--inline .aramesh-player__frame { border-radius: var(--radius-card); }
+
 /* لیست جلسات کنار پخش‌کننده */
 .lesson-list { list-style:none; padding:0; margin:0; display:grid; gap:.4rem; max-height: 560px; overflow:auto; }
 .lesson-list__item a { display:flex; gap:.6rem; align-items:center; padding:.7rem .8rem; border-radius:12px; color: var(--text); border:1px solid transparent; }

@@ -41,6 +41,59 @@ function aramesh_get_signed_playback_url( $lesson_id, $user_id = 0 ) {
 }
 
 /**
+ * منبع نمونه (دمو): برای جلساتی که شناسه ویدیوی آن‌ها «sample» است،
+ * ویدیوی نمونهٔ باندل‌شدهٔ قالب پخش می‌شود تا جریان تماشا قابل نمایش باشد.
+ * در تولید، شناسهٔ واقعی ویدیو + فیلتر سرویس امن جایگزین می‌شود.
+ */
+function aramesh_sample_playback_url( $url, $video_id, $provider, $lesson_id, $user_id ) {
+	if ( $url ) {
+		return $url;
+	}
+	if ( 'sample' === $video_id && file_exists( ARAMESH_DIR . '/assets/samples/sample-video.webm' ) ) {
+		return ARAMESH_URI . '/assets/samples/sample-video.webm';
+	}
+	return $url;
+}
+add_filter( 'aramesh_signed_playback_url', 'aramesh_sample_playback_url', 5, 5 );
+
+/**
+ * آدرس ویدیوی نمونهٔ قالب (برای تریلر/پیش‌نمایش).
+ */
+function aramesh_sample_video_url() {
+	if ( file_exists( ARAMESH_DIR . '/assets/samples/sample-video.webm' ) ) {
+		return ARAMESH_URI . '/assets/samples/sample-video.webm';
+	}
+	return '';
+}
+
+/**
+ * پخش‌کنندهٔ محافظت‌شدهٔ درون‌خطی برای تریلر/پیش‌نمایش (بدون دانلود، بدون منوی راست‌کلیک، با واترمارک).
+ *
+ * @param string $src   آدرس ویدیو.
+ * @param string $label برچسب اختیاری.
+ */
+function aramesh_render_inline_protected_video( $src, $label = '' ) {
+	if ( ! $src ) {
+		return;
+	}
+	$watermark = aramesh_user_watermark();
+	?>
+	<div class="aramesh-player aramesh-player--inline" oncontextmenu="return false;">
+		<div class="aramesh-player__frame ratio ratio-16x9">
+			<video class="aramesh-player__video" controls controlsList="nodownload noremoteplayback noplaybackrate"
+				disablepictureinpicture playsinline preload="metadata"
+				oncontextmenu="return false;" ondragstart="return false;">
+				<source src="<?php echo esc_url( $src ); ?>" type="video/webm">
+				<?php esc_html_e( 'مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.', 'aramesh' ); ?>
+			</video>
+			<?php if ( $watermark ) : ?><div class="aramesh-player__watermark" aria-hidden="true"><?php echo esc_html( $watermark ); ?></div><?php endif; ?>
+			<?php if ( $label ) : ?><span class="aramesh-player__badge"><?php echo esc_html( $label ); ?></span><?php endif; ?>
+		</div>
+	</div>
+	<?php
+}
+
+/**
  * برچسب واترمارک ماسک‌شده کاربر.
  * مثال: 0912***4567 — کاربر ۱۲
  */
@@ -119,9 +172,10 @@ function aramesh_render_secure_player( $lesson_id ) {
 			<video
 				class="aramesh-player__video"
 				controls
-				controlsList="nodownload noremoteplayback"
+				controlsList="nodownload noremoteplayback noplaybackrate"
 				disablepictureinpicture
 				oncontextmenu="return false;"
+				ondragstart="return false;"
 				playsinline
 				preload="none">
 				<?php esc_html_e( 'مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.', 'aramesh' ); ?>

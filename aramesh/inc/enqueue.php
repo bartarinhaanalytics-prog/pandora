@@ -61,8 +61,12 @@ add_action( 'wp_enqueue_scripts', 'aramesh_enqueue_assets' );
  * پخش‌کننده ویدیو فقط در صفحه جلسه (سبک نگه‌داشتن بقیه صفحات).
  */
 function aramesh_enqueue_player_assets() {
-	if ( is_singular( 'lesson' ) || is_page_template( 'single-lesson.php' ) ) {
+	// استایل پخش‌کننده در صفحهٔ جلسه و صفحهٔ دوره (برای تریلر) لازم است.
+	if ( is_singular( array( 'lesson', 'course' ) ) || is_page_template( 'single-lesson.php' ) ) {
 		wp_enqueue_style( 'aramesh-player', ARAMESH_URI . '/assets/css/player.css', array( 'aramesh-theme' ), ARAMESH_VERSION );
+	}
+	// اسکریپت پخش‌کننده فقط در صفحهٔ جلسه.
+	if ( is_singular( 'lesson' ) || is_page_template( 'single-lesson.php' ) ) {
 		wp_enqueue_script( 'aramesh-player', ARAMESH_URI . '/assets/js/player.js', array( 'aramesh-theme' ), ARAMESH_VERSION, true );
 	}
 }

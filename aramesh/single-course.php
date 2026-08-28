@@ -34,17 +34,18 @@ while ( have_posts() ) :
 
 				<!-- media -->
 				<div class="col-lg-6 order-lg-2">
-					<div class="trailer ratio ratio-16x9">
-						<?php if ( has_post_thumbnail() ) : ?>
-							<?php the_post_thumbnail( 'aramesh-cover', array( 'style' => 'object-fit:cover;width:100%;height:100%' ) ); ?>
-						<?php else : ?>
-							<span class="ph-media w-100 h-100"><?php echo aramesh_icon( 'sprout', 56 ); ?></span>
-						<?php endif; ?>
-						<?php if ( $trailer ) : ?>
-							<div class="play"><a class="play-btn" href="<?php echo esc_url( $trailer ); ?>" target="_blank" rel="noopener" aria-label="<?php esc_attr_e( 'پخش معرفی دوره', 'aramesh' ); ?>"><?php echo aramesh_icon( 'play', 24 ); ?></a></div>
-						<?php endif; ?>
-						<?php if ( $bestseller ) : ?><span class="badge-soft badge-best position-absolute" style="top:12px;inset-inline-start:12px"><?php esc_html_e( 'پرفروش‌ترین دوره', 'aramesh' ); ?></span><?php endif; ?>
-					</div>
+					<?php if ( $trailer ) : ?>
+						<?php aramesh_render_inline_protected_video( $trailer, __( 'پیش‌نمایش دوره', 'aramesh' ) ); ?>
+					<?php else : ?>
+						<div class="trailer ratio ratio-16x9">
+							<?php if ( has_post_thumbnail() ) : ?>
+								<?php the_post_thumbnail( 'aramesh-cover', array( 'style' => 'object-fit:cover;width:100%;height:100%' ) ); ?>
+							<?php else : ?>
+								<span class="ph-media w-100 h-100"><?php echo aramesh_icon( 'sprout', 56 ); ?></span>
+							<?php endif; ?>
+							<?php if ( $bestseller ) : ?><span class="badge-soft badge-best position-absolute" style="top:12px;inset-inline-start:12px"><?php esc_html_e( 'پرفروش‌ترین دوره', 'aramesh' ); ?></span><?php endif; ?>
+						</div>
+					<?php endif; ?>
 				</div>
 
 				<!-- summary + price -->
@@ -79,10 +80,13 @@ while ( have_posts() ) :
 								<span class="text-secondary"><?php esc_html_e( 'تومان', 'aramesh' ); ?></span>
 								<?php if ( $price['has_sale'] ) : ?><del class="text-secondary ms-2"><?php echo esc_html( aramesh_format_toman( $price['price'] ) ); ?></del><?php endif; ?>
 							</div>
-							<button class="btn btn-primary w-100 btn-lg mb-2" data-buy-course="<?php echo (int) $course_id; ?>" data-login-url="<?php echo esc_url( add_query_arg( 'redirect_to', get_permalink(), aramesh_page_url( 'register_path' ) ) ); ?>">
-								<?php echo aramesh_icon( 'check', 20 ); ?> <?php esc_html_e( 'همین حالا ثبت‌نام و خرید دوره', 'aramesh' ); ?>
+							<button class="btn btn-primary w-100 btn-lg mb-2" data-buy-course="<?php echo (int) $course_id; ?>" data-login-url="<?php echo esc_url( add_query_arg( 'redirect_to', get_permalink(), aramesh_page_url( 'register_iran' ) ) ); ?>">
+								<?php echo aramesh_icon( 'check', 20 ); ?> <?php esc_html_e( 'ثبت‌نام و خرید (داخل ایران)', 'aramesh' ); ?>
 							</button>
-							<a class="btn btn-outline-primary w-100" href="<?php echo esc_url( aramesh_page_url( 'register_path' ) ); ?>"><?php echo aramesh_icon( 'heart', 18 ); ?> <?php esc_html_e( 'راهنمای ثبت‌نام (داخل/خارج ایران)', 'aramesh' ); ?></a>
+							<?php $telegram = aramesh_option( 'telegram' ); ?>
+							<a class="btn btn-outline-primary w-100" href="<?php echo esc_url( $telegram ? $telegram : aramesh_page_url( 'register_intl' ) ); ?>" <?php echo $telegram ? 'target="_blank" rel="noopener"' : ''; ?>>
+								<?php echo aramesh_icon( 'telegram', 18 ); ?> <?php esc_html_e( 'خارج از کشور هستید؟ ثبت‌نام در تلگرام', 'aramesh' ); ?>
+							</a>
 						<?php endif; ?>
 					</div>
 				</div>

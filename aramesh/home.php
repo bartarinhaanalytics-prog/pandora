@@ -46,7 +46,8 @@ $cats = get_terms( array( 'taxonomy' => 'category', 'hide_empty' => true, 'numbe
 							$first = false;
 							// Editor pick / featured بزرگ.
 							?>
-							<article class="a-card hover-lift mb-4">
+							<div class="mb-4">
+							<article class="a-card hover-lift">
 								<div class="row g-0">
 									<div class="col-md-6">
 										<a class="a-card__media h-100 d-block" href="<?php the_permalink(); ?>" style="min-height:240px">
@@ -66,6 +67,7 @@ $cats = get_terms( array( 'taxonomy' => 'category', 'hide_empty' => true, 'numbe
 									</div>
 								</div>
 							</article>
+							</div>
 							<?php
 						else :
 							echo '<div class="mb-4">';
