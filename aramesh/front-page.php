@@ -13,19 +13,20 @@ $telegram    = aramesh_option( 'telegram' );
 ?>
 
 <!-- ============ HERO ============ -->
-<section class="hero">
+<section class="hero has-grain">
+	<div class="hero__decor" aria-hidden="true"><span class="d1"></span><span class="d2"></span></div>
 	<div class="container">
 		<div class="row align-items-center g-5">
 			<div class="col-lg-6 text-center text-lg-start">
-				<span class="eyebrow"><?php esc_html_e( 'کارگاه‌های تخصصی روان‌شناسی', 'aramesh' ); ?></span>
+				<span class="eyebrow"><?php echo aramesh_icon( 'leaf', 16 ); ?> <?php esc_html_e( 'کارگاه‌های تخصصی روان‌شناسی', 'aramesh' ); ?></span>
 				<h1 class="hero__title">
 					<?php esc_html_e( 'برای حال بهتر،', 'aramesh' ); ?><br>
-					<span class="accent"><?php esc_html_e( 'از شناخت عمیق‌تر شروع کن.', 'aramesh' ); ?></span>
+					<span class="accent title-accent"><?php esc_html_e( 'از شناخت عمیق‌تر شروع کن.', 'aramesh' ); ?></span>
 				</h1>
 				<p class="lead-soft mb-4">
 					<?php esc_html_e( 'کارگاه‌های علمی و کاربردی برای شناخت خود، بهبود حال و ساختن زندگی آگاهانه‌تر.', 'aramesh' ); ?>
 				</p>
-				<div class="d-flex flex-wrap gap-2 justify-content-center justify-content-lg-end">
+				<div class="d-flex flex-wrap gap-2 justify-content-center justify-content-lg-start">
 					<a class="btn btn-primary btn-lg" href="<?php echo esc_url( aramesh_courses_url() ); ?>">
 						<?php echo aramesh_icon( 'arrow-left', 20 ); ?>
 						<?php esc_html_e( 'مشاهده دوره‌ها', 'aramesh' ); ?>
@@ -35,50 +36,69 @@ $telegram    = aramesh_option( 'telegram' );
 						<?php echo aramesh_icon( 'arrow-down', 18 ); ?>
 					</a>
 				</div>
-				<div class="hero__pills justify-content-center justify-content-lg-end">
-					<span class="hero__pill"><?php esc_html_e( 'دسترسی همیشگی', 'aramesh' ); ?></span>
-					<span class="hero__pill"><?php esc_html_e( 'آموزش آنلاین', 'aramesh' ); ?></span>
-					<span class="hero__pill"><?php esc_html_e( 'محتوای تخصصی و کاربردی', 'aramesh' ); ?></span>
+				<div class="social-proof mt-4 mx-auto mx-lg-0">
+					<span class="avatars" aria-hidden="true">
+						<span><?php echo aramesh_icon( 'heart', 16 ); ?></span>
+						<span><?php echo aramesh_icon( 'sprout', 16 ); ?></span>
+						<span><?php echo aramesh_icon( 'users', 16 ); ?></span>
+					</span>
+					<span class="social-proof__text"><b><?php esc_html_e( '۱۰۰۰+ همراه', 'aramesh' ); ?></b><?php esc_html_e( 'در مسیر رشد و تغییر', 'aramesh' ); ?></span>
 				</div>
 			</div>
 			<div class="col-lg-6">
-				<div class="hero__media mx-auto" style="max-width:460px">
-					<?php
-					$hero_img = aramesh_doctor_image( 'hero_image' );
-					if ( $hero_img ) :
-						?>
-						<img src="<?php echo esc_url( $hero_img ); ?>" alt="<?php echo esc_attr( $doctor_name ); ?>">
-					<?php else : ?>
-						<span class="ph-media w-100 h-100"><?php echo aramesh_icon( 'leaf', 64 ); ?></span>
-					<?php endif; ?>
+				<div class="media-wrap mx-auto" style="max-width:460px">
+					<div class="hero__media">
+						<?php
+						$hero_img = aramesh_doctor_image( 'hero_image' );
+						if ( $hero_img ) :
+							?>
+							<img src="<?php echo esc_url( $hero_img ); ?>" alt="<?php echo esc_attr( $doctor_name ); ?>">
+						<?php else : ?>
+							<span class="ph-media w-100 h-100"><?php echo aramesh_icon( 'leaf', 64 ); ?></span>
+						<?php endif; ?>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
 
-<!-- ============ TRUST STRIP ============ -->
-<section class="pb-5">
+<!-- ============ BENTO (اعتماد/ویژگی‌ها) ============ -->
+<section class="section-sm pt-0">
 	<div class="container">
-		<div class="trust">
-			<div class="row g-0">
-				<?php
-				$trust_items = array(
-					array( 'award', __( 'محتوای علمی و معتبر', 'aramesh' ), __( 'بر پایه دانش روز روان‌شناسی', 'aramesh' ) ),
-					array( 'infinity', __( 'دسترسی آسان', 'aramesh' ), __( 'در هر زمان و مکان', 'aramesh' ) ),
-					array( 'users', __( 'هزاران همراه', 'aramesh' ), __( 'در مسیر رشد و تغییر', 'aramesh' ) ),
-					array( 'award', sprintf( __( '+%s سال تجربه', 'aramesh' ), $experience ), __( 'درمان، مشاوره و آموزش', 'aramesh' ) ),
-				);
-				foreach ( $trust_items as $t ) :
-					?>
-					<div class="col-6 col-lg-3">
-						<div class="trust__item">
-							<div class="trust__icon"><?php echo aramesh_icon( $t[0], 26 ); ?></div>
-							<div class="trust__title"><?php echo esc_html( $t[1] ); ?></div>
-							<div class="trust__text"><?php echo esc_html( $t[2] ); ?></div>
-						</div>
-					</div>
-				<?php endforeach; ?>
+		<div class="bento">
+			<div class="bento__tile bento--accent bento__wide">
+				<div class="bento__num"><?php echo esc_html( $experience ); ?>+</div>
+				<div class="bento__title"><?php esc_html_e( 'سال تجربهٔ بالینی', 'aramesh' ); ?></div>
+				<p class="bento__text"><?php esc_html_e( 'درمان، مشاوره و آموزش برای هزاران نفر در ایران و خارج از کشور.', 'aramesh' ); ?></p>
+			</div>
+			<div class="bento__tile">
+				<div class="feature__icon"><?php echo aramesh_icon( 'award', 22 ); ?></div>
+				<div class="bento__title"><?php esc_html_e( 'علمی و معتبر', 'aramesh' ); ?></div>
+				<p class="bento__text"><?php esc_html_e( 'بر پایهٔ دانش روز روان‌شناسی.', 'aramesh' ); ?></p>
+			</div>
+			<div class="bento__tile">
+				<div class="feature__icon"><?php echo aramesh_icon( 'infinity', 22 ); ?></div>
+				<div class="bento__title"><?php esc_html_e( 'دسترسی همیشگی', 'aramesh' ); ?></div>
+				<p class="bento__text"><?php esc_html_e( 'در هر زمان و مکان.', 'aramesh' ); ?></p>
+			</div>
+			<div class="bento__tile bento--soft">
+				<div class="bento__num">۳۰+</div>
+				<div class="bento__label"><?php esc_html_e( 'کارگاه درمانی', 'aramesh' ); ?></div>
+			</div>
+			<div class="bento__tile">
+				<div class="bento__num">۱۰۰۰+</div>
+				<div class="bento__label"><?php esc_html_e( 'همراه دوره‌ها', 'aramesh' ); ?></div>
+			</div>
+			<div class="bento__tile bento--soft">
+				<div class="feature__icon"><?php echo aramesh_icon( 'headset', 22 ); ?></div>
+				<div class="bento__title"><?php esc_html_e( 'پشتیبانی و همراهی', 'aramesh' ); ?></div>
+				<p class="bento__text"><?php esc_html_e( 'در طول دوره کنار شما.', 'aramesh' ); ?></p>
+			</div>
+			<div class="bento__tile">
+				<div class="feature__icon"><?php echo aramesh_icon( 'shield', 22 ); ?></div>
+				<div class="bento__title"><?php esc_html_e( 'محتوای محافظت‌شده', 'aramesh' ); ?></div>
+				<p class="bento__text"><?php esc_html_e( 'ویدیوها بدون دانلود مستقیم.', 'aramesh' ); ?></p>
 			</div>
 		</div>
 	</div>
@@ -90,7 +110,7 @@ $telegram    = aramesh_option( 'telegram' );
 		<div class="row align-items-center g-5">
 			<div class="col-lg-6">
 				<span class="eyebrow"><?php esc_html_e( 'درباره من', 'aramesh' ); ?></span>
-				<h2 class="mb-3"><?php esc_html_e( 'شناخت، اولین قدم تغییر است.', 'aramesh' ); ?></h2>
+				<h2 class="mb-3"><?php esc_html_e( 'شناخت،', 'aramesh' ); ?> <span class="title-accent"><?php esc_html_e( 'اولین قدم تغییر است.', 'aramesh' ); ?></span></h2>
 				<p class="lead-soft"><?php echo esc_html( aramesh_option( 'doctor_bio', 'من ' . $doctor_name . ' هستم، روان‌شناس و درمانگر. با استفاده از رویکردهای علمی و تجربی، تلاش می‌کنم آموزش‌هایی ارائه دهم که به شما در مسیر آگاهی، بهبود روابط و ابزارهای کاربردی برای زندگی رضایت‌بخش‌تر کمک کند.' ) ); ?></p>
 				<div class="row g-3 my-3">
 					<?php
@@ -116,7 +136,7 @@ $telegram    = aramesh_option( 'telegram' );
 				</a>
 			</div>
 			<div class="col-lg-6">
-				<div class="hero__media mx-auto" style="max-width:460px;aspect-ratio:1/1;border-radius:var(--radius-card)">
+				<div class="hero__media mx-auto" style="max-width:440px;aspect-ratio:1/1">
 					<?php
 					$about_img = aramesh_doctor_image( 'about_image' );
 					if ( $about_img ) : ?>
@@ -151,7 +171,7 @@ if ( $featured_q->have_posts() ) :
 			<div class="d-flex flex-wrap justify-content-between align-items-end section-head gap-2">
 				<div>
 					<span class="eyebrow"><?php esc_html_e( 'دوره‌های منتخب', 'aramesh' ); ?></span>
-					<h2 class="m-0"><?php esc_html_e( 'دوره‌هایی برای یک تغییر واقعی', 'aramesh' ); ?></h2>
+					<h2 class="m-0"><span class="title-accent"><?php esc_html_e( "دوره‌هایی برای یک تغییر واقعی", "aramesh" ); ?></span></h2>
 				</div>
 				<a class="btn btn-ghost" href="<?php echo esc_url( aramesh_courses_url() ); ?>"><?php esc_html_e( 'مشاهده همه دوره‌ها', 'aramesh' ); ?> <?php echo aramesh_icon( 'arrow-left', 18 ); ?></a>
 			</div>
@@ -322,7 +342,7 @@ if ( $aq->have_posts() ) :
 			<div class="d-flex flex-wrap justify-content-between align-items-end section-head gap-2">
 				<div>
 					<span class="eyebrow"><?php esc_html_e( 'مجله', 'aramesh' ); ?></span>
-					<h2 class="m-0"><?php esc_html_e( 'تازه‌ترین مقالات', 'aramesh' ); ?></h2>
+					<h2 class="m-0"><span class="title-accent"><?php esc_html_e( "تازه‌ترین مقالات", "aramesh" ); ?></span></h2>
 				</div>
 				<a class="btn btn-ghost" href="<?php echo esc_url( aramesh_page_url( 'blog' ) ); ?>"><?php esc_html_e( 'مشاهده همه مقالات', 'aramesh' ); ?> <?php echo aramesh_icon( 'arrow-left', 18 ); ?></a>
 			</div>

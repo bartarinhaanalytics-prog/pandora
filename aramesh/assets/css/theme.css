@@ -404,3 +404,113 @@ html, body { overflow-x: clip; } /* شبکهٔ ایمنی در برابر سرر
 /* placeholder media when no image */
 .ph-media { background: linear-gradient(135deg, #efeae2, #e3ddd2); display:grid; place-items:center; color: var(--primary-dark); }
 .ph-media svg { opacity:.5; }
+
+/* ==========================================================================
+   Modern / Organic elevation (v1.7) — تمایز و به‌روزرسانی بصری
+   حفظ پالت sage + دسترس‌پذیری؛ افزودن فرم‌های ارگانیک، بافت، Bento و جزئیات
+   ========================================================================== */
+
+/* --- دکمه‌های Pill (مدرن‌تر) --- */
+.btn { border-radius: 999px; }
+.btn-primary { box-shadow: 0 8px 20px -8px rgba(95,112,96,.55); }
+.btn-primary:hover { box-shadow: 0 10px 24px -8px rgba(78,94,74,.6); }
+.chip { transition: transform .18s ease, background-color .18s ease, border-color .18s ease; }
+.chip:hover { transform: translateY(-2px); }
+
+/* --- بافت دانه‌ای ظریف روی نواحی تزئینی --- */
+.has-grain { position: relative; }
+.has-grain::after {
+	content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+	opacity: .5; mix-blend-mode: multiply;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+}
+.has-grain > * { position: relative; z-index: 1; }
+
+/* --- شکل ارگانیک/گوشهٔ نامتقارن برای عکس‌ها --- */
+.hero__media, .about-photo {
+	border-radius: 38px 38px 38px 96px; /* گوشهٔ دراماتیک پایین‌راست (RTL) */
+	position: relative;
+}
+@media (max-width: 575.98px) { .hero__media, .about-photo { border-radius: 28px 28px 28px 64px; } }
+
+/* بلابِ لهجه‌ای پشت عکس + نقطه‌چین تزئینی */
+.media-wrap { position: relative; }
+.media-wrap::before {
+	content: ""; position: absolute; z-index: 0;
+	inset-block-start: -22px; inset-inline-end: -22px; width: 62%; height: 62%;
+	background: radial-gradient(circle at 30% 30%, rgba(199,169,139,.35), rgba(199,169,139,0) 70%);
+	border-radius: 50%; filter: blur(6px);
+}
+.media-wrap::after {
+	content: ""; position: absolute; z-index: 0;
+	inset-block-end: -18px; inset-inline-start: -18px; width: 108px; height: 108px;
+	background-image: radial-gradient(var(--primary) 1.6px, transparent 1.6px);
+	background-size: 14px 14px; opacity: .22; border-radius: 12px;
+}
+.media-wrap > * { position: relative; z-index: 1; }
+
+/* --- شکل‌های ارگانیک شناور در پس‌زمینهٔ هیرو --- */
+.hero { position: relative; overflow: hidden; }
+.hero__decor { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.hero__decor span {
+	position: absolute; display: block; border-radius: 46% 54% 48% 52% / 60% 56% 44% 40%;
+	filter: blur(2px); opacity: .5;
+}
+.hero__decor .d1 { width: 340px; height: 340px; inset-block-start: -120px; inset-inline-start: -80px; background: rgba(120,137,120,.14); }
+.hero__decor .d2 { width: 220px; height: 220px; inset-block-end: -70px; inset-inline-end: 8%; background: rgba(199,169,139,.16); }
+.hero > .container { position: relative; z-index: 1; }
+@media (prefers-reduced-motion: no-preference) {
+	.hero__decor span { animation: floaty 12s ease-in-out infinite alternate; }
+	.hero__decor .d2 { animation-duration: 15s; animation-delay: -4s; }
+}
+@keyframes floaty { from { transform: translate(0,0) rotate(0); } to { transform: translate(-18px,14px) rotate(8deg); } }
+
+/* --- لهجهٔ زیر تیترها (قلم‌موی ارگانیک) --- */
+.title-accent { position: relative; display: inline-block; }
+.title-accent::after {
+	content: ""; position: absolute; inset-inline-start: 0; inset-block-end: -10px; width: 100%; height: 10px;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='10' viewBox='0 0 120 10'%3E%3Cpath d='M2 6 C 30 2, 60 10, 118 4' stroke='%23C7A98B' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat; background-size: 100% 100%;
+}
+
+/* --- Social proof pill (کنار CTA هیرو) --- */
+.social-proof { display: inline-flex; align-items: center; gap: .7rem; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: .4rem .9rem .4rem .5rem; box-shadow: var(--shadow-soft); }
+.avatars { display: inline-flex; }
+.avatars span { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--surface); background: var(--surface-soft); display: grid; place-items: center; color: var(--primary-dark); margin-inline-start: -10px; }
+.avatars span:first-child { margin-inline-start: 0; }
+.social-proof__text { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.3; }
+.social-proof__text b { color: var(--text); display: block; }
+
+/* --- Bento grid (ویژگی‌ها/اعتماد به‌صورت مدرن) --- */
+.bento { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.bento__tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: var(--s-4); position: relative; overflow: hidden; transition: transform .2s ease, box-shadow .2s ease; }
+.bento__tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+.bento__tile .feature__icon { margin-bottom: var(--s-2); }
+.bento__num { font-size: clamp(1.9rem, 3vw, 2.6rem); font-weight: 800; color: var(--primary-dark); line-height: 1; }
+.bento__label { color: var(--text-secondary); font-size: var(--fs-sm); margin-top: .35rem; }
+.bento__title { font-weight: 800; font-size: var(--fs-md); margin-bottom: .35rem; }
+.bento__text { color: var(--text-secondary); font-size: var(--fs-sm); margin: 0; }
+.bento__wide { grid-column: span 2; }
+.bento__tall { grid-row: span 2; }
+.bento--accent { background: linear-gradient(150deg, #7d8e7d, var(--primary-dark)); color: #fff; border-color: transparent; }
+.bento--accent .bento__title, .bento--accent .bento__num { color: #fff; }
+.bento--accent .bento__text { color: rgba(255,255,255,.9); }
+.bento--soft { background: var(--surface-soft); }
+.bento__tile .bento__bg-icon { position: absolute; inset-block-end: -14px; inset-inline-start: -10px; opacity: .06; }
+@media (max-width: 991.98px) { .bento { grid-template-columns: repeat(2, 1fr); } .bento__wide { grid-column: span 2; } .bento__tall { grid-row: auto; } }
+@media (max-width: 575.98px) { .bento { grid-template-columns: 1fr; } .bento__wide { grid-column: auto; } }
+
+/* --- تقسیم‌کنندهٔ موجی ارگانیک بین بخش‌ها --- */
+.wave-divider { line-height: 0; }
+.wave-divider svg { display: block; width: 100%; height: 48px; }
+
+/* --- ارتقای کارت‌ها --- */
+.a-card { transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.a-card:hover { border-color: rgba(120,137,120,.4); }
+.a-card__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(40,39,36,.12), transparent 45%); opacity: 0; transition: opacity .25s ease; }
+.a-card:hover .a-card__media::after { opacity: 1; }
+.a-card__flag { backdrop-filter: blur(4px); background: rgba(255,255,255,.75); }
+
+/* --- بخش با پس‌زمینهٔ ارگانیک ملایم --- */
+.section-organic { position: relative; background: var(--surface-soft); overflow: hidden; }
+.section-organic::before { content: ""; position: absolute; inset-block-start: -80px; inset-inline-start: -60px; width: 360px; height: 360px; background: radial-gradient(circle at 40% 40%, rgba(120,137,120,.12), transparent 70%); border-radius: 50%; pointer-events: none; }
