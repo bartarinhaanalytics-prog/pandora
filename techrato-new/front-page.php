@@ -16,25 +16,13 @@ $shown_ids = array();
 
 <main id="primary">
 
-	<?php // The homepage has no headline of its own; this names the site for
-	// search engines and screen readers without altering the design. ?>
-	<h1 class="screen-reader-text">
-		<?php
-		echo esc_html( get_bloginfo( 'name' ) );
-		$techrato_tagline = get_bloginfo( 'description' );
-		if ( $techrato_tagline ) {
-			echo ' — ' . esc_html( $techrato_tagline );
-		}
-		?>
-	</h1>
-
 	<!-- ===== HERO ===== -->
 	<?php if ( techrato_home_shows( 'hero' ) ) : ?>
 	<section class="hero-pattern hero-section">
 		<div class="container">
 			<div class="hero-heading">
 				<span class="eyebrow"><?php echo esc_html( techrato_home_option( 'hero', 'eyebrow' ) ); ?></span>
-				<h2><?php echo wp_kses_post( techrato_home_option( 'hero', 'headline' ) ); ?></h2>
+				<h1><?php echo wp_kses_post( techrato_home_option( 'hero', 'headline' ) ); ?></h1>
 				<p><?php echo esc_html( techrato_home_option( 'hero', 'subline' ) ); ?></p>
 				<form class="search-box" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 					<input type="search" name="s" value="<?php echo esc_attr( get_search_query() ); ?>"

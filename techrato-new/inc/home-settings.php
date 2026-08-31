@@ -45,6 +45,16 @@ function techrato_home_blocks() {
 			),
 		),
 
+		'trend' => array(
+			'label'       => __( 'نوار «داغ‌ترین‌ها» زیر هیرو', 'techrato' ),
+			'description' => __( 'نوار باریک زیر بخش هیرو. اگر نمی‌خواهیدش تیک نمایش را بردارید.', 'techrato' ),
+			'fields'      => array(
+				'enabled' => array( 'type' => 'toggle', 'label' => __( 'نمایش این بخش', 'techrato' ), 'default' => 1 ),
+				'title'   => array( 'type' => 'text', 'label' => __( 'برچسب', 'techrato' ), 'default' => 'داغ‌ترین‌ها' ),
+				'count'   => array( 'type' => 'number', 'label' => __( 'تعداد مطالب', 'techrato' ), 'default' => 4, 'min' => 2, 'max' => 8 ),
+			),
+		),
+
 		'editors' => array(
 			'label'       => __( 'پیشنهادهای سردبیر', 'techrato' ),
 			'description' => __( 'از تیک «پیشنهاد سردبیر» در صفحه ویرایش مطلب خوانده می‌شود.', 'techrato' ),

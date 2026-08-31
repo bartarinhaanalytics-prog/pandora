@@ -3,7 +3,7 @@ Theme Name: تکراتو جدید
 Theme URI: https://techrato.com/
 Author: Techrato
 Description: قالب اختصاصی تکراتو — نسخه‌ی جدید. شامل سیستم تبلیغات، لایه‌ی سئو، تنظیمات صفحه نخست، مگا منو و بارگذاری مطالب بدون رفرش.
-Version: 2.0.0
+Version: 2.1.0
 Requires at least: 5.8
 Requires PHP: 7.4
 License: GNU General Public License v2 or later
@@ -10236,3 +10236,116 @@ textarea.comment-field {
    the drawer backdrop cover the page from the first paint. */
 .search-overlay[hidden],
 .mobile-menu-backdrop[hidden] { display: none !important; }
+
+/* ==================================================================
+   اصلاحات بعد از بازخورد
+   ================================================================== */
+
+/* فلش‌های ورود به مطلب: با موس گرد می‌شوند و رنگ می‌گیرند. */
+.feature-card__button,
+.side-story__image a,
+.news-card__image a,
+.app-card-notch a,
+.topic-notch a,
+.surface-notch a,
+.category-top-main__button,
+.social-follow-link svg {
+	transition: background-color .2s ease, color .2s ease, border-radius .2s ease, transform .2s ease;
+}
+.feature-card__button:hover,
+.side-story__image a:hover,
+.news-card__image a:hover,
+.app-card-notch a:hover,
+.topic-notch a:hover,
+.surface-notch a:hover,
+.category-top-main__notch:hover .category-top-main__button {
+	border-radius: 50%;
+	background: #3ad13a;
+	color: #0d2b0d;
+}
+.feature-card__button:hover svg,
+.side-story__image a:hover svg,
+.news-card__image a:hover svg,
+.app-card-notch a:hover svg,
+.topic-notch a:hover svg,
+.surface-notch a:hover svg { stroke: currentColor; }
+
+/* نوار داغ‌ترین‌ها: لینک‌ها باید مثل متن طراحی دیده شوند. */
+.trend-list a {
+	flex: 0 0 auto;
+	color: inherit;
+	white-space: nowrap;
+	transition: color .18s ease;
+}
+.trend-list a:hover { color: #2aa72a; }
+
+/* شبکه‌های اجتماعی: فهرست قابل کلیک به‌جای یک دکمه‌ی تنها. */
+.social-follow-links {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+}
+.social-follow-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 18px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, .12);
+	border: 1px solid rgba(255, 255, 255, .28);
+	color: #fff;
+	font-size: 12.5px;
+	font-weight: 600;
+	transition: background .2s ease, color .2s ease;
+}
+.social-follow-link svg { width: 14px; height: 14px; }
+.social-follow-link:hover { background: #3ad13a; border-color: #3ad13a; color: #0d2b0d; }
+
+/* تبلیغات لینکی: تگ‌های کنار هم داخل یک کادر. */
+.link-ads-wrap { padding-block: 0 26px; }
+.link-ads {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px 14px;
+	padding: 16px 20px;
+	border: 1px solid #e6e6e6;
+	border-radius: 20px;
+	background: #fff;
+}
+.link-ads-title {
+	flex: 0 0 auto;
+	padding: 6px 14px;
+	border-radius: 999px;
+	background: #161616;
+	color: #fff;
+	font-size: 11px;
+	font-weight: 700;
+}
+.link-ads-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 10px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.link-ads-list li { margin: 0; }
+.link-ads-list a {
+	display: block;
+	padding: 7px 16px;
+	border: 1px solid #e6e6e6;
+	border-radius: 999px;
+	background: #fafafa;
+	color: #4a4a4a;
+	font-size: 12.5px;
+	transition: border-color .18s ease, color .18s ease, background .18s ease;
+}
+.link-ads-list a:hover { border-color: #3ad13a; background: #f2fff2; color: #1d7a1d; }
+
+@media (max-width: 640px) {
+	.link-ads { padding: 14px 16px; border-radius: 16px; }
+	.social-follow-links { gap: 8px; }
+	.social-follow-link { padding: 9px 14px; font-size: 12px; }
+}

@@ -26,9 +26,7 @@ if ( ! $techrato_terms ) {
 		<div class="category-grid">
 			<?php foreach ( $techrato_terms as $techrato_term ) : ?>
 				<a class="category-card" href="<?php echo esc_url( get_category_link( $techrato_term->term_id ) ); ?>">
-					<span class="category-icon" aria-hidden="true">
-						<svg viewBox="0 0 24 24"><rect height="18" rx="2.4" width="10" x="7" y="3"></rect><path d="M10 6h4M11 18h2"></path></svg>
-					</span>
+					<span class="category-icon" aria-hidden="true"><?php echo techrato_term_icon( $techrato_term->term_id ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
 					<h3><?php echo esc_html( $techrato_term->name ); ?></h3>
 					<b><?php echo techrato_arrow_icon(); // phpcs:ignore WordPress.Security.EscapeOutput ?></b>
 				</a>
