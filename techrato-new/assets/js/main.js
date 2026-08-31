@@ -1,0 +1,316 @@
+/**
+ * Techrato — front-end behaviour.
+ *
+ * Everything here is optional: with JavaScript off the site still navigates,
+ * searches and paginates, because each control is a real link or form first.
+ */
+( function () {
+	'use strict';
+
+	var data = window.techratoData || {};
+
+	/* ---------------------------------------------------------------
+	 * Mobile menu
+	 * ------------------------------------------------------------- */
+	( function () {
+		var toggle   = document.querySelector( '.js-menu-toggle' );
+		var panel    = document.getElementById( 'mobile-menu-panel' );
+		var backdrop = document.querySelector( '.js-menu-backdrop' );
+		var close    = document.querySelector( '.js-menu-close' );
+
+		if ( ! toggle || ! panel ) {
+			return;
+		}
+
+		function setOpen( open ) {
+			document.body.classList.toggle( 'menu-open', open );
+			panel.classList.toggle( 'is-open', open );
+			panel.setAttribute( 'aria-hidden', open ? 'false' : 'true' );
+			toggle.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+			if ( backdrop ) {
+				backdrop.hidden = ! open;
+			}
+		}
+
+		toggle.addEventListener( 'click', function () {
+			setOpen( ! panel.classList.contains( 'is-open' ) );
+		} );
+
+		if ( close ) {
+			close.addEventListener( 'click', function () { setOpen( false ); } );
+		}
+		if ( backdrop ) {
+			backdrop.addEventListener( 'click', function () { setOpen( false ); } );
+		}
+
+		document.addEventListener( 'keydown', function ( e ) {
+			if ( 'Escape' === e.key ) {
+				setOpen( false );
+			}
+		} );
+
+		// Sub-menus fold open in the drawer rather than hovering.
+		panel.addEventListener( 'click', function ( e ) {
+			var item = e.target.closest( '.menu-item-has-children > a' );
+			if ( ! item ) {
+				return;
+			}
+			var li = item.parentNode;
+			if ( ! li.classList.contains( 'is-open' ) ) {
+				e.preventDefault();
+			}
+			li.classList.toggle( 'is-open' );
+		} );
+	} )();
+
+	/* ---------------------------------------------------------------
+	 * Search overlay
+	 * ------------------------------------------------------------- */
+	( function () {
+		var toggle  = document.querySelector( '.js-search-toggle' );
+		var overlay = document.querySelector( '.js-search-overlay' );
+		var close   = document.querySelector( '.js-search-close' );
+
+		if ( ! toggle || ! overlay ) {
+			return;
+		}
+
+		function setOpen( open ) {
+			overlay.hidden = ! open;
+			document.body.classList.toggle( 'search-open', open );
+			if ( open ) {
+				var field = overlay.querySelector( 'input[type="search"]' );
+				if ( field ) {
+					field.focus();
+				}
+			}
+		}
+
+		toggle.addEventListener( 'click', function () { setOpen( overlay.hidden ); } );
+		if ( close ) {
+			close.addEventListener( 'click', function () { setOpen( false ); } );
+		}
+		document.addEventListener( 'keydown', function ( e ) {
+			if ( 'Escape' === e.key ) {
+				setOpen( false );
+			}
+		} );
+	} )();
+
+	/* ---------------------------------------------------------------
+	 * Mega menu
+	 *
+	 * Hover opens it, and it stays open for a moment after the pointer
+	 * leaves so the cursor can travel down into the panel without it
+	 * snapping shut. Clicking the chevron pins it open.
+	 * ------------------------------------------------------------- */
+	( function () {
+		var items = document.querySelectorAll( '.nav-item.has-mega' );
+		if ( ! items.length || ! window.matchMedia( '(min-width: 961px)' ).matches ) {
+			return;
+		}
+
+		items.forEach( function ( item ) {
+			var timer = null;
+
+			function open() {
+				window.clearTimeout( timer );
+				items.forEach( function ( other ) {
+					if ( other !== item ) {
+						other.classList.remove( 'is-open', 'is-pinned' );
+					}
+				} );
+				item.classList.add( 'is-open' );
+			}
+
+			function scheduleClose() {
+				window.clearTimeout( timer );
+				timer = window.setTimeout( function () {
+					if ( ! item.classList.contains( 'is-pinned' ) ) {
+						item.classList.remove( 'is-open' );
+					}
+				}, 220 );
+			}
+
+			item.addEventListener( 'mouseenter', open );
+			item.addEventListener( 'mouseleave', scheduleClose );
+
+			var chevron = item.querySelector( '.nav-chevron' );
+			if ( chevron ) {
+				chevron.addEventListener( 'click', function ( e ) {
+					e.preventDefault();
+					e.stopPropagation();
+					var pinned = item.classList.toggle( 'is-pinned' );
+					item.classList.toggle( 'is-open', pinned );
+				} );
+			}
+		} );
+
+		document.addEventListener( 'click', function ( e ) {
+			if ( ! e.target.closest( '.nav-item.has-mega' ) ) {
+				items.forEach( function ( item ) {
+					item.classList.remove( 'is-open', 'is-pinned' );
+				} );
+			}
+		} );
+	} )();
+
+	/* ---------------------------------------------------------------
+	 * Load more, in place
+	 * ------------------------------------------------------------- */
+	document.querySelectorAll( '.js-feed' ).forEach( function ( feed ) {
+		var list = feed.querySelector( '.js-post-list' );
+		var more = feed.querySelector( '.js-load-more' );
+
+		if ( ! list || ! more || ! data.ajaxUrl ) {
+			return;
+		}
+
+		more.addEventListener( 'click', function ( e ) {
+			e.preventDefault();
+
+			if ( more.classList.contains( 'is-busy' ) ) {
+				return;
+			}
+
+			var next = parseInt( list.dataset.paged, 10 ) + 1;
+			var max  = parseInt( list.dataset.max, 10 );
+
+			if ( next > max ) {
+				return;
+			}
+
+			more.classList.add( 'is-busy' );
+			var label = more.textContent;
+			more.textContent = 'در حال بارگذاری…';
+
+			var body = new URLSearchParams( {
+				action: 'techrato_load_posts',
+				term:   list.dataset.term || 0,
+				paged:  next,
+				per:    list.dataset.per || 0,
+				card:   list.dataset.card || 'news',
+				days:   list.dataset.days || 0,
+				sort:   list.dataset.sort || 'date'
+			} );
+
+			window.fetch( data.ajaxUrl, { method: 'POST', body: body, credentials: 'same-origin' } )
+				.then( function ( r ) { return r.json(); } )
+				.then( function ( res ) {
+					if ( ! res || ! res.success ) {
+						throw new Error( 'bad response' );
+					}
+					list.insertAdjacentHTML( 'beforeend', res.data.html );
+					list.dataset.paged = res.data.paged;
+					list.dataset.max   = res.data.maxPages;
+
+					if ( res.data.paged >= res.data.maxPages ) {
+						more.remove();
+					} else {
+						more.textContent = label;
+						more.classList.remove( 'is-busy' );
+					}
+				} )
+				.catch( function () {
+					// Falling back to the real link is better than a dead button.
+					window.location.href = more.getAttribute( 'href' );
+				} );
+		} );
+	} );
+
+	/* ---------------------------------------------------------------
+	 * Likes and saved posts
+	 * ------------------------------------------------------------- */
+	( function () {
+		var like = document.querySelector( '.js-like-btn' );
+
+		if ( like && data.ajaxUrl ) {
+			like.addEventListener( 'click', function () {
+				if ( like.classList.contains( 'is-busy' ) ) {
+					return;
+				}
+				like.classList.add( 'is-busy' );
+
+				window.fetch( data.ajaxUrl, {
+					method: 'POST',
+					credentials: 'same-origin',
+					body: new URLSearchParams( {
+						action:  'techrato_toggle_like',
+						post_id: like.dataset.postId,
+						nonce:   data.nonce || ''
+					} )
+				} )
+					.then( function ( r ) { return r.json(); } )
+					.then( function ( res ) {
+						if ( res && res.success ) {
+							var count = like.querySelector( '.article-like-count' );
+							if ( count ) {
+								count.textContent = res.data.count;
+							}
+							like.classList.toggle( 'is-liked', !! res.data.liked );
+						}
+					} )
+					.catch( function () {} )
+					.then( function () { like.classList.remove( 'is-busy' ); } );
+			} );
+		}
+
+		// Saved posts live in the browser only; nothing is sent anywhere.
+		var save = document.querySelector( '.js-save-btn' );
+		if ( ! save ) {
+			return;
+		}
+
+		var key = 'techrato_saved';
+
+		function read() {
+			try {
+				return JSON.parse( window.localStorage.getItem( key ) || '[]' );
+			} catch ( e ) {
+				return [];
+			}
+		}
+
+		var id    = save.dataset.postId;
+		var saved = read();
+		save.classList.toggle( 'is-saved', saved.indexOf( id ) !== -1 );
+
+		save.addEventListener( 'click', function () {
+			var list = read();
+			var at   = list.indexOf( id );
+
+			if ( at === -1 ) {
+				list.push( id );
+			} else {
+				list.splice( at, 1 );
+			}
+
+			try {
+				window.localStorage.setItem( key, JSON.stringify( list ) );
+			} catch ( e ) {}
+
+			save.classList.toggle( 'is-saved', at === -1 );
+		} );
+	} )();
+
+	/* ---------------------------------------------------------------
+	 * View counter
+	 *
+	 * Sent from the browser because page caching means PHP never runs
+	 * for most visitors.
+	 * ------------------------------------------------------------- */
+	( function () {
+		if ( ! data.postId || ! data.ajaxUrl ) {
+			return;
+		}
+
+		window.setTimeout( function () {
+			window.fetch( data.ajaxUrl, {
+				method: 'POST',
+				credentials: 'same-origin',
+				body: new URLSearchParams( { action: 'techrato_count_view', post_id: data.postId } )
+			} ).catch( function () {} );
+		}, 2000 );
+	} )();
+
+} )();
