@@ -162,7 +162,13 @@
 		var list = feed.querySelector( '.js-post-list' );
 		var more = feed.querySelector( '.js-load-more' );
 
-		if ( ! list || ! more || ! data.ajaxUrl ) {
+		// The address is printed into the markup as well as localized, because
+		// plugins that combine or defer scripts can separate this file from the
+		// data object — and a button that silently falls back to a plain link
+		// looks to the reader like it simply did nothing.
+		var endpoint = feed.dataset.ajax || data.ajaxUrl;
+
+		if ( ! list || ! more || ! endpoint ) {
 			return;
 		}
 
@@ -194,7 +200,7 @@
 				sort:   list.dataset.sort || 'date'
 			} );
 
-			window.fetch( data.ajaxUrl, { method: 'POST', body: body, credentials: 'same-origin' } )
+			window.fetch( endpoint, { method: 'POST', body: body, credentials: 'same-origin' } )
 				.then( function ( r ) { return r.json(); } )
 				.then( function ( res ) {
 					if ( ! res || ! res.success ) {
@@ -213,11 +219,15 @@
 				} )
 				.catch( function () {
 					var href = more.getAttribute( 'href' );
-					if ( href ) {
-						// Falling back to the real link beats a dead button.
+
+					// Only hand over to the plain link while nothing has been
+					// added yet. Once posts are on the page, loading a fresh
+					// page would throw them away.
+					if ( href && 1 === parseInt( list.dataset.paged, 10 ) ) {
 						window.location.href = href;
 						return;
 					}
+
 					more.textContent = label;
 					more.classList.remove( 'is-busy' );
 				} );

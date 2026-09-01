@@ -10,7 +10,10 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 
-	$techrato_id    = get_the_ID();
+	$techrato_id     = get_the_ID();
+	$techrato_author = (int) get_post_field( 'post_author', $techrato_id );
+	$techrato_name   = $techrato_author ? get_the_author_meta( 'display_name', $techrato_author ) : '';
+	$techrato_bio    = $techrato_author ? get_the_author_meta( 'description', $techrato_author ) : '';
 	$techrato_likes = (int) get_post_meta( $techrato_id, 'techrato_likes', true );
 	$techrato_liked = ! empty( $_COOKIE[ 'techrato_liked_' . $techrato_id ] ); // phpcs:ignore WordPress.Security.NonceVerification
 	?>
@@ -33,7 +36,9 @@ while ( have_posts() ) :
 
 									<div class="article-meta-row">
 										<div class="article-meta">
-											<span><?php the_author(); ?></span><i></i>
+											<?php if ( $techrato_name ) : ?>
+												<span><a href="<?php echo esc_url( get_author_posts_url( $techrato_author ) ); ?>"><?php echo esc_html( $techrato_name ); ?></a></span><i></i>
+											<?php endif; ?>
 											<span><?php echo esc_html( techrato_time_ago() ); ?></span><i></i>
 											<span><?php comments_number( __( 'بدون دیدگاه', 'techrato' ), __( '۱ دیدگاه', 'techrato' ), __( '% دیدگاه', 'techrato' ) ); ?></span>
 										</div>
@@ -87,6 +92,22 @@ while ( have_posts() ) :
 								<?php foreach ( $techrato_tags as $techrato_tag ) : ?>
 									<a href="<?php echo esc_url( get_tag_link( $techrato_tag ) ); ?>">#<?php echo esc_html( $techrato_tag->name ); ?></a>
 								<?php endforeach; ?>
+							</div>
+						<?php endif; ?>
+
+						<?php if ( $techrato_name ) : ?>
+							<div class="author-box">
+								<div class="author-avatar"><?php echo esc_html( function_exists( 'mb_substr' ) ? mb_substr( $techrato_name, 0, 1, 'UTF-8' ) : substr( $techrato_name, 0, 1 ) ); ?></div>
+								<div class="author-box__copy">
+									<strong><?php echo esc_html( $techrato_name ); ?></strong>
+									<?php if ( $techrato_bio ) : ?>
+										<p><?php echo esc_html( $techrato_bio ); ?></p>
+									<?php endif; ?>
+								</div>
+								<a class="author-all-posts" href="<?php echo esc_url( get_author_posts_url( $techrato_author ) ); ?>">
+									<span><?php esc_html_e( 'مشاهده کلیه مقالات منتشر شده', 'techrato' ); ?></span>
+									<?php echo techrato_arrow_icon(); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+								</a>
 							</div>
 						<?php endif; ?>
 

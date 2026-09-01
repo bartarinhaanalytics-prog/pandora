@@ -81,7 +81,10 @@ if ( $techrato_is_term && ! $techrato_image ) {
 					'card'       => 'category-post',
 					'list_class' => 'category-post-list',
 					'ads'        => 'cat_native',
-					'more_url'   => $techrato_term_id ? get_category_link( $techrato_term_id ) : techrato_more_url( '', $GLOBALS['wp_query'] ),
+					// Page two of this very archive. Pointing at the category
+					// itself sent the reader back to the page they were already
+					// on, which looked like the button had done nothing.
+					'more_url'   => (string) get_next_posts_page_link(),
 					'empty_text' => __( 'مطلبی برای نمایش یافت نشد.', 'techrato' ),
 					'push_url'   => true,
 				) );

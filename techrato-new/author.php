@@ -68,7 +68,7 @@ $techrato_count  = $techrato_id ? (int) count_user_posts( $techrato_id, 'post' )
 					'term_id'    => 0,
 					'card'       => 'category-post',
 					'list_class' => 'category-post-list',
-					'more_url'   => '',
+					'more_url'   => (string) get_next_posts_page_link(),
 					'empty_text' => __( 'این نویسنده هنوز مطلبی منتشر نکرده است.', 'techrato' ),
 					'push_url'   => true,
 				) );

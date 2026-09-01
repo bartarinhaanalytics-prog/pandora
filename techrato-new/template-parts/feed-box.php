@@ -51,10 +51,11 @@ if ( ! $feed_query instanceof WP_Query ) {
 // would skip or repeat posts.
 $feed_per   = (int) $feed_query->get( 'posts_per_page' );
 $feed_max   = (int) $feed_query->max_num_pages;
+$feed_now   = max( 1, (int) $feed_query->get( 'paged' ) );
 $feed_has   = $feed_query->have_posts();
 // The button is about paging, not about the fallback link: requiring a URL
 // meant a box with more pages but no archive to point at lost its button.
-$feed_more  = $feed_has && $feed_max > 1;
+$feed_more  = $feed_has && $feed_now < $feed_max;
 $feed_uid   = wp_unique_id( 'feed-' );
 
 // Native ads sit at fixed places in the first render only. Load-more appends
@@ -63,7 +64,8 @@ $feed_ads = ( $feed['ads'] && function_exists( 'techrato_ads_native_map' ) )
 	? techrato_ads_native_map( $feed['ads'] )
 	: array();
 ?>
-<div class="js-feed feed-box"<?php echo $feed['push_url'] ? ' data-push-url="1"' : ''; ?>>
+<div class="js-feed feed-box"
+	data-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>"<?php echo $feed['push_url'] ? ' data-push-url="1"' : ''; ?>>
 
 	<?php if ( $feed['tabs'] ) : ?>
 		<div class="tabs js-archive-tabs" style="margin-bottom:16px;" role="tablist">
@@ -78,7 +80,7 @@ $feed_ads = ( $feed['ads'] && function_exists( 'techrato_ads_native_map' ) )
 	<div class="js-post-list <?php echo esc_attr( $feed['list_class'] ); ?>"
 		id="<?php echo esc_attr( $feed_uid ); ?>"
 		data-term="<?php echo esc_attr( $feed['term_id'] ); ?>"
-		data-paged="1"
+		data-paged="<?php echo esc_attr( $feed_now ); ?>"
 		data-max="<?php echo esc_attr( $feed_max ); ?>"
 		data-per="<?php echo esc_attr( $feed_per ); ?>"
 		data-card="<?php echo esc_attr( $feed['card'] ); ?>"
