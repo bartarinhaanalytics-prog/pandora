@@ -7,12 +7,30 @@
 ( function () {
 	'use strict';
 
+	/**
+	 * Runs a piece of behaviour, and keeps going if it throws. Everything used
+	 * to live in one block: a single error took the whole page's behaviour
+	 * down with it.
+	 */
+	function guard( fn ) {
+		return function () {
+			try {
+				fn();
+			} catch ( err ) {
+				if ( window.console && window.console.error ) {
+					window.console.error( 'techrato:', err );
+				}
+			}
+		};
+	}
+
+	function start() {
 	var data = window.techratoData || {};
 
 	/* ---------------------------------------------------------------
 	 * Mobile menu
 	 * ------------------------------------------------------------- */
-	( function () {
+	guard( function () {
 		var toggle   = document.querySelector( '.js-menu-toggle' );
 		var panel    = document.getElementById( 'mobile-menu-panel' );
 		var backdrop = document.querySelector( '.js-menu-backdrop' );
@@ -61,12 +79,12 @@
 			}
 			li.classList.toggle( 'is-open' );
 		} );
-	} )();
+	} );
 
 	/* ---------------------------------------------------------------
 	 * Search overlay
 	 * ------------------------------------------------------------- */
-	( function () {
+	guard( function () {
 		var toggle  = document.querySelector( '.js-search-toggle' );
 		var overlay = document.querySelector( '.js-search-overlay' );
 		var close   = document.querySelector( '.js-search-close' );
@@ -95,7 +113,7 @@
 				setOpen( false );
 			}
 		} );
-	} )();
+	} );
 
 	/* ---------------------------------------------------------------
 	 * Mega menu
@@ -104,7 +122,7 @@
 	 * leaves so the cursor can travel down into the panel without it
 	 * snapping shut. Clicking the chevron pins it open.
 	 * ------------------------------------------------------------- */
-	( function () {
+	guard( function () {
 		var items = document.querySelectorAll( '.nav-item.has-mega' );
 		if ( ! items.length || ! window.matchMedia( '(min-width: 961px)' ).matches ) {
 			return;
@@ -153,85 +171,90 @@
 				} );
 			}
 		} );
-	} )();
+	} );
 
 	/* ---------------------------------------------------------------
 	 * Load more, in place
+	 *
+	 * Listened for on the document rather than bound to each button, so it
+	 * works no matter when the markup appears and no matter where a caching
+	 * plugin decides to move this file. A button that quietly falls back to
+	 * its plain link reloads the page and throws away everything already
+	 * read — so the click is taken over here in every case.
 	 * ------------------------------------------------------------- */
-	document.querySelectorAll( '.js-feed' ).forEach( function ( feed ) {
-		var list = feed.querySelector( '.js-post-list' );
-		var more = feed.querySelector( '.js-load-more' );
+	document.addEventListener( 'click', function ( e ) {
+		var more = e.target.closest ? e.target.closest( '.js-load-more' ) : null;
 
-		// The address is printed into the markup as well as localized, because
-		// plugins that combine or defer scripts can separate this file from the
-		// data object — and a button that silently falls back to a plain link
-		// looks to the reader like it simply did nothing.
-		var endpoint = feed.dataset.ajax || data.ajaxUrl;
-
-		if ( ! list || ! more || ! endpoint ) {
+		if ( ! more ) {
 			return;
 		}
 
-		more.addEventListener( 'click', function ( e ) {
-			e.preventDefault();
+		var feed = more.closest( '.js-feed' );
+		var list = feed && feed.querySelector( '.js-post-list' );
+		var endpoint = ( feed && feed.dataset.ajax ) || data.ajaxUrl;
 
-			if ( more.classList.contains( 'is-busy' ) ) {
-				return;
-			}
+		// Without a list or an address there is nothing to add to, so the
+		// plain link stays the honest behaviour.
+		if ( ! list || ! endpoint || ! window.fetch ) {
+			return;
+		}
 
-			var next = parseInt( list.dataset.paged, 10 ) + 1;
-			var max  = parseInt( list.dataset.max, 10 );
+		e.preventDefault();
 
-			if ( next > max ) {
-				return;
-			}
+		if ( more.classList.contains( 'is-busy' ) ) {
+			return;
+		}
 
-			more.classList.add( 'is-busy' );
-			var label = more.textContent;
-			more.textContent = 'در حال بارگذاری…';
+		var next = parseInt( list.dataset.paged, 10 ) + 1;
+		var max  = parseInt( list.dataset.max, 10 );
 
-			var body = new URLSearchParams( {
-				action: 'techrato_load_posts',
-				term:   list.dataset.term || 0,
-				paged:  next,
-				per:    list.dataset.per || 0,
-				card:   list.dataset.card || 'news',
-				days:   list.dataset.days || 0,
-				sort:   list.dataset.sort || 'date'
-			} );
+		if ( ! next || next > max ) {
+			return;
+		}
 
-			window.fetch( endpoint, { method: 'POST', body: body, credentials: 'same-origin' } )
-				.then( function ( r ) { return r.json(); } )
-				.then( function ( res ) {
-					if ( ! res || ! res.success ) {
-						throw new Error( 'bad response' );
-					}
-					list.insertAdjacentHTML( 'beforeend', res.data.html );
-					list.dataset.paged = res.data.paged;
-					list.dataset.max   = res.data.maxPages;
+		more.classList.add( 'is-busy' );
+		var label = more.textContent;
+		more.textContent = 'در حال بارگذاری…';
 
-					if ( res.data.paged >= res.data.maxPages ) {
-						more.remove();
-					} else {
-						more.textContent = label;
-						more.classList.remove( 'is-busy' );
-					}
-				} )
-				.catch( function () {
-					var href = more.getAttribute( 'href' );
+		var body = new URLSearchParams( {
+			action: 'techrato_load_posts',
+			term:   list.dataset.term || 0,
+			paged:  next,
+			per:    list.dataset.per || 0,
+			card:   list.dataset.card || 'news',
+			days:   list.dataset.days || 0,
+			sort:   list.dataset.sort || 'date'
+		} );
 
-					// Only hand over to the plain link while nothing has been
-					// added yet. Once posts are on the page, loading a fresh
-					// page would throw them away.
-					if ( href && 1 === parseInt( list.dataset.paged, 10 ) ) {
-						window.location.href = href;
-						return;
-					}
+		window.fetch( endpoint, { method: 'POST', body: body, credentials: 'same-origin' } )
+			.then( function ( r ) { return r.json(); } )
+			.then( function ( res ) {
+				if ( ! res || ! res.success ) {
+					throw new Error( 'bad response' );
+				}
 
+				// Added to what is already there. Never replacing it.
+				list.insertAdjacentHTML( 'beforeend', res.data.html );
+				list.dataset.paged = res.data.paged;
+				list.dataset.max   = res.data.maxPages;
+
+				if ( res.data.paged >= res.data.maxPages ) {
+					more.remove();
+				} else {
 					more.textContent = label;
 					more.classList.remove( 'is-busy' );
-				} );
-		} );
+				}
+			} )
+			.catch( function () {
+				// Reloading the page here would wipe out the posts the reader
+				// already has, so the button just says it failed.
+				more.textContent = 'دوباره تلاش کنید';
+				more.classList.remove( 'is-busy' );
+
+				window.setTimeout( function () {
+					more.textContent = label;
+				}, 2500 );
+			} );
 	} );
 
 	/* ---------------------------------------------------------------
@@ -241,7 +264,7 @@
 	 * the floating dock. Both are kept in step, so a tap on either one
 	 * updates the other.
 	 * ------------------------------------------------------------- */
-	( function () {
+	guard( function () {
 		var likes = [].slice.call( document.querySelectorAll( '.js-like-btn' ) );
 		var busy  = false;
 
@@ -330,7 +353,7 @@
 				paintSaves( at === -1 );
 			} );
 		} );
-	} )();
+	} );
 
 	/* ---------------------------------------------------------------
 	 * Share button
@@ -338,6 +361,7 @@
 	 * Uses the phone's own share sheet where there is one, and quietly
 	 * copies the address to the clipboard everywhere else.
 	 * ------------------------------------------------------------- */
+	guard( function () {
 	document.querySelectorAll( '.js-share-btn' ).forEach( function ( btn ) {
 		btn.addEventListener( 'click', function () {
 			var share = { title: document.title, url: window.location.href };
@@ -355,6 +379,7 @@
 			}
 		} );
 	} );
+	} );
 
 	/* ---------------------------------------------------------------
 	 * Floating action dock
@@ -362,7 +387,7 @@
 	 * Appears once the reader has scrolled past the top of the article
 	 * and steps aside again when the related-posts block arrives.
 	 * ------------------------------------------------------------- */
-	( function () {
+	guard( function () {
 		var dock = document.querySelector( '.article-action-dock' );
 
 		if ( ! dock ) {
@@ -383,7 +408,7 @@
 		window.addEventListener( 'scroll', update, { passive: true } );
 		window.addEventListener( 'resize', update );
 		update();
-	} )();
+	} );
 
 	/* ---------------------------------------------------------------
 	 * Reading navigation
@@ -392,7 +417,7 @@
 	 * written by hand in the editor. With no headings the whole panel
 	 * simply stays hidden.
 	 * ------------------------------------------------------------- */
-	( function () {
+	guard( function () {
 		var root    = document.querySelector( '.js-reading-nav' );
 		var content = document.querySelector( '.article-content' );
 
@@ -587,12 +612,12 @@
 		active( 0 );
 		update();
 		syncWithDock();
-	} )();
+	} );
 
 	/* ---------------------------------------------------------------
 	 * Reading progress bar (phones only)
 	 * ------------------------------------------------------------- */
-	( function () {
+	guard( function () {
 		var progress = document.querySelector( '.mobile-reading-progress' );
 		var article  = document.querySelector( '.article-content' );
 		var dock     = document.querySelector( '.article-action-dock' );
@@ -647,7 +672,7 @@
 		window.addEventListener( 'scroll', request, { passive: true } );
 		window.addEventListener( 'resize', request );
 		update();
-	} )();
+	} );
 
 	/* ---------------------------------------------------------------
 	 * View counter
@@ -655,7 +680,7 @@
 	 * Sent from the browser because page caching means PHP never runs
 	 * for most visitors.
 	 * ------------------------------------------------------------- */
-	( function () {
+	guard( function () {
 		if ( ! data.postId || ! data.ajaxUrl ) {
 			return;
 		}
@@ -667,6 +692,15 @@
 				body: new URLSearchParams( { action: 'techrato_count_view', post_id: data.postId } )
 			} ).catch( function () {} );
 		}, 2000 );
-	} )();
+	} );
 
+	}
+
+	// A caching plugin may move this file into the head, where the markup does
+	// not exist yet. Waiting for the document means it works from either place.
+	if ( 'loading' === document.readyState ) {
+		document.addEventListener( 'DOMContentLoaded', guard( start ) );
+	} else {
+		guard( start )();
+	}
 } )();
