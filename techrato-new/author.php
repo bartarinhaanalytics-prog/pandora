@@ -63,9 +63,14 @@ $techrato_count  = $techrato_id ? (int) count_user_posts( $techrato_id, 'post' )
 					'category-latest-heading'
 				);
 
+				$techrato_paging = techrato_archive_paging();
+
 				get_template_part( 'template-parts/feed-box', null, array(
 					'query'      => $GLOBALS['wp_query'],
 					'term_id'    => 0,
+					'per_page'   => $techrato_paging['per'],
+					'paged'      => $techrato_paging['page'],
+					'max_pages'  => $techrato_paging['max'],
 					'card'       => 'category-post',
 					'list_class' => 'category-post-list',
 					'more_url'   => (string) get_next_posts_page_link(),

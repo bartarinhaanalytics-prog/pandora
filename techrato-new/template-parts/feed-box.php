@@ -18,6 +18,10 @@
  *   'sort'       string 'date' or 'views'.
  *   'empty_text' string Notice shown when there is nothing to list.
  *   'ads'        string Ad slot key whose native ads are placed in the list.
+ *   'per_page'   int    Posts per page for load-more. Needed on archives, where
+ *                       the query holds several pages stacked together.
+ *   'paged'      int    Page the box is really showing.
+ *   'max_pages'  int    Total pages available.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -39,6 +43,9 @@ $feed = wp_parse_args(
 		'empty_text' => '',
 		'push_url'   => false,
 		'ads'        => '',
+		'per_page'   => 0,
+		'paged'      => 0,
+		'max_pages'  => 0,
 	)
 );
 
@@ -49,9 +56,12 @@ if ( ! $feed_query instanceof WP_Query ) {
 
 // Load-more must page with the same size as the first render, or page two
 // would skip or repeat posts.
-$feed_per   = (int) $feed_query->get( 'posts_per_page' );
-$feed_max   = (int) $feed_query->max_num_pages;
-$feed_now   = max( 1, (int) $feed_query->get( 'paged' ) );
+// On an archive the query carries every page so far in one go, so the caller
+// passes the real page size and page number rather than letting them be read
+// back out of it.
+$feed_per   = $feed['per_page'] ? (int) $feed['per_page'] : (int) $feed_query->get( 'posts_per_page' );
+$feed_max   = $feed['max_pages'] ? (int) $feed['max_pages'] : (int) $feed_query->max_num_pages;
+$feed_now   = $feed['paged'] ? (int) $feed['paged'] : max( 1, (int) $feed_query->get( 'paged' ) );
 $feed_has   = $feed_query->have_posts();
 // The button is about paging, not about the fallback link: requiring a URL
 // meant a box with more pages but no archive to point at lost its button.

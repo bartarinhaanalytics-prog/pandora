@@ -521,6 +521,27 @@ function techrato_save_button( $post_id = null ) {
 }
 
 /**
+ * The page size, page number and page count of the archive being shown.
+ *
+ * The main query stacks the pages up to the current one, so its own
+ * posts_per_page and max_num_pages describe the stack, not the paging.
+ *
+ * @return array{per:int,page:int,max:int}
+ */
+function techrato_archive_paging() {
+	$page = max( 1, (int) get_query_var( 'paged' ) );
+	$per  = (int) get_option( 'posts_per_page' );
+	$per  = $per > 0 ? $per : 10;
+	$found = isset( $GLOBALS['wp_query'] ) ? (int) $GLOBALS['wp_query']->found_posts : 0;
+
+	return array(
+		'per'  => $per,
+		'page' => $page,
+		'max'  => (int) ceil( $found / $per ),
+	);
+}
+
+/**
  * The site's social networks, in the order they are shown everywhere.
  *
  * One list feeds the homepage banner, both sidebars and the footer, so the

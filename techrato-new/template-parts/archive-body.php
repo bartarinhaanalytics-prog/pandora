@@ -75,9 +75,14 @@ if ( $techrato_is_term && ! $techrato_image ) {
 					? (int) get_queried_object()->term_id
 					: 0;
 
+				$techrato_paging = techrato_archive_paging();
+
 				get_template_part( 'template-parts/feed-box', null, array(
 					'query'      => $GLOBALS['wp_query'],
 					'term_id'    => $techrato_term_id,
+					'per_page'   => $techrato_paging['per'],
+					'paged'      => $techrato_paging['page'],
+					'max_pages'  => $techrato_paging['max'],
 					'card'       => 'category-post',
 					'list_class' => 'category-post-list',
 					'ads'        => 'cat_native',

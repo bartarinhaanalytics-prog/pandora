@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '2.5.2' );
+define( 'TECHRATO_VERSION', '2.6.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -290,6 +290,51 @@ function techrato_ajax_load_posts() {
 }
 add_action( 'wp_ajax_techrato_load_posts', 'techrato_ajax_load_posts' );
 add_action( 'wp_ajax_nopriv_techrato_load_posts', 'techrato_ajax_load_posts' );
+
+/**
+ * Archive pages stack up instead of replacing each other.
+ *
+ * "مشاهده مطالب بیشتر" is meant to add to what the reader already has. The
+ * in-place version needs JavaScript, and on a site with a caching or
+ * script-combining plugin that cannot be relied on — so the plain link has to
+ * behave the same way. Page two therefore renders pages one and two together,
+ * page three renders one to three, and nothing the reader was looking at ever
+ * disappears.
+ *
+ * @param WP_Query $query The query about to run.
+ */
+function techrato_stack_archive_pages( $query ) {
+	if ( is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+
+	$is_listing = $query->is_category() || $query->is_tag() || $query->is_tax()
+		|| $query->is_author() || $query->is_home() || $query->is_search();
+
+	if ( ! $is_listing ) {
+		return;
+	}
+
+	$page = max( 1, (int) $query->get( 'paged' ) );
+
+	if ( 1 === $page ) {
+		return;
+	}
+
+	$per = (int) $query->get( 'posts_per_page' );
+	if ( $per < 1 ) {
+		$per = (int) get_option( 'posts_per_page' );
+	}
+	if ( $per < 1 ) {
+		return;
+	}
+
+	// An explicit offset makes WordPress start from the very first post rather
+	// than skipping the pages before this one.
+	$query->set( 'posts_per_page', $per * $page );
+	$query->set( 'offset', 0 );
+}
+add_action( 'pre_get_posts', 'techrato_stack_archive_pages' );
 
 /**
  * Count a view.
