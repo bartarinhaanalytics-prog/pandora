@@ -521,6 +521,79 @@ function techrato_save_button( $post_id = null ) {
 }
 
 /**
+ * The site's social networks, in the order they are shown everywhere.
+ *
+ * One list feeds the homepage banner, both sidebars and the footer, so the
+ * addresses are edited in a single place (تنظیمات صفحه نخست ← بنر دنبال کنید).
+ * A network with an empty address simply drops out of the list.
+ *
+ * @return array List of array( key, label, url, svg ).
+ */
+function techrato_social_links() {
+	$networks = array(
+		'telegram'  => array(
+			'label' => __( 'تلگرام', 'techrato' ),
+			'svg'   => '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 4.5 3.2 11.4c-1.2.47-1.19 1.12-.22 1.42l4.68 1.46 1.8 5.5c.22.6.38.85.78.85.35 0 .53-.16.75-.38l1.83-1.78 4.1 3.03c.75.42 1.3.2 1.5-.7l2.7-13.1c.3-1.2-.4-1.7-1.14-1.24Zm-3.2 3.15-9.6 6.05-.42 3.98-1.9-5.9 11.9-4.13Z"/></svg>',
+		),
+		'instagram' => array(
+			'label' => __( 'اینستاگرام', 'techrato' ),
+			'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>',
+		),
+		'twitter'   => array(
+			'label' => __( 'توییتر', 'techrato' ),
+			'svg'   => '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 3h3l-7 8 8.2 10h-6.4l-5-6.5L5 21H2l7.5-8.6L1.7 3h6.5l4.5 5.9L18.9 3Zm-1.1 16.2h1.7L7.3 4.7H5.5l12.3 14.5Z"/></svg>',
+		),
+	);
+
+	$links = array();
+
+	foreach ( $networks as $key => $network ) {
+		$url = trim( (string) techrato_home_option( 'follow', $key ) );
+
+		if ( '' === $url ) {
+			continue;
+		}
+
+		$links[] = array(
+			'key'   => $key,
+			'label' => $network['label'],
+			'url'   => $url,
+			'svg'   => $network['svg'],
+		);
+	}
+
+	return $links;
+}
+
+/**
+ * The row of round social buttons used in the sidebars and the homepage banner.
+ *
+ * @param string $class Extra class for the wrapper.
+ */
+function techrato_social_icon_row( $class = '' ) {
+	$links = techrato_social_links();
+
+	if ( ! $links ) {
+		return;
+	}
+
+	$class = trim( 'social-icon-row ' . $class );
+	?>
+	<div class="<?php echo esc_attr( $class ); ?>">
+		<?php foreach ( $links as $link ) : ?>
+			<a class="social-icon social-icon--<?php echo esc_attr( $link['key'] ); ?>"
+				href="<?php echo esc_url( $link['url'] ); ?>"
+				target="_blank" rel="noopener noreferrer"
+				title="<?php echo esc_attr( $link['label'] ); ?>"
+				aria-label="<?php echo esc_attr( $link['label'] ); ?>">
+				<?php echo $link['svg']; // phpcs:ignore -- static, theme-defined SVG markup. ?>
+			</a>
+		<?php endforeach; ?>
+	</div>
+	<?php
+}
+
+/**
  * Print a social "follow" icon link. Detects the platform from the URL's
  * host so each button gets its real brand icon instead of a generic one.
  */

@@ -68,6 +68,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="footer-column">
 				<h4><?php esc_html_e( 'همراه تکراتو', 'techrato' ); ?></h4>
 				<?php
+				// A menu wins when one is assigned; otherwise the same three
+				// networks the sidebars and the homepage banner use.
 				if ( has_nav_menu( 'social' ) ) {
 					wp_nav_menu( array(
 						'theme_location' => 'social',
@@ -76,6 +78,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 						'depth'          => 1,
 						'walker'         => new Techrato_Footer_Link_Walker(),
 					) );
+				} else {
+					foreach ( techrato_social_links() as $techrato_social ) {
+						printf(
+							'<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a>',
+							esc_url( $techrato_social['url'] ),
+							esc_html( $techrato_social['label'] )
+						);
+					}
 				}
 				?>
 			</div>

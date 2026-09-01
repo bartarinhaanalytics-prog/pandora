@@ -8,21 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $techrato_style = isset( $args['style'] ) && 'category' === $args['style'] ? 'category' : 'article';
+$techrato_links = techrato_social_links();
 
-// One link is enough here; the full list lives in the homepage banner and the
-// footer. The first social menu item is the one people actually follow.
-$techrato_url   = techrato_home_option( 'follow', 'url' );
-$techrato_label = __( 'دنبال کردن تکراتو', 'techrato' );
-
-if ( ! $techrato_url && has_nav_menu( 'social' ) ) {
-	$techrato_locations = get_nav_menu_locations();
-	$techrato_items     = isset( $techrato_locations['social'] ) ? wp_get_nav_menu_items( $techrato_locations['social'] ) : array();
-	if ( ! empty( $techrato_items[0]->url ) ) {
-		$techrato_url = $techrato_items[0]->url;
-	}
-}
-
-if ( ! $techrato_url ) {
+if ( ! $techrato_links ) {
 	return;
 }
 
@@ -32,10 +20,7 @@ if ( 'category' === $techrato_style ) :
 		<span class="eyebrow"><?php esc_html_e( 'شبکه‌های اجتماعی', 'techrato' ); ?></span>
 		<h3><?php esc_html_e( 'تکراتو را دنبال کنید', 'techrato' ); ?></h3>
 		<p><?php echo esc_html( techrato_home_option( 'follow', 'text' ) ); ?></p>
-		<a class="category-social-button" href="<?php echo esc_url( $techrato_url ); ?>" target="_blank" rel="noopener">
-			<span><?php echo esc_html( $techrato_label ); ?></span>
-			<?php echo techrato_arrow_icon(); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-		</a>
+		<?php techrato_social_icon_row( 'social-icon-row--card' ); ?>
 	</section>
 	<?php
 else :
@@ -43,10 +28,7 @@ else :
 	<section class="sidebar-card sidebar-social">
 		<h3><?php esc_html_e( 'تکراتو در شبکه‌های اجتماعی', 'techrato' ); ?></h3>
 		<p><?php echo esc_html( techrato_home_option( 'follow', 'text' ) ); ?></p>
-		<a href="<?php echo esc_url( $techrato_url ); ?>" target="_blank" rel="noopener">
-			<span><?php echo esc_html( $techrato_label ); ?></span>
-			<?php echo techrato_arrow_icon(); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-		</a>
+		<?php techrato_social_icon_row( 'social-icon-row--card' ); ?>
 	</section>
 	<?php
 endif;

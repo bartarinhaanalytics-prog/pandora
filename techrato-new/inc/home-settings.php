@@ -71,17 +71,17 @@ function techrato_home_blocks() {
 				'enabled' => array( 'type' => 'toggle', 'label' => __( 'نمایش این بخش', 'techrato' ), 'default' => 1 ),
 				'title'   => array( 'type' => 'text', 'label' => __( 'عنوان', 'techrato' ), 'default' => 'ما را در شبکه‌های اجتماعی دنبال کنید' ),
 				'text'    => array( 'type' => 'text', 'label' => __( 'توضیح', 'techrato' ), 'default' => 'اخبار فوری، ویدیوها و تازه‌ترین مطالب تکراتو را در شبکه‌های اجتماعی دنبال کنید.' ),
-				'url'     => array( 'type' => 'text', 'label' => __( 'لینک دکمه', 'techrato' ), 'default' => '' ),
+				'twitter'   => array( 'type' => 'text', 'label' => __( 'آدرس توییتر', 'techrato' ), 'default' => 'https://twitter.com/Techratocom' ),
+				'instagram' => array( 'type' => 'text', 'label' => __( 'آدرس اینستاگرام', 'techrato' ), 'default' => 'https://www.instagram.com/techratocom' ),
+				'telegram'  => array( 'type' => 'text', 'label' => __( 'آدرس تلگرام', 'techrato' ), 'default' => 'https://t.me/techrato_com' ),
 			),
 		),
 
 		'side' => array(
-			'label'       => __( 'ستون کناری — باکس دسته', 'techrato' ),
-			'description' => __( 'در صفحه دسته‌بندی، مطلب و نویسنده کنار محتوا نمایش داده می‌شود. اگر عنوان را خالی بگذارید نام همان دسته استفاده می‌شود.', 'techrato' ),
+			'label'       => __( 'ستون کناری — جدیدترین مطالب', 'techrato' ),
+			'description' => __( 'در صفحه دسته‌بندی، مطلب و نویسنده کنار محتوا نمایش داده می‌شود و جدیدترین مطالب کل سایت را نشان می‌دهد.', 'techrato' ),
 			'fields'      => array(
 				'enabled' => array( 'type' => 'toggle', 'label' => __( 'نمایش این بخش', 'techrato' ), 'default' => 1 ),
-				'title'   => array( 'type' => 'text', 'label' => __( 'عنوان', 'techrato' ), 'default' => '' ),
-				'cat'     => array( 'type' => 'category', 'label' => __( 'دسته', 'techrato' ), 'default' => 0 ),
 				'count'   => array( 'type' => 'number', 'label' => __( 'تعداد مطالب', 'techrato' ), 'default' => 4, 'min' => 2, 'max' => 10 ),
 			),
 		),

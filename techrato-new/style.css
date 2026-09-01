@@ -3,7 +3,7 @@ Theme Name: تکراتو جدید
 Theme URI: https://techrato.com/
 Author: Techrato
 Description: قالب اختصاصی تکراتو — نسخه‌ی جدید. شامل سیستم تبلیغات، لایه‌ی سئو، تنظیمات صفحه نخست، مگا منو و بارگذاری مطالب بدون رفرش.
-Version: 2.2.0
+Version: 2.3.0
 Requires at least: 5.8
 Requires PHP: 7.4
 License: GNU General Public License v2 or later
@@ -10391,5 +10391,87 @@ textarea.comment-field {
 	.author-hero__body h1 {
 		margin: 4px 0 8px;
 		font-size: 20px;
+	}
+}
+
+/* ==== شبکه‌های اجتماعی: ردیف آیکون‌ها ==== */
+/* یک ردیف مشترک برای سایدبار و بنر صفحه نخست، تا هر سه شبکه با آیکون
+   خودشان و قابل کلیک نمایش داده شوند. */
+.social-icon-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+}
+.social-icon-row .social-icon {
+	width: 46px;
+	height: 46px;
+	flex: 0 0 auto;
+	display: grid;
+	place-items: center;
+	padding: 0;
+	border: 1px solid rgba(255, 255, 255, .12);
+	border-radius: 15px;
+	background: rgba(255, 255, 255, .06);
+	color: #fff;
+	transition: background .2s ease, color .2s ease, transform .2s ease, border-color .2s ease;
+}
+.social-icon-row .social-icon svg {
+	width: 20px;
+	height: 20px;
+	display: block;
+}
+.social-icon-row .social-icon:hover {
+	transform: translateY(-2px);
+	border-color: transparent;
+	background: var(--green);
+	color: #111;
+}
+
+/* روی بنر صفحه نخست: همان‌جایی که در طراحی دکمه‌ی تکی بود، پایین-چپ. */
+.social-icon-row--banner {
+	position: absolute;
+	left: 28px;
+	bottom: 28px;
+	z-index: 3;
+	gap: 12px;
+}
+.social-icon-row--banner .social-icon {
+	width: 62px;
+	height: 62px;
+	border-radius: 20px;
+}
+.social-icon-row--banner .social-icon svg {
+	width: 26px;
+	height: 26px;
+}
+.social-icon-row--banner .social-icon:hover {
+	border-radius: 50%;
+	transform: translateY(-4px);
+}
+
+/* کارت روشن ستون کناری صفحه دسته‌بندی */
+.category-social-card .social-icon-row .social-icon {
+	border-color: rgba(255, 255, 255, .16);
+}
+
+/* در عرض‌های کوچک بنر جای کافی برای ستون چپ ندارد، پس آیکون‌ها زیر متن
+   می‌نشینند و از حالت شناور خارج می‌شوند. */
+@media (max-width: 900px) {
+	.social-icon-row--banner {
+		position: static;
+		margin-top: 22px;
+	}
+}
+
+@media (max-width: 650px) {
+	.social-icon-row--banner .social-icon {
+		width: 52px;
+		height: 52px;
+		border-radius: 17px;
+	}
+	.social-icon-row--banner .social-icon svg {
+		width: 22px;
+		height: 22px;
 	}
 }

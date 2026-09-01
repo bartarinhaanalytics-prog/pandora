@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '2.2.0' );
+define( 'TECHRATO_VERSION', '2.3.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -335,23 +335,6 @@ add_action( 'wp_ajax_nopriv_techrato_toggle_like', 'techrato_ajax_toggle_like' )
 if ( ! isset( $content_width ) ) {
 	$content_width = 900;
 }
-
-/**
- * Register widget areas (footer columns can be edited from Appearance > Menus,
- * but we still expose a sidebar in case a widget is preferred over a menu).
- */
-function techrato_widgets_init() {
-	register_sidebar( array(
-		'name'          => __( 'سایدبار مقالات', 'techrato' ),
-		'id'            => 'sidebar-article',
-		'description'   => __( 'ابزارک‌های نمایش داده‌شده در کنار مقالات و صفحات دسته‌بندی', 'techrato' ),
-		'before_widget' => '<div class="widget">',
-		'after_widget'  => '</div>',
-		'before_title'  => '<h3 class="widget-title">',
-		'after_title'   => '</h3>',
-	) );
-}
-add_action( 'widgets_init', 'techrato_widgets_init' );
 
 /**
  * Includes.

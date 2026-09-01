@@ -39,6 +39,12 @@ function techrato_category_icons() {
 		'business' => array( __( 'کسب و کار', 'techrato' ), '<rect x="3" y="8" width="18" height="12" rx="2.4"/><path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>' ),
 		'video'    => array( __( 'ویدیو', 'techrato' ), '<rect x="3" y="6" width="13" height="12" rx="2.4"/><path d="M16 10.5l5-2.6v8.2l-5-2.6Z"/>' ),
 		'health'   => array( __( 'سلامت', 'techrato' ), '<path d="M20.8 6.6a4.9 4.9 0 0 0-7 0L12 8.4l-1.8-1.8a4.9 4.9 0 1 0-7 7L12 21l8.8-7.4a4.9 4.9 0 0 0 0-7Z"/>' ),
+		'tv'       => array( __( 'سینما و تلویزیون', 'techrato' ), '<rect x="2.5" y="6.5" width="19" height="12" rx="2.4"/><path d="M8 3.5l4 3 4-3M9 21.5h6"/>' ),
+		'shopping' => array( __( 'راهنمای خرید', 'techrato' ), '<path d="M4.5 8h15l-1.2 11.2a2 2 0 0 1-2 1.8H7.7a2 2 0 0 1-2-1.8Z"/><path d="M9 8V6.2a3 3 0 0 1 6 0V8"/>' ),
+		'iran'     => array( __( 'فناوری ایران', 'techrato' ), '<path d="M12 21s7-5.1 7-10.4A7 7 0 0 0 5 10.6C5 15.9 12 21 12 21Z"/><circle cx="12" cy="10.4" r="2.6"/>' ),
+		'tablet'   => array( __( 'تبلت', 'techrato' ), '<rect x="4" y="2.5" width="16" height="19" rx="2.6"/><path d="M10.5 18.5h3"/>' ),
+		'headphone' => array( __( 'هدفون و صوتی', 'techrato' ), '<path d="M4 15v-2.5a8 8 0 0 1 16 0V15"/><rect x="2.5" y="14" width="4.5" height="6.5" rx="2"/><rect x="17" y="14" width="4.5" height="6.5" rx="2"/>' ),
+		'news'     => array( __( 'اخبار', 'techrato' ), '<rect x="3" y="5" width="14.5" height="14" rx="2.2"/><path d="M17.5 9H21v8a2 2 0 0 1-2 2h-1.5ZM6.5 9h7M6.5 12.5h7M6.5 16h4"/>' ),
 		'star'     => array( __( 'عمومی', 'techrato' ), '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.8-5.3-2.9-5.3 2.9 1.1-5.8L3.5 9.7l5.9-.8Z"/>' ),
 	);
 }
@@ -57,22 +63,31 @@ function techrato_guess_category_icon( $term ) {
 
 	$haystack = strtolower( $term->slug . ' ' . $term->name );
 
+	// Order matters: the specific words are tried before the generic ones, so
+	// "اخبار سینما و تلویزیون" lands on the television icon rather than on the
+	// plain news icon.
 	$map = array(
-		'mobile'   => array( 'mobile', 'smartphone', 'phone', 'موبایل', 'گوشی' ),
-		'laptop'   => array( 'laptop', 'computer', 'pc', 'hardware', 'لپ', 'کامپیوتر', 'سخت' ),
-		'ai'       => array( 'ai', 'artificial', 'هوش' ),
-		'car'      => array( 'car', 'khodro', 'auto', 'vehicle', 'خودرو' ),
-		'gadget'   => array( 'gadget', 'wearable', 'گجت', 'پوشیدنی' ),
-		'camera'   => array( 'camera', 'photo', 'دوربین', 'عکاسی' ),
-		'game'     => array( 'game', 'gaming', 'بازی' ),
-		'app'      => array( 'app', 'software', 'application', 'اپلیکیشن', 'نرم' ),
-		'security' => array( 'security', 'privacy', 'امنیت' ),
-		'crypto'   => array( 'crypto', 'bitcoin', 'blockchain', 'ارز', 'رمزارز' ),
-		'internet' => array( 'internet', 'network', 'web', 'اینترنت', 'شبکه' ),
-		'science'  => array( 'science', 'space', 'astronomy', 'علمی', 'فضا', 'نجوم' ),
-		'business' => array( 'business', 'economy', 'startup', 'کسب', 'اقتصاد', 'استارتاپ' ),
-		'video'    => array( 'video', 'film', 'ویدیو', 'فیلم' ),
-		'health'   => array( 'health', 'medical', 'سلامت', 'پزشکی' ),
+		'headphone' => array( 'headphone', 'earbud', 'audio', 'speaker', 'هدفون', 'ایرباد', 'هندزفری', 'صوتی', 'اسپیکر' ),
+		'mobile'    => array( 'mobile', 'smartphone', 'phone', 'iphone', 'android', 'galaxy', 'موبایل', 'گوشی', 'آیفون', 'اندروید' ),
+		'tablet'    => array( 'tablet', 'ipad', 'تبلت', 'آیپد' ),
+		'laptop'    => array( 'laptop', 'computer', 'desktop', 'pc', 'hardware', 'cpu', 'gpu', 'لپ', 'کامپیوتر', 'رایانه', 'سخت‌افزار', 'سخت افزار', 'پردازنده', 'کارت گرافیک' ),
+		'ai'        => array( 'ai', 'artificial', 'chatgpt', 'machine-learning', 'هوش مصنوعی', 'هوش' ),
+		'car'       => array( 'car', 'khodro', 'auto', 'vehicle', 'ev', 'خودرو', 'ماشین', 'موتورسیکلت' ),
+		'camera'    => array( 'camera', 'photo', 'photography', 'دوربین', 'عکاسی' ),
+		'game'      => array( 'game', 'gaming', 'console', 'playstation', 'xbox', 'بازی', 'کنسول', 'پلی استیشن' ),
+		'tv'        => array( 'tv', 'television', 'cinema', 'movie', 'series', 'film', 'تلویزیون', 'سینما', 'سریال', 'فیلم' ),
+		'video'     => array( 'video', 'youtube', 'stream', 'ویدیو', 'یوتیوب', 'پخش زنده' ),
+		'app'       => array( 'app', 'software', 'application', 'windows', 'اپلیکیشن', 'اپ', 'نرم‌افزار', 'نرم افزار', 'ویندوز' ),
+		'security'  => array( 'security', 'privacy', 'hack', 'malware', 'امنیت', 'حریم', 'هک', 'بدافزار' ),
+		'crypto'    => array( 'crypto', 'bitcoin', 'blockchain', 'nft', 'ارز دیجیتال', 'رمزارز', 'بیت کوین', 'بلاک' ),
+		'internet'  => array( 'internet', 'network', 'web', 'wifi', '5g', 'اینترنت', 'شبکه', 'وب', 'فیلترینگ' ),
+		'science'   => array( 'science', 'space', 'astronomy', 'nasa', 'علمی', 'علم', 'فضا', 'نجوم' ),
+		'health'    => array( 'health', 'medical', 'fitness', 'سلامت', 'پزشکی', 'تندرستی' ),
+		'shopping'  => array( 'shop', 'buy', 'buying-guide', 'price', 'store', 'market', 'خرید', 'قیمت', 'فروشگاه', 'بازار' ),
+		'business'  => array( 'business', 'economy', 'startup', 'company', 'کسب', 'اقتصاد', 'استارتاپ', 'شرکت' ),
+		'gadget'    => array( 'gadget', 'wearable', 'smartwatch', 'drone', 'گجت', 'پوشیدنی', 'ساعت هوشمند', 'پهپاد' ),
+		'iran'      => array( 'iran', 'ایران', 'داخلی', 'بومی' ),
+		'news'      => array( 'news', 'اخبار', 'خبر', 'فناوری', 'تکنولوژی', 'تک' ),
 	);
 
 	foreach ( $map as $icon => $needles ) {

@@ -33,8 +33,4 @@ $techrato_recent = new WP_Query( array(
 
 	<?php get_template_part( 'template-parts/sidebar-social', null, array( 'style' => 'article' ) ); ?>
 
-	<?php if ( is_active_sidebar( 'sidebar-article' ) ) : ?>
-		<div class="sidebar-widgets"><?php dynamic_sidebar( 'sidebar-article' ); ?></div>
-	<?php endif; ?>
-
 </aside>
