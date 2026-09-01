@@ -52,7 +52,9 @@ if ( ! $feed_query instanceof WP_Query ) {
 $feed_per   = (int) $feed_query->get( 'posts_per_page' );
 $feed_max   = (int) $feed_query->max_num_pages;
 $feed_has   = $feed_query->have_posts();
-$feed_more  = $feed_has && $feed_max > 1 && $feed['more_url'];
+// The button is about paging, not about the fallback link: requiring a URL
+// meant a box with more pages but no archive to point at lost its button.
+$feed_more  = $feed_has && $feed_max > 1;
 $feed_uid   = wp_unique_id( 'feed-' );
 
 // Native ads sit at fixed places in the first render only. Load-more appends
@@ -113,8 +115,14 @@ $feed_ads = ( $feed['ads'] && function_exists( 'techrato_ads_native_map' ) )
 	</div>
 
 	<?php if ( $feed_more ) : ?>
-		<?php // A real link, so it still goes somewhere useful without JavaScript. ?>
-		<a class="more-link js-load-more" href="<?php echo esc_url( $feed['more_url'] ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+		<?php if ( $feed['more_url'] ) : ?>
+			<?php // A real link, so it still goes somewhere useful without JavaScript. ?>
+			<a class="more-link js-load-more" href="<?php echo esc_url( $feed['more_url'] ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+		<?php else : ?>
+			<?php // Nowhere honest to send a reader without JavaScript, so this is a
+			// button rather than a link that promises a page it cannot open. ?>
+			<button type="button" class="more-link js-load-more"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></button>
+		<?php endif; ?>
 	<?php endif; ?>
 
 </div>

@@ -1,7 +1,11 @@
 <?php
 /**
- * Comment form + comment list, styled to match the design.
+ * Comments, built to the design's own markup: a form card on one side and
+ * the thread on the other.
+ *
+ * @package techrato
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -9,52 +13,85 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( post_password_required() ) {
 	return;
 }
+
+$techrato_count = (int) get_comments_number();
 ?>
-<div id="comments" class="comments-wrap">
 
-	<div class="comment-form-wrap">
-		<?php
-		comment_form( array(
-			'title_reply'          => __( 'دیدگاه ها و نظرات خود را بنویسید', 'techrato' ),
-			'title_reply_before'   => '<h3 id="reply-title" class="comment-reply-title">',
-			'title_reply_after'    => '</h3>',
-			'class_submit'         => 'btn',
-			'label_submit'         => __( 'ارسال', 'techrato' ),
-			'comment_field'        => '<textarea id="comment" name="comment" placeholder="' . esc_attr__( 'متن دیدگاه', 'techrato' ) . '" required></textarea>',
-			'fields'                => array(
-				'author' => '<div class="row"><span><input id="author" name="author" type="text" placeholder="' . esc_attr__( 'نام شما', 'techrato' ) . '" required></span>' .
-					'<span><input id="email" name="email" type="email" placeholder="' . esc_attr__( 'ایمیل شما', 'techrato' ) . '" required></span></div>',
-			),
-		) );
-		?>
+<div class="section-heading comments-heading">
+	<div>
+		<span class="eyebrow"><?php esc_html_e( 'گفت‌وگوی کاربران', 'techrato' ); ?></span>
+		<h2><?php esc_html_e( 'دیدگاه‌ها', 'techrato' ); ?></h2>
 	</div>
-
-	<?php if ( have_comments() ) : ?>
-		<h3 class="comment-list-title">
-			<?php
+	<span class="comments-count-pill">
+		<?php
+		printf(
 			/* translators: %s: number of comments */
-			printf( esc_html__( 'نظرات ثبت شده (%s نظر)', 'techrato' ), esc_html( get_comments_number() ) );
-			?>
-		</h3>
-		<ol class="comment-list">
+			esc_html( _n( '%s دیدگاه', '%s دیدگاه', $techrato_count, 'techrato' ) ),
+			esc_html( number_format_i18n( $techrato_count ) )
+		);
+		?>
+	</span>
+</div>
+
+<div class="comments-layout">
+
+	<?php if ( comments_open() ) : ?>
+		<div class="comments-card">
 			<?php
-			wp_list_comments( array(
-				'style'    => 'ol',
-				'short_ping' => true,
-				'callback' => 'techrato_comment_callback',
+			// The design puts the name, email and message boxes in one grid.
+			// A logged-in visitor gets no name or email box, so the grid has to
+			// be opened by whichever field actually comes first.
+			$techrato_open = is_user_logged_in() ? '<div class="comment-grid">' : '';
+
+			comment_form( array(
+				'title_reply'          => __( 'دیدگاه شما', 'techrato' ),
+				'title_reply_to'       => __( 'پاسخ به %s', 'techrato' ),
+				'title_reply_before'   => '<h2>',
+				'title_reply_after'    => '</h2>',
+				'cancel_reply_before'  => ' <small>',
+				'cancel_reply_after'   => '</small>',
+				'comment_notes_before' => '<p>' . esc_html__( 'نشانی ایمیل شما منتشر نخواهد شد.', 'techrato' ) . '</p>',
+				'comment_notes_after'  => '',
+				'class_submit'         => 'comment-submit',
+				'label_submit'         => __( 'ارسال دیدگاه', 'techrato' ),
+				'submit_field'         => '%1$s %2$s',
+				'comment_field'        => $techrato_open . '<textarea class="comment-field" id="comment" name="comment" rows="5" required placeholder="' . esc_attr__( 'دیدگاه خود را بنویسید...', 'techrato' ) . '"></textarea></div>',
+				'fields'               => array(
+					'author' => '<div class="comment-grid"><input class="comment-field" id="author" name="author" type="text" required placeholder="' . esc_attr__( 'نام شما', 'techrato' ) . '" value="">',
+					'email'  => '<input class="comment-field" id="email" name="email" type="email" required placeholder="' . esc_attr__( 'ایمیل شما', 'techrato' ) . '" value="">',
+				),
 			) );
 			?>
-		</ol>
+		</div>
+	<?php endif; ?>
 
-		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : ?>
-			<div class="pagination">
-				<div><?php previous_comments_link( '« ' . esc_html__( 'قبل', 'techrato' ) ); ?></div>
-				<div><?php next_comments_link( esc_html__( 'بعد', 'techrato' ) . ' »' ); ?></div>
-			</div>
-		<?php endif; ?>
+	<?php if ( have_comments() ) : ?>
+		<div class="comments-thread">
+			<?php
+			wp_list_comments( array(
+				'style'  => 'div',
+				'walker' => new Techrato_Comment_Walker(),
+			) );
+			?>
 
-	<?php elseif ( ! comments_open() ) : ?>
-		<p style="color:var(--text-dim);font-size:13px;"><?php esc_html_e( 'امکان ثبت دیدگاه برای این مطلب بسته شده است.', 'techrato' ); ?></p>
+			<?php
+			$techrato_pages = get_comment_pages_count();
+			if ( $techrato_pages > 1 && get_option( 'page_comments' ) ) :
+				?>
+				<div class="comments-pagination">
+					<?php
+					paginate_comments_links( array(
+						'prev_text' => __( 'قبلی', 'techrato' ),
+						'next_text' => __( 'بعدی', 'techrato' ),
+					) );
+					?>
+				</div>
+			<?php endif; ?>
+		</div>
 	<?php endif; ?>
 
 </div>
+
+<?php if ( ! comments_open() && $techrato_count ) : ?>
+	<p class="comments-closed"><?php esc_html_e( 'امکان ثبت دیدگاه برای این مطلب بسته شده است.', 'techrato' ); ?></p>
+<?php endif; ?>

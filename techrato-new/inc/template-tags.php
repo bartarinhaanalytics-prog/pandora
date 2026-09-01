@@ -669,3 +669,23 @@ function techrato_section_heading( $eyebrow, $title, $url = '', $more = '', $ext
 	</div>
 	<?php
 }
+
+/**
+ * Where "all the latest posts" actually lives.
+ *
+ * A box that mixes every category has no category archive to point at, so
+ * sending the reader to the dominant category of whatever happens to be on
+ * screen is worse than sending them nowhere. When no posts page is set this
+ * returns an empty string and the caller hides its button.
+ *
+ * @return string
+ */
+function techrato_posts_archive_url() {
+	$page_id = (int) get_option( 'page_for_posts' );
+
+	if ( $page_id && 'publish' === get_post_status( $page_id ) ) {
+		return (string) get_permalink( $page_id );
+	}
+
+	return '';
+}

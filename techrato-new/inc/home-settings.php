@@ -45,16 +45,6 @@ function techrato_home_blocks() {
 			),
 		),
 
-		'trend' => array(
-			'label'       => __( 'نوار «داغ‌ترین‌ها» زیر هیرو', 'techrato' ),
-			'description' => __( 'نوار باریک زیر بخش هیرو. اگر نمی‌خواهیدش تیک نمایش را بردارید.', 'techrato' ),
-			'fields'      => array(
-				'enabled' => array( 'type' => 'toggle', 'label' => __( 'نمایش این بخش', 'techrato' ), 'default' => 1 ),
-				'title'   => array( 'type' => 'text', 'label' => __( 'برچسب', 'techrato' ), 'default' => 'داغ‌ترین‌ها' ),
-				'count'   => array( 'type' => 'number', 'label' => __( 'تعداد مطالب', 'techrato' ), 'default' => 4, 'min' => 2, 'max' => 8 ),
-			),
-		),
-
 		'editors' => array(
 			'label'       => __( 'پیشنهادهای سردبیر', 'techrato' ),
 			'description' => __( 'از تیک «پیشنهاد سردبیر» در صفحه ویرایش مطلب خوانده می‌شود.', 'techrato' ),
@@ -82,6 +72,17 @@ function techrato_home_blocks() {
 				'title'   => array( 'type' => 'text', 'label' => __( 'عنوان', 'techrato' ), 'default' => 'ما را در شبکه‌های اجتماعی دنبال کنید' ),
 				'text'    => array( 'type' => 'text', 'label' => __( 'توضیح', 'techrato' ), 'default' => 'اخبار فوری، ویدیوها و تازه‌ترین مطالب تکراتو را در شبکه‌های اجتماعی دنبال کنید.' ),
 				'url'     => array( 'type' => 'text', 'label' => __( 'لینک دکمه', 'techrato' ), 'default' => '' ),
+			),
+		),
+
+		'side' => array(
+			'label'       => __( 'ستون کناری — باکس دسته', 'techrato' ),
+			'description' => __( 'در صفحه دسته‌بندی، مطلب و نویسنده کنار محتوا نمایش داده می‌شود. اگر عنوان را خالی بگذارید نام همان دسته استفاده می‌شود.', 'techrato' ),
+			'fields'      => array(
+				'enabled' => array( 'type' => 'toggle', 'label' => __( 'نمایش این بخش', 'techrato' ), 'default' => 1 ),
+				'title'   => array( 'type' => 'text', 'label' => __( 'عنوان', 'techrato' ), 'default' => '' ),
+				'cat'     => array( 'type' => 'category', 'label' => __( 'دسته', 'techrato' ), 'default' => 0 ),
+				'count'   => array( 'type' => 'number', 'label' => __( 'تعداد مطالب', 'techrato' ), 'default' => 4, 'min' => 2, 'max' => 10 ),
 			),
 		),
 

@@ -40,19 +40,22 @@ while ( have_posts() ) :
 
 										<div class="article-actions article-actions--under-title">
 											<div class="article-actions__group article-actions__group--right">
-												<button type="button" class="article-action article-action-like js-like-btn<?php echo $techrato_liked ? ' is-liked' : ''; ?>"
+												<button type="button" class="article-action article-action-like js-like-btn<?php echo $techrato_liked ? ' is-active' : ''; ?>"
 													data-post-id="<?php echo esc_attr( $techrato_id ); ?>" aria-label="<?php esc_attr_e( 'پسندیدن', 'techrato' ); ?>">
-													<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+													<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
 													<span class="article-action-count article-like-count"><?php echo esc_html( $techrato_likes ); ?></span>
 												</button>
 												<a class="article-action article-action-comment" href="#comments" aria-label="<?php esc_attr_e( 'دیدگاه', 'techrato' ); ?>">
-													<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 1 1 17 0z"/></svg>
+													<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 1 1 17 0z"/></svg>
 													<span class="article-action-count article-comment-count"><?php echo esc_html( get_comments_number() ); ?></span>
 												</a>
 											</div>
 											<div class="article-actions__group article-actions__group--left">
+												<button type="button" class="article-action article-action-share js-share-btn" aria-label="<?php esc_attr_e( 'اشتراک گذاری', 'techrato' ); ?>">
+													<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9M8.6 13.5l6.8 3.9"/></svg>
+												</button>
 												<button type="button" class="article-action article-action-save js-save-btn" data-post-id="<?php echo esc_attr( $techrato_id ); ?>" aria-label="<?php esc_attr_e( 'ذخیره', 'techrato' ); ?>">
-													<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v17l-6-4-6 4V4Z"/></svg>
+													<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v17l-6-4-6 4V4Z"/></svg>
 												</button>
 											</div>
 										</div>
@@ -90,9 +93,53 @@ while ( have_posts() ) :
 						<?php // Two banners at the end of the article, under the tags. ?>
 						<?php techrato_ads_render_banners( 'single_bottom' ); ?>
 					</article>
+
+					<?php get_template_part( 'template-parts/sidebar-article', null, array( 'exclude' => array( $techrato_id ) ) ); ?>
 				</div>
 			</div>
 		</section>
+
+		<?php // Table of contents and the floating dock, both from the design.
+		// The list itself is filled by JavaScript from the article's headings. ?>
+		<aside class="reading-nav js-reading-nav" aria-label="<?php esc_attr_e( 'فهرست مطلب', 'techrato' ); ?>" hidden>
+			<button type="button" class="reading-nav__mobile-toggle js-reading-toggle" aria-expanded="false" aria-label="<?php esc_attr_e( 'باز کردن فهرست مطلب', 'techrato' ); ?>">
+				<span class="reading-nav__mobile-progress"><span></span></span>
+				<b class="reading-nav__mobile-index">۱ / ۱</b>
+				<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 9.5l5 5 5-5"/></svg>
+			</button>
+			<div class="reading-nav__panel">
+				<div class="reading-nav__header">
+					<span><?php esc_html_e( 'در این مطلب', 'techrato' ); ?></span>
+					<b class="reading-nav__counter">۱ / ۱</b>
+				</div>
+				<div class="reading-nav__body">
+					<span class="reading-nav__rail" aria-hidden="true"><span class="reading-nav__rail-progress"></span></span>
+					<nav class="reading-nav__list" aria-label="<?php esc_attr_e( 'سرفصل‌های مطلب', 'techrato' ); ?>"></nav>
+				</div>
+			</div>
+		</aside>
+
+		<div class="mobile-reading-progress" aria-hidden="true"><span class="mobile-reading-progress__fill"></span></div>
+
+		<div class="article-action-dock" aria-label="<?php esc_attr_e( 'ابزارهای مطلب', 'techrato' ); ?>">
+			<button type="button" class="dock-action dock-like js-like-btn<?php echo $techrato_liked ? ' is-active' : ''; ?>"
+				data-post-id="<?php echo esc_attr( $techrato_id ); ?>" aria-label="<?php esc_attr_e( 'پسندیدن', 'techrato' ); ?>" aria-pressed="<?php echo $techrato_liked ? 'true' : 'false'; ?>">
+				<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+				<span class="dock-like-count article-like-count"><?php echo esc_html( $techrato_likes ); ?></span>
+			</button>
+			<span class="dock-separator" aria-hidden="true"></span>
+			<a class="dock-action dock-comment" href="#comments" aria-label="<?php esc_attr_e( 'دیدگاه', 'techrato' ); ?>">
+				<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 1 1 17 0z"/></svg>
+			</a>
+			<span class="dock-separator" aria-hidden="true"></span>
+			<button type="button" class="dock-action dock-share js-share-btn" aria-label="<?php esc_attr_e( 'اشتراک گذاری', 'techrato' ); ?>">
+				<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9M8.6 13.5l6.8 3.9"/></svg>
+			</button>
+			<span class="dock-separator" aria-hidden="true"></span>
+			<button type="button" class="dock-action dock-save js-save-btn" data-post-id="<?php echo esc_attr( $techrato_id ); ?>" aria-label="<?php esc_attr_e( 'ذخیره', 'techrato' ); ?>" aria-pressed="false">
+				<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 4h12v17l-6-4-6 4V4Z"/></svg>
+			</button>
+		</div>
 
 		<?php if ( comments_open() || get_comments_number() ) : ?>
 			<section class="comments-section" id="comments">

@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TECHRATO_VERSION', '2.1.0' );
+define( 'TECHRATO_VERSION', '2.2.0' );
 define( 'TECHRATO_DIR', get_template_directory() );
 define( 'TECHRATO_URI', get_template_directory_uri() );
 
@@ -41,7 +41,6 @@ function techrato_setup() {
 
 	register_nav_menus( array(
 		'primary'          => __( 'منوی اصلی', 'techrato' ),
-		'trending'         => __( 'نوار پرطرفدارها', 'techrato' ),
 		'footer-techrato'  => __( 'فوتر - تکراتو', 'techrato' ),
 		'footer-categories' => __( 'فوتر - دسته‌بندی‌ها', 'techrato' ),
 		'social'            => __( 'فوتر - شبکه‌های اجتماعی', 'techrato' ),
@@ -292,6 +291,41 @@ function techrato_ajax_load_posts() {
 add_action( 'wp_ajax_techrato_load_posts', 'techrato_ajax_load_posts' );
 add_action( 'wp_ajax_nopriv_techrato_load_posts', 'techrato_ajax_load_posts' );
 
+/**
+ * Count a view.
+ *
+ * The browser sends this a couple of seconds after the page settles, because
+ * page caching means PHP never runs for most visitors — counting server-side
+ * would only ever see the first reader of each cached copy.
+ *
+ * Deliberately nonce-free: it writes one integer against a public post, and a
+ * nonce baked into a cached page goes stale and starts rejecting ordinary
+ * readers.
+ */
+function techrato_ajax_count_view() {
+	$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+
+	if ( ! $post_id || 'publish' !== get_post_status( $post_id ) ) {
+		wp_send_json_error( array( 'message' => __( 'مطلب پیدا نشد.', 'techrato' ) ), 404 );
+	}
+
+	// One count per reader per post per day. Without this a single open tab
+	// that refreshes would look like a popular article.
+	$cookie = 'techrato_seen_' . $post_id;
+	if ( ! empty( $_COOKIE[ $cookie ] ) ) {
+		wp_send_json_success( array( 'counted' => false ) );
+	}
+
+	$views = (int) get_post_meta( $post_id, 'techrato_views', true );
+	update_post_meta( $post_id, 'techrato_views', $views + 1 );
+
+	setcookie( $cookie, '1', time() + DAY_IN_SECONDS, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN );
+
+	wp_send_json_success( array( 'counted' => true, 'views' => $views + 1 ) );
+}
+add_action( 'wp_ajax_techrato_count_view', 'techrato_ajax_count_view' );
+add_action( 'wp_ajax_nopriv_techrato_count_view', 'techrato_ajax_count_view' );
+
 add_action( 'wp_ajax_techrato_toggle_like', 'techrato_ajax_toggle_like' );
 add_action( 'wp_ajax_nopriv_techrato_toggle_like', 'techrato_ajax_toggle_like' );
 
@@ -327,6 +361,7 @@ require TECHRATO_DIR . '/inc/customizer.php';
 require TECHRATO_DIR . '/inc/home-settings.php';
 require TECHRATO_DIR . '/inc/category-image.php';
 require TECHRATO_DIR . '/inc/category-icon.php';
+require TECHRATO_DIR . '/inc/comment-walker.php';
 require TECHRATO_DIR . '/inc/mega-menu.php';
 require TECHRATO_DIR . '/inc/link-ads.php';
 require TECHRATO_DIR . '/inc/ads.php';

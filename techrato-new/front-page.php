@@ -62,8 +62,6 @@ $shown_ids = array();
 					?>
 				</div>
 			</div>
-
-			<?php get_template_part( 'template-parts/trend-bar' ); ?>
 		</div>
 	</section>
 	<?php endif; ?>
@@ -84,10 +82,13 @@ $shown_ids = array();
 	<section class="editor-section">
 		<div class="container">
 			<?php
+			// Editor's picks come from a checkbox, not a category, so there is no
+			// archive of them. The posts page is the closest honest destination,
+			// and when none is set the button simply does not appear.
 			techrato_section_heading(
 				__( 'انتخاب تحریریه', 'techrato' ),
 				techrato_home_option( 'editors', 'title' ),
-				techrato_more_url( 'more_link_editors', $editors ),
+				techrato_posts_archive_url(),
 				__( 'مطالب بیشتر', 'techrato' ),
 				'section-heading--dark'
 			);
@@ -151,10 +152,13 @@ $shown_ids = array();
 				'ignore_sticky_posts' => true,
 			) );
 
+			// This box mixes every category, so pointing it at the dominant
+			// category of whatever is on screen sends the reader somewhere they
+			// did not ask for.
 			techrato_section_heading(
 				__( 'تازه منتشر شده', 'techrato' ),
 				techrato_home_option( 'latest', 'title' ),
-				techrato_more_url( 'more_link_latest', $news_query ),
+				techrato_posts_archive_url(),
 				__( 'مشاهده همه', 'techrato' )
 			);
 
@@ -164,7 +168,7 @@ $shown_ids = array();
 				'card'       => 'news',
 				'list_class' => 'latest-grid',
 				'ads'        => 'latest_native',
-				'more_url'   => techrato_more_url( 'more_link_latest', $news_query ),
+				'more_url'   => techrato_posts_archive_url(),
 			) );
 			?>
 

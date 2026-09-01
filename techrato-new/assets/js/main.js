@@ -212,52 +212,72 @@
 					}
 				} )
 				.catch( function () {
-					// Falling back to the real link is better than a dead button.
-					window.location.href = more.getAttribute( 'href' );
+					var href = more.getAttribute( 'href' );
+					if ( href ) {
+						// Falling back to the real link beats a dead button.
+						window.location.href = href;
+						return;
+					}
+					more.textContent = label;
+					more.classList.remove( 'is-busy' );
 				} );
 		} );
 	} );
 
 	/* ---------------------------------------------------------------
 	 * Likes and saved posts
+	 *
+	 * The same post has two sets of buttons: the row under the title and
+	 * the floating dock. Both are kept in step, so a tap on either one
+	 * updates the other.
 	 * ------------------------------------------------------------- */
 	( function () {
-		var like = document.querySelector( '.js-like-btn' );
+		var likes = [].slice.call( document.querySelectorAll( '.js-like-btn' ) );
+		var busy  = false;
 
-		if ( like && data.ajaxUrl ) {
-			like.addEventListener( 'click', function () {
-				if ( like.classList.contains( 'is-busy' ) ) {
-					return;
+		function paintLikes( count, liked ) {
+			likes.forEach( function ( btn ) {
+				var el = btn.querySelector( '.article-like-count' );
+				if ( el && null !== count ) {
+					el.textContent = count;
 				}
-				like.classList.add( 'is-busy' );
+				btn.classList.toggle( 'is-active', !! liked );
+				btn.setAttribute( 'aria-pressed', liked ? 'true' : 'false' );
+			} );
+		}
 
-				window.fetch( data.ajaxUrl, {
-					method: 'POST',
-					credentials: 'same-origin',
-					body: new URLSearchParams( {
-						action:  'techrato_toggle_like',
-						post_id: like.dataset.postId,
-						nonce:   data.nonce || ''
+		if ( likes.length && data.ajaxUrl ) {
+			likes.forEach( function ( like ) {
+				like.addEventListener( 'click', function () {
+					if ( busy ) {
+						return;
+					}
+					busy = true;
+
+					window.fetch( data.ajaxUrl, {
+						method: 'POST',
+						credentials: 'same-origin',
+						body: new URLSearchParams( {
+							action:  'techrato_toggle_like',
+							post_id: like.dataset.postId,
+							nonce:   data.nonce || ''
+						} )
 					} )
-				} )
-					.then( function ( r ) { return r.json(); } )
-					.then( function ( res ) {
-						if ( res && res.success ) {
-							var count = like.querySelector( '.article-like-count' );
-							if ( count ) {
-								count.textContent = res.data.count;
+						.then( function ( r ) { return r.json(); } )
+						.then( function ( res ) {
+							if ( res && res.success ) {
+								paintLikes( res.data.count, res.data.liked );
 							}
-							like.classList.toggle( 'is-liked', !! res.data.liked );
-						}
-					} )
-					.catch( function () {} )
-					.then( function () { like.classList.remove( 'is-busy' ); } );
+						} )
+						.catch( function () {} )
+						.then( function () { busy = false; } );
+				} );
 			} );
 		}
 
 		// Saved posts live in the browser only; nothing is sent anywhere.
-		var save = document.querySelector( '.js-save-btn' );
-		if ( ! save ) {
+		var saves = [].slice.call( document.querySelectorAll( '.js-save-btn' ) );
+		if ( ! saves.length ) {
 			return;
 		}
 
@@ -271,26 +291,352 @@
 			}
 		}
 
-		var id    = save.dataset.postId;
-		var saved = read();
-		save.classList.toggle( 'is-saved', saved.indexOf( id ) !== -1 );
+		var id = saves[0].dataset.postId;
 
-		save.addEventListener( 'click', function () {
-			var list = read();
-			var at   = list.indexOf( id );
+		function paintSaves( on ) {
+			saves.forEach( function ( btn ) {
+				btn.classList.toggle( 'is-active', on );
+				btn.setAttribute( 'aria-pressed', on ? 'true' : 'false' );
+			} );
+		}
 
-			if ( at === -1 ) {
-				list.push( id );
-			} else {
-				list.splice( at, 1 );
+		paintSaves( read().indexOf( id ) !== -1 );
+
+		saves.forEach( function ( save ) {
+			save.addEventListener( 'click', function () {
+				var list = read();
+				var at   = list.indexOf( id );
+
+				if ( at === -1 ) {
+					list.push( id );
+				} else {
+					list.splice( at, 1 );
+				}
+
+				try {
+					window.localStorage.setItem( key, JSON.stringify( list ) );
+				} catch ( e ) {}
+
+				paintSaves( at === -1 );
+			} );
+		} );
+	} )();
+
+	/* ---------------------------------------------------------------
+	 * Share button
+	 *
+	 * Uses the phone's own share sheet where there is one, and quietly
+	 * copies the address to the clipboard everywhere else.
+	 * ------------------------------------------------------------- */
+	document.querySelectorAll( '.js-share-btn' ).forEach( function ( btn ) {
+		btn.addEventListener( 'click', function () {
+			var share = { title: document.title, url: window.location.href };
+
+			if ( navigator.share ) {
+				navigator.share( share ).catch( function () {} );
+				return;
 			}
 
-			try {
-				window.localStorage.setItem( key, JSON.stringify( list ) );
-			} catch ( e ) {}
-
-			save.classList.toggle( 'is-saved', at === -1 );
+			if ( navigator.clipboard ) {
+				navigator.clipboard.writeText( share.url ).then( function () {
+					btn.classList.add( 'is-active' );
+					window.setTimeout( function () { btn.classList.remove( 'is-active' ); }, 1200 );
+				} ).catch( function () {} );
+			}
 		} );
+	} );
+
+	/* ---------------------------------------------------------------
+	 * Floating action dock
+	 *
+	 * Appears once the reader has scrolled past the top of the article
+	 * and steps aside again when the related-posts block arrives.
+	 * ------------------------------------------------------------- */
+	( function () {
+		var dock = document.querySelector( '.article-action-dock' );
+
+		if ( ! dock ) {
+			return;
+		}
+
+		var related = document.querySelector( '.related-section' );
+
+		function update() {
+			dock.classList.toggle( 'is-visible', window.scrollY > 220 );
+
+			if ( related ) {
+				var height = window.innerHeight || document.documentElement.clientHeight;
+				dock.classList.toggle( 'is-related-hidden', related.getBoundingClientRect().top <= height * 0.92 );
+			}
+		}
+
+		window.addEventListener( 'scroll', update, { passive: true } );
+		window.addEventListener( 'resize', update );
+		update();
+	} )();
+
+	/* ---------------------------------------------------------------
+	 * Reading navigation
+	 *
+	 * Built from the article's own h2 headings, so nothing has to be
+	 * written by hand in the editor. With no headings the whole panel
+	 * simply stays hidden.
+	 * ------------------------------------------------------------- */
+	( function () {
+		var root    = document.querySelector( '.js-reading-nav' );
+		var content = document.querySelector( '.article-content' );
+
+		if ( ! root || ! content ) {
+			return;
+		}
+
+		var list     = root.querySelector( '.reading-nav__list' );
+		var counter  = root.querySelector( '.reading-nav__counter' );
+		var rail     = root.querySelector( '.reading-nav__rail-progress' );
+		var toggle   = root.querySelector( '.js-reading-toggle' );
+		var index    = root.querySelector( '.reading-nav__mobile-index' );
+		var bar      = root.querySelector( '.reading-nav__mobile-progress > span' );
+		var headings = [].slice.call( content.querySelectorAll( 'h2' ) );
+
+		if ( ! list || headings.length < 2 ) {
+			return;
+		}
+
+		root.hidden = false;
+
+		function fa( n ) {
+			return Number( n ).toLocaleString( 'fa-IR' );
+		}
+
+		function slug( text, i ) {
+			var clean = text.trim().replace( /\s+/g, '-' )
+				.replace( /[^؀-ۿa-zA-Z0-9\-_]/g, '' )
+				.replace( /-+/g, '-' ).replace( /^-|-$/g, '' );
+
+			return clean || ( 'section-' + ( i + 1 ) );
+		}
+
+		headings.forEach( function ( h, i ) {
+			if ( ! h.id ) {
+				var base = slug( h.textContent, i );
+				var id   = base;
+				var n    = 2;
+
+				while ( document.getElementById( id ) ) {
+					id = base + '-' + n++;
+				}
+
+				h.id = id;
+			}
+
+			var label = h.textContent.trim();
+			var btn   = document.createElement( 'button' );
+
+			btn.type      = 'button';
+			btn.className = 'reading-nav__item';
+			btn.setAttribute( 'aria-label', label );
+			btn.innerHTML = '<span class="reading-nav__dot" aria-hidden="true"></span><span class="reading-nav__label"></span>';
+			btn.querySelector( '.reading-nav__label' ).textContent = label;
+
+			btn.addEventListener( 'click', function () {
+				window.scrollTo( {
+					top: h.getBoundingClientRect().top + window.scrollY - 26,
+					behavior: 'smooth'
+				} );
+
+				if ( window.matchMedia( '(max-width:650px)' ).matches ) {
+					root.classList.remove( 'is-open' );
+					if ( toggle ) {
+						toggle.setAttribute( 'aria-expanded', 'false' );
+					}
+				}
+			} );
+
+			list.appendChild( btn );
+		} );
+
+		var items = [].slice.call( list.querySelectorAll( '.reading-nav__item' ) );
+
+		function active( i ) {
+			i = Math.max( 0, Math.min( i, headings.length - 1 ) );
+
+			items.forEach( function ( el, n ) {
+				el.classList.toggle( 'is-active', n === i );
+				el.classList.toggle( 'is-passed', n < i );
+
+				if ( n === i ) {
+					el.setAttribute( 'aria-current', 'true' );
+				} else {
+					el.removeAttribute( 'aria-current' );
+				}
+			} );
+
+			var text = fa( i + 1 ) + ' / ' + fa( headings.length );
+
+			if ( counter ) {
+				counter.textContent = text;
+			}
+			if ( index ) {
+				index.textContent = text;
+			}
+		}
+
+		function update() {
+			var anchor = Math.max( 90, window.innerHeight * 0.28 );
+			var at     = 0;
+
+			headings.forEach( function ( h, n ) {
+				if ( h.getBoundingClientRect().top <= anchor ) {
+					at = n;
+				}
+			} );
+
+			active( at );
+
+			var first  = headings[0].getBoundingClientRect().top + window.scrollY;
+			var bottom = content.getBoundingClientRect().bottom + window.scrollY;
+			var start  = Math.max( 0, first - window.innerHeight * 0.28 );
+			var stop   = Math.max( start + 1, bottom - window.innerHeight * 0.72 );
+			var done   = Math.max( 0, Math.min( 1, ( window.scrollY - start ) / ( stop - start ) ) ) * 100;
+
+			if ( rail ) {
+				rail.style.height = done + '%';
+			}
+			if ( bar ) {
+				bar.style.width = done + '%';
+			}
+		}
+
+		var waiting = false;
+
+		function request() {
+			if ( waiting ) {
+				return;
+			}
+			waiting = true;
+			window.requestAnimationFrame( function () {
+				update();
+				waiting = false;
+			} );
+		}
+
+		if ( toggle ) {
+			toggle.addEventListener( 'click', function ( e ) {
+				e.stopPropagation();
+				var open = ! root.classList.contains( 'is-open' );
+				root.classList.toggle( 'is-open', open );
+				toggle.setAttribute( 'aria-expanded', String( open ) );
+			} );
+		}
+
+		document.addEventListener( 'click', function ( e ) {
+			if ( window.innerWidth <= 650 && root.classList.contains( 'is-open' ) && ! root.contains( e.target ) ) {
+				root.classList.remove( 'is-open' );
+				if ( toggle ) {
+					toggle.setAttribute( 'aria-expanded', 'false' );
+				}
+			}
+		} );
+
+		document.addEventListener( 'keydown', function ( e ) {
+			if ( 'Escape' === e.key ) {
+				root.classList.remove( 'is-open' );
+				if ( toggle ) {
+					toggle.setAttribute( 'aria-expanded', 'false' );
+				}
+			}
+		} );
+
+		// On phones the panel shares its corner with the dock, so it only
+		// shows itself while the dock is on screen.
+		var dock = document.querySelector( '.article-action-dock' );
+
+		function syncWithDock() {
+			if ( ! dock ) {
+				return;
+			}
+
+			var visible = dock.classList.contains( 'is-visible' ) && ! dock.classList.contains( 'is-related-hidden' );
+			root.classList.toggle( 'is-dock-visible', visible );
+
+			if ( ! visible ) {
+				root.classList.remove( 'is-open' );
+				if ( toggle ) {
+					toggle.setAttribute( 'aria-expanded', 'false' );
+				}
+			}
+		}
+
+		if ( dock && window.MutationObserver ) {
+			new window.MutationObserver( syncWithDock ).observe( dock, { attributes: true, attributeFilter: [ 'class' ] } );
+		}
+
+		window.addEventListener( 'scroll', function () { request(); syncWithDock(); }, { passive: true } );
+		window.addEventListener( 'resize', function () { request(); syncWithDock(); } );
+
+		active( 0 );
+		update();
+		syncWithDock();
+	} )();
+
+	/* ---------------------------------------------------------------
+	 * Reading progress bar (phones only)
+	 * ------------------------------------------------------------- */
+	( function () {
+		var progress = document.querySelector( '.mobile-reading-progress' );
+		var article  = document.querySelector( '.article-content' );
+		var dock     = document.querySelector( '.article-action-dock' );
+
+		if ( ! progress || ! article || ! dock ) {
+			return;
+		}
+
+		var fill = progress.querySelector( '.mobile-reading-progress__fill' );
+
+		if ( ! fill ) {
+			return;
+		}
+
+		function update() {
+			var small = window.matchMedia( '(max-width:650px)' ).matches;
+			var shown = small && dock.classList.contains( 'is-visible' ) && ! dock.classList.contains( 'is-related-hidden' );
+
+			progress.classList.toggle( 'is-dock-visible', shown );
+
+			if ( ! small ) {
+				fill.style.width = '0%';
+				return;
+			}
+
+			var top    = window.scrollY + article.getBoundingClientRect().top;
+			var start  = top - Math.min( window.innerHeight * 0.28, 180 );
+			var stop   = top + article.offsetHeight - window.innerHeight * 0.72;
+			var range  = Math.max( 1, stop - start );
+			var done   = Math.max( 0, Math.min( 1, ( window.scrollY - start ) / range ) );
+
+			fill.style.width = ( done * 100 ).toFixed( 2 ) + '%';
+		}
+
+		var waiting = false;
+
+		function request() {
+			if ( waiting ) {
+				return;
+			}
+			waiting = true;
+			window.requestAnimationFrame( function () {
+				update();
+				waiting = false;
+			} );
+		}
+
+		if ( window.MutationObserver ) {
+			new window.MutationObserver( request ).observe( dock, { attributes: true, attributeFilter: [ 'class' ] } );
+		}
+
+		window.addEventListener( 'scroll', request, { passive: true } );
+		window.addEventListener( 'resize', request );
+		update();
 	} )();
 
 	/* ---------------------------------------------------------------

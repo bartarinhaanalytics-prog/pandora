@@ -87,6 +87,8 @@ if ( $techrato_is_term && ! $techrato_image ) {
 				) );
 				?>
 			</div>
+
+			<?php get_template_part( 'template-parts/sidebar-category' ); ?>
 		</div>
 	</section>
 

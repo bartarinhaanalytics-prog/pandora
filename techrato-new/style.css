@@ -3,7 +3,7 @@ Theme Name: تکراتو جدید
 Theme URI: https://techrato.com/
 Author: Techrato
 Description: قالب اختصاصی تکراتو — نسخه‌ی جدید. شامل سیستم تبلیغات، لایه‌ی سئو، تنظیمات صفحه نخست، مگا منو و بارگذاری مطالب بدون رفرش.
-Version: 2.1.0
+Version: 2.2.0
 Requires at least: 5.8
 Requires PHP: 7.4
 License: GNU General Public License v2 or later
@@ -1288,98 +1288,6 @@ input {
 }
 
 
-
-.trend-bar {
-    min-height:
-        49px;
-
-    margin-top:
-        30px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    overflow:
-        hidden;
-
-    border-radius:
-        999px;
-
-    background:
-        #f7f7f7;
-}
-
-
-.trend-title {
-    min-height:
-        49px;
-
-    padding:
-        0 22px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    border-radius:
-        999px;
-
-    background:
-        var(--black);
-
-    color:
-        #fff;
-
-    font-size:
-        11px;
-}
-
-
-.trend-list {
-    padding:
-        0 18px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        12px;
-
-    overflow:
-        hidden;
-
-    white-space:
-        nowrap;
-
-    font-size:
-        10px;
-}
-
-
-.trend-list i {
-    width:
-        4px;
-
-    height:
-        4px;
-
-    flex:
-        0 0 auto;
-
-    border-radius:
-        50%;
-
-    background:
-        var(--green);
-}
 
 
 
@@ -10270,14 +10178,8 @@ textarea.comment-field {
 .topic-notch a:hover svg,
 .surface-notch a:hover svg { stroke: currentColor; }
 
-/* نوار داغ‌ترین‌ها: لینک‌ها باید مثل متن طراحی دیده شوند. */
-.trend-list a {
-	flex: 0 0 auto;
-	color: inherit;
-	white-space: nowrap;
-	transition: color .18s ease;
-}
-.trend-list a:hover { color: #2aa72a; }
+
+
 
 /* شبکه‌های اجتماعی: فهرست قابل کلیک به‌جای یک دکمه‌ی تنها. */
 .social-follow-links {
@@ -10348,4 +10250,146 @@ textarea.comment-field {
 	.link-ads { padding: 14px 16px; border-radius: 16px; }
 	.social-follow-links { gap: 8px; }
 	.social-follow-link { padding: 9px 14px; font-size: 12px; }
+}
+
+/* ==== دیدگاه‌ها: کلاسی که وردپرس خودش می‌سازد ==== */
+/* لینک «پاسخ» را وردپرس با کلاس ثابت خودش می‌سازد، پس همان ظاهر دکمه‌ی طراحی به آن هم داده می‌شود. */
+.comment-item .comment-reply-link {
+	flex: 0 0 auto;
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	background: transparent;
+	color: #555;
+	font-size: 8px;
+	font-weight: 800;
+	cursor: pointer;
+}
+.comment-item .comment-reply-link .icon {
+	width: 13px;
+	height: 13px;
+}
+.comment-item .comment-reply-link:hover {
+	color: #49b614;
+}
+
+.comment-awaiting {
+	margin: 0 0 8px;
+	color: #b07a00;
+	font-size: 9px;
+	font-weight: 800;
+}
+
+.comments-pagination {
+	margin-top: 18px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	font-size: 10px;
+}
+.comments-pagination a,
+.comments-pagination span {
+	min-width: 32px;
+	min-height: 32px;
+	padding: 0 10px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #ececec;
+	border-radius: 11px;
+	background: #fff;
+	color: #444;
+	font-weight: 800;
+}
+.comments-pagination .current {
+	border-color: transparent;
+	background: var(--green);
+	color: #111;
+}
+
+.comments-closed {
+	margin: 18px 0 0;
+	color: #888;
+	font-size: 10px;
+	text-align: center;
+}
+
+/* دکمه‌ی «پاسخ» وقتی فرم زیر یک دیدگاه باز می‌شود */
+.comment-item .comments-card {
+	margin-top: 14px;
+}
+
+/* ==== صفحه‌ی نویسنده ==== */
+/* در طراحی صفحه‌ای برای نویسنده نبود؛ این کارت از روی همان زبان بصری
+   کارت‌های دیگر ساخته شده تا با بقیه‌ی سایت یکدست بماند. */
+.author-hero {
+	display: grid;
+	grid-template-columns: 96px minmax(0, 1fr);
+	gap: 20px;
+	align-items: center;
+}
+.author-hero__avatar {
+	width: 96px;
+	height: 96px;
+	overflow: hidden;
+	border-radius: 28px;
+	background: #f1f1f1;
+}
+.author-hero__avatar img {
+	width: 100%;
+	height: 100%;
+	display: block;
+	object-fit: cover;
+	border-radius: inherit;
+}
+.author-hero__body {
+	min-width: 0;
+}
+.author-hero__body h1 {
+	margin: 6px 0 10px;
+	font-size: 30px;
+}
+.author-hero__bio {
+	margin: 0 0 12px;
+	max-width: 720px;
+	color: #555;
+	font-size: 11px;
+	line-height: 2;
+}
+.author-hero__facts {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 14px;
+	color: #777;
+	font-size: 9px;
+	font-weight: 800;
+}
+.author-hero__facts i {
+	width: 4px;
+	height: 4px;
+	flex: 0 0 auto;
+	border-radius: 50%;
+	background: var(--green);
+}
+.author-hero__facts a {
+	color: #2aa72a;
+}
+
+@media (max-width: 650px) {
+	.author-hero {
+		grid-template-columns: 64px minmax(0, 1fr);
+		gap: 14px;
+		align-items: start;
+	}
+	.author-hero__avatar {
+		width: 64px;
+		height: 64px;
+		border-radius: 20px;
+	}
+	.author-hero__body h1 {
+		margin: 4px 0 8px;
+		font-size: 20px;
+	}
 }
