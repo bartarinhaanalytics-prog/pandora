@@ -256,6 +256,32 @@
 	} );
 
 	/* ---------------------------------------------------------------
+	 * Landing on the first new post
+	 *
+	 * When the button falls back to its plain link, the address carries a
+	 * #more-N marker. Pictures finish loading after the browser has already
+	 * jumped, which pushes the list down, so the jump is made once more when
+	 * everything has settled.
+	 * ------------------------------------------------------------- */
+	guard( function () {
+		if ( ! /^#more-\d+$/.test( window.location.hash ) ) {
+			return;
+		}
+
+		var target = document.getElementById( window.location.hash.slice( 1 ) );
+
+		if ( ! target ) {
+			return;
+		}
+
+		window.addEventListener( 'load', function () {
+			window.setTimeout( function () {
+				target.scrollIntoView();
+			}, 60 );
+		} );
+	} );
+
+	/* ---------------------------------------------------------------
 	 * Likes and saved posts
 	 *
 	 * The same post has two sets of buttons: the row under the title and

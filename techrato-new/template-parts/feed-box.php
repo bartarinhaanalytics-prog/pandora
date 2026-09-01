@@ -100,8 +100,21 @@ $feed_ads = ( $feed['ads'] && function_exists( 'techrato_ads_native_map' ) )
 		<?php
 		if ( $feed_has ) {
 			$feed_slot = 0;
+			$feed_seen = 0;
 			while ( $feed_query->have_posts() ) {
 				$feed_query->the_post();
+
+				// Archive pages stack, so page two renders pages one and two
+				// together. This marks where each new batch starts; the more
+				// link points at it, and the reader arrives at the first post
+				// they have not seen rather than at the top of the page.
+				if ( $feed_per > 0 && $feed_seen > 0 && 0 === $feed_seen % $feed_per ) {
+					printf(
+						'<span class="feed-anchor" id="more-%d" aria-hidden="true"></span>',
+						(int) ( $feed_seen / $feed_per ) + 1
+					);
+				}
+				$feed_seen++;
 
 				// The ad takes the slot it was sold, and the post that would
 				// have been there moves down one — no article is lost.
@@ -129,7 +142,7 @@ $feed_ads = ( $feed['ads'] && function_exists( 'techrato_ads_native_map' ) )
 	<?php if ( $feed_more ) : ?>
 		<?php if ( $feed['more_url'] ) : ?>
 			<?php // A real link, so it still goes somewhere useful without JavaScript. ?>
-			<a class="more-link js-load-more" href="<?php echo esc_url( $feed['more_url'] ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
+			<a class="more-link js-load-more" href="<?php echo esc_url( $feed['more_url'] . '#more-' . ( $feed_now + 1 ) ); ?>"><?php esc_html_e( 'مشاهده مطالب بیشتر', 'techrato' ); ?></a>
 		<?php else : ?>
 			<?php // Nowhere honest to send a reader without JavaScript, so this is a
 			// button rather than a link that promises a page it cannot open. ?>

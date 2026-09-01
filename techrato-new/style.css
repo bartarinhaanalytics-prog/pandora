@@ -3,7 +3,7 @@ Theme Name: تکراتو جدید
 Theme URI: https://techrato.com/
 Author: Techrato
 Description: قالب اختصاصی تکراتو — نسخه‌ی جدید. شامل سیستم تبلیغات، لایه‌ی سئو، تنظیمات صفحه نخست، مگا منو و بارگذاری مطالب بدون رفرش.
-Version: 2.6.0
+Version: 2.6.1
 Requires at least: 5.8
 Requires PHP: 7.4
 License: GNU General Public License v2 or later
@@ -10474,4 +10474,18 @@ textarea.comment-field {
 		width: 22px;
 		height: 22px;
 	}
+}
+
+/* ==== نشانه‌ی شروع دسته‌ی تازه‌ی مطالب ==== */
+/* وقتی صفحه دوباره بارگذاری می‌شود، مرورگر به اولین مطلبِ ندیده می‌رود
+   نه به بالای صفحه. ارتفاعش صفر است و فاصله‌ی اضافه‌ی فلکس را پس می‌دهد. */
+.feed-anchor {
+	display: block;
+	height: 0;
+	margin: 0;
+	padding: 0;
+	scroll-margin-top: 24px;
+}
+.category-post-list > .feed-anchor {
+	margin-bottom: -14px;
 }
