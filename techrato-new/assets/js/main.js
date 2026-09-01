@@ -13,15 +13,13 @@
 	 * down with it.
 	 */
 	function guard( fn ) {
-		return function () {
-			try {
-				fn();
-			} catch ( err ) {
-				if ( window.console && window.console.error ) {
-					window.console.error( 'techrato:', err );
-				}
+		try {
+			fn();
+		} catch ( err ) {
+			if ( window.console && window.console.error ) {
+				window.console.error( 'techrato:', err );
 			}
-		};
+		}
 	}
 
 	function start() {
@@ -699,8 +697,8 @@
 	// A caching plugin may move this file into the head, where the markup does
 	// not exist yet. Waiting for the document means it works from either place.
 	if ( 'loading' === document.readyState ) {
-		document.addEventListener( 'DOMContentLoaded', guard( start ) );
+		document.addEventListener( 'DOMContentLoaded', function () { guard( start ); } );
 	} else {
-		guard( start )();
+		guard( start );
 	}
 } )();
