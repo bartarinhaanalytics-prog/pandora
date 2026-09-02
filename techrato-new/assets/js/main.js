@@ -174,12 +174,96 @@
 	/* ---------------------------------------------------------------
 	 * Load more, in place
 	 *
-	 * Listened for on the document rather than bound to each button, so it
-	 * works no matter when the markup appears and no matter where a caching
-	 * plugin decides to move this file. A button that quietly falls back to
-	 * its plain link reloads the page and throws away everything already
-	 * read — so the click is taken over here in every case.
+	 * The click is taken over here in every case: the page must not move at
+	 * all. Placeholder cards appear under the list straight away, and the real
+	 * posts fade in over them when they arrive.
 	 * ------------------------------------------------------------- */
+
+	/**
+	 * Where to post to. Printed into the markup, localized into a variable and
+	 * finally worked out from the address bar — because a plugin that combines
+	 * or defers scripts can take either of the first two away, and a button
+	 * that silently gives up looks broken.
+	 */
+	function feedEndpoint( feed ) {
+		if ( feed && feed.dataset.ajax ) {
+			return feed.dataset.ajax;
+		}
+
+		if ( data.ajaxUrl ) {
+			return data.ajaxUrl;
+		}
+
+		// WordPress always prints its own address in the head; admin-ajax sits
+		// next to it. This keeps working on an installation in a subfolder.
+		var link = document.querySelector( 'link[rel="https://api.w.org/"]' );
+
+		if ( link && link.href ) {
+			return link.href.replace( /wp-json\/?.*$/, '' ) + 'wp-admin/admin-ajax.php';
+		}
+
+		return window.location.origin + '/wp-admin/admin-ajax.php';
+	}
+
+	/**
+	 * Placeholder cards, cloned from a real one so every list gets the shape
+	 * it actually uses. Text and pictures are stripped and the stylesheet
+	 * paints the shimmering bars.
+	 */
+	function addSkeletons( list, count ) {
+		var sample = list.querySelector( 'article, .card-list-row, .news-card' );
+
+		if ( ! sample ) {
+			return [];
+		}
+
+		// The real card is measured first, so a placeholder takes exactly the
+		// room the post will take and nothing shifts when they swap over.
+		var tall = Math.round( sample.getBoundingClientRect().height );
+		var shots = [].slice.call( sample.querySelectorAll( 'img' ) ).map( function ( img ) {
+			var box = img.getBoundingClientRect();
+			return { w: Math.round( box.width ), h: Math.round( box.height ) };
+		} );
+
+		// A transparent pixel: an <img> with no source draws a broken-image mark.
+		var blank = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+		var made = [];
+		var i;
+
+		for ( i = 0; i < count; i++ ) {
+			var ghost = sample.cloneNode( true );
+
+			ghost.removeAttribute( 'id' );
+			ghost.classList.add( 'feed-skeleton' );
+			ghost.setAttribute( 'aria-hidden', 'true' );
+
+			if ( tall > 0 ) {
+				ghost.style.minHeight = tall + 'px';
+			}
+
+			[].slice.call( ghost.querySelectorAll( 'img' ) ).forEach( function ( img, n ) {
+				img.removeAttribute( 'srcset' );
+				img.removeAttribute( 'sizes' );
+				img.setAttribute( 'alt', '' );
+				img.src = blank;
+
+				if ( shots[ n ] && shots[ n ].h > 0 ) {
+					img.style.width  = shots[ n ].w + 'px';
+					img.style.height = shots[ n ].h + 'px';
+				}
+			} );
+
+			ghost.querySelectorAll( 'a' ).forEach( function ( a ) {
+				a.removeAttribute( 'href' );
+			} );
+
+			list.appendChild( ghost );
+			made.push( ghost );
+		}
+
+		return made;
+	}
+
 	document.addEventListener( 'click', function ( e ) {
 		var more = e.target.closest ? e.target.closest( '.js-load-more' ) : null;
 
@@ -189,14 +273,12 @@
 
 		var feed = more.closest( '.js-feed' );
 		var list = feed && feed.querySelector( '.js-post-list' );
-		var endpoint = ( feed && feed.dataset.ajax ) || data.ajaxUrl;
 
-		// Without a list or an address there is nothing to add to, so the
-		// plain link stays the honest behaviour.
-		if ( ! list || ! endpoint || ! window.fetch ) {
+		if ( ! list || ! window.fetch ) {
 			return;
 		}
 
+		// From here the page stays exactly where it is.
 		e.preventDefault();
 
 		if ( more.classList.contains( 'is-busy' ) ) {
@@ -205,14 +287,17 @@
 
 		var next = parseInt( list.dataset.paged, 10 ) + 1;
 		var max  = parseInt( list.dataset.max, 10 );
+		var per  = parseInt( list.dataset.per, 10 ) || 6;
 
-		if ( ! next || next > max ) {
+		if ( ! next || ( max && next > max ) ) {
 			return;
 		}
 
 		more.classList.add( 'is-busy' );
 		var label = more.textContent;
 		more.textContent = 'در حال بارگذاری…';
+
+		var ghosts = addSkeletons( list, per );
 
 		var body = new URLSearchParams( {
 			action: 'techrato_load_posts',
@@ -224,15 +309,36 @@
 			sort:   list.dataset.sort || 'date'
 		} );
 
-		window.fetch( endpoint, { method: 'POST', body: body, credentials: 'same-origin' } )
+		function clearGhosts() {
+			ghosts.forEach( function ( ghost ) {
+				if ( ghost.parentNode ) {
+					ghost.parentNode.removeChild( ghost );
+				}
+			} );
+			ghosts = [];
+		}
+
+		window.fetch( feedEndpoint( feed ), { method: 'POST', body: body, credentials: 'same-origin' } )
 			.then( function ( r ) { return r.json(); } )
 			.then( function ( res ) {
-				if ( ! res || ! res.success ) {
+				if ( ! res || ! res.success || ! res.data ) {
 					throw new Error( 'bad response' );
 				}
 
-				// Added to what is already there. Never replacing it.
-				list.insertAdjacentHTML( 'beforeend', res.data.html );
+				var holder = document.createElement( 'div' );
+				holder.innerHTML = res.data.html;
+
+				var fresh = [].slice.call( holder.children );
+
+				clearGhosts();
+
+				// Added underneath what is already there. Never replacing it.
+				fresh.forEach( function ( card, i ) {
+					card.classList.add( 'feed-entering' );
+					card.style.animationDelay = ( i * 45 ) + 'ms';
+					list.appendChild( card );
+				} );
+
 				list.dataset.paged = res.data.paged;
 				list.dataset.max   = res.data.maxPages;
 
@@ -244,10 +350,24 @@
 				}
 			} )
 			.catch( function () {
-				// Reloading the page here would wipe out the posts the reader
-				// already has, so the button just says it failed.
-				more.textContent = 'دوباره تلاش کنید';
+				clearGhosts();
 				more.classList.remove( 'is-busy' );
+
+				var tries = ( parseInt( more.dataset.tries, 10 ) || 0 ) + 1;
+				more.dataset.tries = tries;
+
+				var href = more.getAttribute( 'href' );
+
+				// Twice in a row means something on this connection is wrong,
+				// not a passing hiccup. The plain link still shows the posts —
+				// the page it opens keeps everything already on screen — so the
+				// reader is never left with a button that does nothing.
+				if ( tries >= 2 && href ) {
+					window.location.href = href;
+					return;
+				}
+
+				more.textContent = 'دوباره تلاش کنید';
 
 				window.setTimeout( function () {
 					more.textContent = label;
