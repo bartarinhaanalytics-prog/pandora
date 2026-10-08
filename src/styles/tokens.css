@@ -1,0 +1,120 @@
+/*
+ * دردونه: توکن‌های طراحی
+ * همهٔ رنگ، فاصله، شعاع، سایه، تایپوگرافی و زمان‌بندی‌ها فقط از این‌جا می‌آیند.
+ * کانسپت: «گهوارهٔ ماه»؛ شب آرام (سرمه‌ای)، فیروزه‌ای قابل‌اعتماد، مهتاب برای کنش اصلی.
+ */
+:root {
+  /* رنگ پایه: خنثی‌ها با ته‌رنگ فیروزه‌ای */
+  --c-night-950: #0c1322; /* عمیق‌ترین سطح شب؛ نه مشکی مطلق */
+  --c-night-900: #111a2c;
+  --c-night-800: #18233a;
+  --c-night-700: #22304b;
+  --c-night-600: #33456a;
+  --c-ink-on-night: #eef1f6;
+  --c-ink-on-night-2: #b4bfd2; /* ۹٫۴:۱ روی night-900، ۷٫۱:۱ روی night-700 */
+
+  --c-paper: #ffffff;
+  --c-ground: #f3f5f4;
+  --c-line: #dce3e0;
+  --c-ink: #13222b; /* ۱۴٫۹:۱ روی ground */
+  --c-ink-2: #43535c; /* ۷٫۳:۱ روی ground */
+  --c-ink-3: #5c6b73; /* ۵٫۰:۱ روی ground، حداقل برای متن کوچک */
+
+  /* رنگ اصلی: فیروزه‌ای */
+  --c-primary-900: #0f3f42;
+  --c-primary-700: #1f5f63; /* ۷٫۳:۱ با سفید */
+  --c-primary-500: #2f7f83;
+  --c-primary-100: #e3efed;
+  --c-primary-on-night: #7cc4bf; /* ۸٫۷:۱ روی night-900 */
+
+  /* رنگ تأکیدی: مهتاب؛ فقط برای کنش اصلی و ماه */
+  --c-accent: #f0c766;
+  --c-accent-hover: #f6d684;
+  --c-accent-ink: #111a2c; /* متن روی مهتاب: ۱۰٫۸:۱ */
+  --c-accent-100: #fff7df;
+  --c-accent-shadow: #c98a2b;
+
+  /* وضعیت‌ها (همیشه همراه با آیکن یا متن) */
+  --c-success: #22603c;
+  --c-success-bg: #e4f1e8;
+  --c-danger: #b3261e;
+  --c-danger-bg: #fbeae8;
+  --c-danger-on-night: #ffb4a9; /* ۹٫۲:۱ روی night-800 */
+  --c-placeholder-on-night: #8592a8; /* ۵٫۵:۱ روی night-900 */
+
+  /* بدنهٔ گوشی و مروارید در نمایش محصول */
+  --c-device-hi: #3a4a68;
+  --c-device-mid: #1a2438;
+  --c-device-lo: #0f1626;
+  --c-device-edge: #0b111d;
+  --c-pearl-hi: #fbf7f1;
+  --c-pearl-mid: #e9e1d6;
+  --c-pearl-lo: #c8bdb0;
+
+  /* تایپوگرافی: یک خانواده، وزیرمتن متغیر */
+  --font-sans: 'Vazirmatn Variable', 'Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+  --fs-display: clamp(2.25rem, 1.4rem + 3.6vw, 4.25rem); /* ۳۶ تا ۶۸ */
+  --fs-h2: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem); /* ۲۸ تا ۴۴ */
+  --fs-h3: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem); /* ۱۸ تا ۲۱ */
+  --fs-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem); /* ۱۷ تا ۲۰ */
+  --fs-body: 1rem; /* ۱۶، حداقل موبایل */
+  --fs-small: 0.875rem; /* ۱۴ */
+  --fs-caption: 0.8125rem; /* ۱۳ */
+  --lh-tight: 1.45; /* فارسی به ارتفاع خط بلندتر از لاتین نیاز دارد */
+  --lh-body: 1.85;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 750;
+  --fw-black: 850;
+  --measure: 62ch; /* بین ۴۵ و ۷۵ نویسه */
+
+  /* فاصله: پایهٔ ۴ و ۸ */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+  --gutter: clamp(1rem, 0.6rem + 2vw, 2rem);
+  --section-y: clamp(4rem, 3rem + 5vw, 8rem);
+  --container: 75rem; /* ۱۲۰۰ */
+
+  /* شعاع */
+  --r-sm: 0.75rem; /* کنترل‌ها */
+  --r-md: 1.25rem; /* کارت */
+  --r-lg: 2rem; /* بخش‌های بزرگ */
+  --r-pill: 999px;
+
+  /* سایه: سه سطح عمق */
+  --shadow-1: 0 1px 2px rgb(19 34 43 / 0.06), 0 4px 12px -6px rgb(19 34 43 / 0.12);
+  --shadow-2: 0 2px 4px rgb(19 34 43 / 0.06), 0 18px 40px -16px rgb(19 34 43 / 0.28);
+  --shadow-3: 0 30px 80px -24px rgb(8 13 24 / 0.6);
+  --shadow-night: 0 24px 60px -20px rgb(0 0 0 / 0.55);
+
+  /* حلقهٔ فوکوس */
+  --focus-ring: 0 0 0 3px var(--c-paper), 0 0 0 6px var(--c-primary-700);
+  --focus-ring-night: 0 0 0 3px var(--c-night-900), 0 0 0 6px var(--c-accent);
+
+  /* حرکت */
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* لایه‌ها */
+  --z-header: 50;
+  --z-dialog: 100;
+
+  /* ارتفاع هدر */
+  --header-h: 4.25rem;
+}
+
+/* نقاط شکست (برای استفاده در JS هم در breakpoints.js تکرار شده)
+ * sm: 375px · md: 768px · lg: 1024px · xl: 1440px
+ */

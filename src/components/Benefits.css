@@ -1,0 +1,76 @@
+.benefits__grid {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.benefit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-6) var(--sp-5);
+  border-radius: var(--r-md);
+  background: var(--c-paper);
+  box-shadow: var(--shadow-1);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+/* نشانهٔ سه‌بعدی: مکعب کوچکی با سطح روشن و سایهٔ نرم */
+.benefit__icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1rem;
+  color: var(--c-primary-700);
+  background: linear-gradient(155deg, var(--c-paper) 0%, var(--c-primary-100) 70%);
+  box-shadow:
+    inset 0 -3px 0 rgb(31 95 99 / 0.12),
+    0 10px 20px -10px rgb(31 95 99 / 0.45);
+  transform: perspective(300px) rotateX(10deg);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.benefit--4 .benefit__icon {
+  color: var(--c-accent-ink);
+  background: linear-gradient(155deg, var(--c-accent-100) 0%, var(--c-accent) 85%);
+  box-shadow:
+    inset 0 -3px 0 rgb(17 26 44 / 0.12),
+    0 10px 20px -10px rgb(201 138 43 / 0.6);
+}
+
+.benefit__title {
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-black);
+}
+
+.benefit__text {
+  color: var(--c-ink-2);
+  max-width: 34ch;
+}
+
+@media (hover: hover) {
+  .benefit:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-2);
+  }
+
+  .benefit:hover .benefit__icon {
+    transform: perspective(300px) rotateX(0deg) translateY(-2px);
+  }
+}
+
+@media (min-width: 768px) {
+  .benefits__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-5);
+  }
+}
+
+@media (min-width: 1024px) {
+  .benefits__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
