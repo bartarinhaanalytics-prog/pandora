@@ -26,9 +26,7 @@
   border-radius: 1rem;
   color: var(--c-primary-700);
   background: linear-gradient(155deg, var(--c-paper) 0%, var(--c-primary-100) 70%);
-  box-shadow:
-    inset 0 -3px 0 rgb(31 95 99 / 0.12),
-    0 10px 20px -10px rgb(31 95 99 / 0.45);
+  box-shadow: 0 10px 20px -10px rgb(31 95 99 / 0.45);
   transform: perspective(300px) rotateX(10deg);
   transition: transform var(--dur-slow) var(--ease-out);
 }
@@ -36,9 +34,7 @@
 .benefit--4 .benefit__icon {
   color: var(--c-accent-ink);
   background: linear-gradient(155deg, var(--c-accent-100) 0%, var(--c-accent) 85%);
-  box-shadow:
-    inset 0 -3px 0 rgb(17 26 44 / 0.12),
-    0 10px 20px -10px rgb(201 138 43 / 0.6);
+  box-shadow: 0 10px 20px -10px rgb(201 138 43 / 0.6);
 }
 
 .benefit__title {
