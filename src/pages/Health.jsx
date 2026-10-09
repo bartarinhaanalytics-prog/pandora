@@ -62,7 +62,6 @@ export function HealthCategory({ id, query }) {
   if (!cat) return null;
   const sub = query.get('sub') || '';
   const stage = query.get('stage') || '';
-  const openId = query.get('a') || '';
   const list = articles.filter((a) => a.cat === id && (!sub || a.sub === sub) && (!stage || a.stage === stage || a.stage === 'all'));
   const q = (patch) => {
     const next = { sub, stage, ...patch };
@@ -97,7 +96,7 @@ export function HealthCategory({ id, query }) {
         {list.length ? (
           <div className="arts">
             {list.map((a) => (
-              <ArticleItem key={a.id} a={a} open={openId === a.id} />
+              <ArticleItem key={a.id} a={a} />
             ))}
           </div>
         ) : (

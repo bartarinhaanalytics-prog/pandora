@@ -86,3 +86,10 @@
 .lull__more {
   margin-top: var(--s-6);
 }
+
+a.verse__title {
+  text-decoration: none;
+}
+a.verse__title:hover {
+  text-decoration: underline;
+}

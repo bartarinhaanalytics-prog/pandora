@@ -9,7 +9,6 @@ import './Health.css';
 
 export default function Men({ query }) {
   const cat = categories.find((c) => c.id === 'men');
-  const openId = query.get('a') || '';
   const menQa = qa.filter((x) => x.stage === 'men');
   return (
     <main id="main" className="page" tabIndex={-1}>
@@ -21,7 +20,7 @@ export default function Men({ query }) {
         />
         <nav className="chips men-jump" aria-label="بخش‌های این صفحه">
           {cat.subs.map((s) => (
-            <a key={s.id} className="chip" href={`#/men?a=${articles.find((a) => a.cat === 'men' && a.sub === s.id)?.id || ''}`}>
+            <a key={s.id} className="chip" href={`#men-${s.id}`} onClick={(e) => { e.preventDefault(); document.getElementById(`men-${s.id}`)?.scrollIntoView(); }}>
               {s.label}
             </a>
           ))}
@@ -37,7 +36,7 @@ export default function Men({ query }) {
                   {articles
                     .filter((a) => a.cat === 'men' && a.sub === s.id)
                     .map((a) => (
-                      <ArticleItem key={a.id} a={a} open={openId === a.id} />
+                      <ArticleItem key={a.id} a={a} />
                     ))}
                 </div>
               </section>

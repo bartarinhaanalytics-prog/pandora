@@ -188,6 +188,7 @@ export default function Pregnancy({ weekParam }) {
                 نشانم بده و یادم بماند
               </button>
             </div>
+            <a href={href('/tools/due-date')}>محاسبهٔ کامل تاریخ زایمان و زمان آزمایش‌ها</a>
             <p className="hint">تاریخ فقط روی همین دستگاه ذخیره می‌شود. تاریخ زایمان تخمینی است و پزشک با سونوگرافی دقیق‌ترش می‌کند.</p>
           </aside>
         </div>

@@ -26,6 +26,21 @@ import Partner from './pages/Partner.jsx';
 import Pregnancy from './pages/Pregnancy.jsx';
 import Privacy from './pages/Privacy.jsx';
 import Profile from './pages/Profile.jsx';
+import Article from './pages/Article.jsx';
+import Daily from './pages/Daily.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import DueDate from './pages/DueDate.jsx';
+import Growth from './pages/Growth.jsx';
+import LullabyPage from './pages/LullabyPage.jsx';
+import { ReadyStories, ReadyStory } from './pages/ReadyStories.jsx';
+import Saved from './pages/Saved.jsx';
+import Settings from './pages/Settings.jsx';
+import Sleep from './pages/Sleep.jsx';
+import Stage from './pages/Stage.jsx';
+import { MyStories, ReadSaved, SharedStory } from './pages/StoryPages.jsx';
+import Symptoms from './pages/Symptoms.jsx';
+import Vaccines from './pages/Vaccines.jsx';
+import Welcome from './pages/Welcome.jsx';
 import QA from './pages/QA.jsx';
 import Search from './pages/Search.jsx';
 import Story from './pages/Story.jsx';
@@ -43,7 +58,23 @@ const TITLES = {
   '/story': 'قصه‌ساز',
   '/lullabies': 'کتابخانهٔ لالایی',
   '/tools/cycle': 'تقویم قاعدگی و باروری',
-  '/me': 'پروفایل و خانواده',
+  '/me': 'داشبورد من',
+  '/me/profile': 'پروفایل و خانواده',
+  '/me/stories': 'قصه‌های من',
+  '/me/saved': 'محتوای ذخیره‌شده',
+  '/me/settings': 'تنظیمات',
+  '/welcome': 'شروع کار',
+  '/stage': 'مسیر من',
+  '/article': 'مقاله',
+  '/stories': 'قصه‌های آماده',
+  '/lullaby': 'لالایی',
+  '/sleep': 'روتین خواب کودک',
+  '/s': 'قصه',
+  '/tools/due-date': 'محاسبهٔ تاریخ زایمان',
+  '/tools/vaccines': 'جدول واکسن کودک',
+  '/tools/growth': 'نمودار رشد کودک',
+  '/tools/symptoms': 'ثبت علائم روزانه',
+  '/tools/daily': 'پیام روزانه',
   '/me/partner': 'اتصال همسر',
   '/ask': 'پرسش بی‌نام از متخصص',
   '/community': 'جامعهٔ والدین',
@@ -87,13 +118,33 @@ function Page({ route }) {
     case 'qa':
       return <QA query={query} />;
     case 'story':
-      return <Story />;
+      return parts[1] === 'read' ? <ReadSaved id={parts[2]} /> : <Story />;
+    case 's':
+      return <SharedStory data={parts[1]} />;
+    case 'stories':
+      return parts[1] ? <ReadyStory id={parts[1]} /> : <ReadyStories query={query} />;
     case 'lullabies':
       return <LullabyLibrary query={query} />;
-    case 'tools':
-      return parts[1] === 'cycle' ? <Cycle /> : <NotFound />;
-    case 'me':
-      return parts[1] === 'partner' ? <Partner /> : <Profile />;
+    case 'lullaby':
+      return <LullabyPage id={parts[1]} />;
+    case 'article':
+      return <Article id={parts[1]} />;
+    case 'stage':
+      return <Stage id={parts[1]} />;
+    case 'welcome':
+      return <Welcome />;
+    case 'sleep':
+      return <Sleep />;
+    case 'tools': {
+      const tools = { cycle: Cycle, 'due-date': DueDate, vaccines: Vaccines, growth: Growth, symptoms: Symptoms, daily: Daily };
+      const T = tools[parts[1]];
+      return T ? <T /> : <NotFound />;
+    }
+    case 'me': {
+      const me = { profile: Profile, partner: Partner, stories: MyStories, saved: Saved, settings: Settings };
+      const M = parts[1] ? me[parts[1]] : Dashboard;
+      return M ? <M /> : <NotFound />;
+    }
     case 'ask':
       return <Ask />;
     case 'community':

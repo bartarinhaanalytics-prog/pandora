@@ -34,7 +34,7 @@ export default function LullabyLibrary({ query }) {
             <article key={l.id} className="lib__item" id={`l-${l.id}`} aria-labelledby={`lt-${l.id}`}>
               <header>
                 <h2 id={`lt-${l.id}`} className="lib__title">
-                  {l.title}
+                  <a href={href(`/lullaby/${l.id}`)}>{l.title}</a>
                 </h2>
                 <p className="row__meta">
                   <span className="tag">{l.origin}</span>

@@ -45,8 +45,25 @@ export default function ToolsPromo() {
             <Icon name="CalendarDays" size={18} />
             باز کردن تقویم
           </a>
+          <ul className="tools__list" aria-label="ابزارهای دیگر">
+            {[
+              ['/tools/due-date', 'تاریخ زایمان', 'با تقویم شمسی و زمان آزمایش‌ها'],
+              ['/tools/vaccines', 'جدول واکسن', 'نوبت بعدی بچه با تاریخ'],
+              ['/tools/growth', 'نمودار رشد', 'قد و وزن در محدودهٔ طبیعی'],
+              ['/tools/symptoms', 'علائم روزانه', 'حال و بدنتان، روز به روز'],
+              ['/sleep', 'روتین خواب', 'ساعت خواب مناسب سن'],
+              ['/tools/daily', 'پیام روزانه', 'یک نکته برای هر روز']
+            ].map(([p, t, d]) => (
+              <li key={p}>
+                <a href={href(p)}>
+                  <strong>{t}</strong>
+                  <small>{d}</small>
+                </a>
+              </li>
+            ))}
+          </ul>
           <nav className="tools__more" aria-label="خانواده">
-            <a href={href('/me')}>
+            <a href={href('/me/profile')}>
               <Icon name="Users" size={22} />
               <span>
                 <strong>پروفایل و خانواده</strong>

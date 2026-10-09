@@ -1,12 +1,15 @@
 import { useId, useState } from 'react';
+import { tipFor } from '../lib/daily.js';
 import { href, navigate } from '../lib/router.js';
+import { useStored } from '../lib/store.js';
 import Icon from './Icon.jsx';
 
 const STAGES = [
-  { label: 'قبل از ازدواج', path: '/health/premarital', icon: 'HeartHandshake' },
-  { label: 'اقدام به بارداری', path: '/tools/cycle', icon: 'CalendarDays' },
-  { label: 'بارداری', path: '/pregnancy', icon: 'HeartPulse' },
-  { label: 'نوزاد و کودک', path: '/health/child', icon: 'Baby' },
+  { label: 'قبل از ازدواج', path: '/stage/before', icon: 'HeartHandshake' },
+  { label: 'اقدام به بارداری', path: '/stage/trying', icon: 'CalendarDays' },
+  { label: 'بارداری', path: '/stage/pregnancy', icon: 'HeartPulse' },
+  { label: 'نوزاد', path: '/stage/baby', icon: 'Baby' },
+  { label: 'کودک', path: '/stage/child', icon: 'Sparkles' },
   { label: 'پدرها', path: '/men', icon: 'User' }
 ];
 
@@ -14,6 +17,8 @@ const STAGES = [
 export default function StagePicker() {
   const id = useId();
   const [q, setQ] = useState('');
+  const [profile] = useStored('profile', {});
+  const known = profile.onboarded || profile.stage;
   return (
     <section className="stages-band" aria-labelledby={`${id}-t`}>
       <div className="wrap stages-band__inner">
@@ -28,6 +33,15 @@ export default function StagePicker() {
             </a>
           ))}
         </nav>
+        <div className="stages-band__me">
+          <p className="stages-band__tip">
+            <span className="tag">پیام امروز</span> {tipFor(profile.stage || 'general')}
+          </p>
+          <a className="btn btn--line" href={href(known ? '/me' : '/welcome')}>
+            <Icon name="User" size={18} />
+            {known ? 'داشبورد من' : 'سه سؤال، تا دردونه مال خودتان شود'}
+          </a>
+        </div>
         <form
           role="search"
           className="search-box stages-band__search"

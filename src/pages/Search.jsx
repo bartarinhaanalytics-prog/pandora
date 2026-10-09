@@ -18,7 +18,7 @@ const INDEX = [
     title: a.title,
     text: a.summary,
     hay: normalize(`${a.title} ${a.summary} ${a.body.join(' ')}`),
-    link: a.cat === 'men' ? href('/men', { a: a.id }) : href(`/health/${a.cat}`, { a: a.id }),
+    link: href(`/article/${a.id}`),
     meta: categories.find((c) => c.id === a.cat)?.label
   })),
   ...qa.map((x) => ({ type: 'پرسش و پاسخ', title: x.q, text: x.a, hay: normalize(`${x.q} ${x.a}`), link: href('/qa', { stage: x.stage, q: x.id }) })),

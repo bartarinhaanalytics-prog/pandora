@@ -35,6 +35,7 @@ function ChildForm({ initial, onSave, onCancel }) {
   const id = useId();
   const [name, setName] = useState(initial?.name || '');
   const [birth, setBirth] = useState(initial?.birth ? fromISO(initial.birth) : null);
+  const [sex, setSex] = useState(initial?.sex || '');
   const [err, setErr] = useState('');
   return (
     <form
@@ -46,7 +47,7 @@ function ChildForm({ initial, onSave, onCancel }) {
           setErr('اسم بچه را بنویسید.');
           return;
         }
-        onSave({ id: initial?.id || uid(), name: name.trim().slice(0, 20), birth: birth ? toISO(birth) : '' });
+        onSave({ id: initial?.id || uid(), name: name.trim().slice(0, 20), birth: birth ? toISO(birth) : '', sex });
       }}
     >
       <div className="field">
@@ -75,6 +76,20 @@ function ChildForm({ initial, onSave, onCancel }) {
         </span>
         <JalaliDate id={`${id}-b`} value={birth} onChange={setBirth} yearsBack={7} />
       </div>
+      <fieldset className="field">
+        <legend>جنسیت (برای نمودار رشد، اختیاری)</legend>
+        <div className="chips">
+          {[
+            ['girl', 'دختر'],
+            ['boy', 'پسر']
+          ].map(([v, l]) => (
+            <label key={v} className="chip">
+              <input type="radio" name={`${id}-sex`} checked={sex === v} onChange={() => setSex(v)} />
+              {l}
+            </label>
+          ))}
+        </div>
+      </fieldset>
       <div className="actions">
         <button type="submit" className="btn btn--star">
           <Icon name="Check" size={18} />
@@ -106,7 +121,7 @@ export default function Profile() {
         <PageHead
           title={profile.name ? `سلام ${profile.name}` : 'پروفایل و خانواده'}
           intro="بگویید در کدام مرحله‌اید و بچه‌هایتان را اضافه کنید تا مطالب، هفتهٔ بارداری و قصه‌ها برای خودتان تنظیم شود."
-          crumbs={[{ label: 'پروفایل' }]}
+          crumbs={[{ label: 'من', path: '/me' }, { label: 'پروفایل' }]}
         />
         <p className="notice" style={{ maxWidth: 760, marginBottom: 'var(--s-6)' }}>
           <Icon name="Lock" size={18} />
@@ -238,7 +253,7 @@ export default function Profile() {
                   <small>همسرتان هفتهٔ بارداری، تقویم یا قصه‌ها را ببیند</small>
                 </span>
               </a>
-              <a href={href('/story')}>
+              <a href={href('/me/stories')}>
                 <Icon name="BookHeart" size={22} />
                 <span>
                   <strong>قصه‌های من</strong>

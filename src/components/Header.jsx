@@ -73,7 +73,7 @@ export default function Header({ path }) {
           </a>
           <a href={href('/me')} className="header__icon header__icon--me" aria-current={isActive(path, '/me') ? 'page' : undefined}>
             <Icon name="User" size={20} />
-            <span className="sr-only">پروفایل و خانواده</span>
+            <span className="sr-only">داشبورد من</span>
           </a>
           <button
             ref={opener}

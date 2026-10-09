@@ -17,7 +17,7 @@ export default function Lullabies() {
           {lullabies.slice(0, 3).map((l) => (
             <figure key={l.id} className={`verse`}>
               <figcaption>
-                <span className="verse__title">{l.title}</span>
+                <a className="verse__title" href={href(`/lullaby/${l.id}`)}>{l.title}</a>
                 <span className="verse__origin">{l.origin}</span>
               </figcaption>
               <blockquote>
@@ -28,9 +28,20 @@ export default function Lullabies() {
             </figure>
           ))}
         </div>
-        <a className="btn btn--line lull__more" href={href('/lullabies')}>
-          همهٔ لالایی‌ها
-        </a>
+        <div className="lull__links">
+          <a className="btn btn--line" href={href('/lullabies')}>
+            همهٔ لالایی‌ها
+          </a>
+          <a className="btn btn--line" href={href('/stories')}>
+            قصه‌های آماده
+          </a>
+          <a className="btn btn--line" href={href('/me/stories')}>
+            قصه‌های من
+          </a>
+          <a className="btn btn--line" href={href('/sleep')}>
+            روتین خواب کودک
+          </a>
+        </div>
       </div>
     </section>
   );

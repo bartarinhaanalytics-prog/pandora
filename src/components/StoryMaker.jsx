@@ -4,6 +4,7 @@ import { faNum } from '../lib/fa.js';
 import { toISO, today } from '../lib/jalali.js';
 import { href } from '../lib/router.js';
 import { read, uid, useStored, write } from '../lib/store.js';
+import { shareText, storyLink } from '../lib/share.js';
 import Icon from './Icon.jsx';
 import './StoryMaker.css';
 
@@ -80,14 +81,9 @@ export default function StoryMaker({ full = false }) {
   };
 
   const share = async () => {
-    const text = `${story.title}\n\n${story.parts.join('\n\n')}\n\nساخته‌شده با دردونه`;
     try {
-      if (navigator.share) {
-        await navigator.share({ title: story.title, text });
-        return;
-      }
-      await navigator.clipboard.writeText(text);
-      setShareMsg('متن قصه کپی شد؛ می‌توانید برای پدربزرگ و مادربزرگ بفرستید.');
+      const copied = await shareText({ title: story.title, text: `قصهٔ «${story.title}» را ببینید:`, url: storyLink(story) });
+      if (copied) setShareMsg('لینک قصه کپی شد؛ پدربزرگ و مادربزرگ بدون ثبت‌نام بازش می‌کنند.');
     } catch {
       /* کاربر اشتراک را لغو کرد */
     }

@@ -21,7 +21,7 @@ function averageCycle(starts, fallback) {
   return Math.round(gaps.slice(-6).reduce((a, b) => a + b, 0) / Math.min(gaps.length, 6));
 }
 
-function buildPlan(data) {
+export function buildPlan(data) {
   const starts = data.periods.map((p) => fromISO(p.start)).sort((a, b) => a - b);
   if (!starts.length) return null;
   const len = averageCycle(starts, data.cycleLen);
