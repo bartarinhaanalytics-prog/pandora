@@ -1,0 +1,519 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-09T12:00:00Z",
+  "title": "Design System: Dordooneh",
+  "extensions": {
+    "colorMeta": {
+      "night": {
+        "role": "neutral",
+        "displayName": "Night",
+        "canonical": "oklch(15.0% 0.031 272)",
+        "tonalRamp": [
+          "oklch(15% 0.031 272)",
+          "oklch(25% 0.031 272)",
+          "oklch(37% 0.031 272)",
+          "oklch(49% 0.031 272)",
+          "oklch(61% 0.031 272)",
+          "oklch(73% 0.031 272)",
+          "oklch(84% 0.031 272)",
+          "oklch(95% 0.031 272)"
+        ],
+        "cssVar": "--night"
+      },
+      "deep": {
+        "role": "neutral",
+        "displayName": "Deep Well",
+        "canonical": "oklch(14.6% 0.033 272)",
+        "tonalRamp": [
+          "oklch(15% 0.033 272)",
+          "oklch(25% 0.033 272)",
+          "oklch(37% 0.033 272)",
+          "oklch(49% 0.033 272)",
+          "oklch(61% 0.033 272)",
+          "oklch(73% 0.033 272)",
+          "oklch(84% 0.033 272)",
+          "oklch(95% 0.033 272)"
+        ],
+        "cssVar": "--deep"
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Night Panel",
+        "canonical": "oklch(20.4% 0.056 272)",
+        "tonalRamp": [
+          "oklch(15% 0.056 272)",
+          "oklch(25% 0.056 272)",
+          "oklch(37% 0.056 272)",
+          "oklch(49% 0.056 272)",
+          "oklch(61% 0.056 272)",
+          "oklch(73% 0.056 272)",
+          "oklch(84% 0.056 272)",
+          "oklch(95% 0.056 272)"
+        ],
+        "cssVar": "--panel"
+      },
+      "panel-2": {
+        "role": "neutral",
+        "displayName": "Panel Raised",
+        "canonical": "oklch(26.3% 0.078 272)",
+        "tonalRamp": [
+          "oklch(15% 0.078 272)",
+          "oklch(25% 0.078 272)",
+          "oklch(37% 0.078 272)",
+          "oklch(49% 0.078 272)",
+          "oklch(61% 0.078 272)",
+          "oklch(73% 0.078 272)",
+          "oklch(84% 0.078 272)",
+          "oklch(95% 0.078 272)"
+        ],
+        "cssVar": "--panel-2"
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Indigo Line",
+        "canonical": "oklch(35.8% 0.104 272)",
+        "tonalRamp": [
+          "oklch(15% 0.104 272)",
+          "oklch(25% 0.104 272)",
+          "oklch(37% 0.104 272)",
+          "oklch(49% 0.104 272)",
+          "oklch(61% 0.104 272)",
+          "oklch(73% 0.104 272)",
+          "oklch(84% 0.104 272)",
+          "oklch(95% 0.104 272)"
+        ],
+        "cssVar": "--line-strong"
+      },
+      "halo": {
+        "role": "secondary",
+        "displayName": "Moon Halo",
+        "canonical": "oklch(88.0% 0.059 271)",
+        "tonalRamp": [
+          "oklch(15% 0.059 271)",
+          "oklch(25% 0.059 271)",
+          "oklch(37% 0.059 271)",
+          "oklch(49% 0.059 271)",
+          "oklch(61% 0.059 271)",
+          "oklch(73% 0.059 271)",
+          "oklch(84% 0.059 271)",
+          "oklch(95% 0.059 271)"
+        ],
+        "cssVar": "--halo"
+      },
+      "star": {
+        "role": "primary",
+        "displayName": "Star Gold",
+        "canonical": "oklch(85.5% 0.123 85)",
+        "tonalRamp": [
+          "oklch(15% 0.120 85)",
+          "oklch(25% 0.120 85)",
+          "oklch(37% 0.120 85)",
+          "oklch(49% 0.120 85)",
+          "oklch(61% 0.120 85)",
+          "oklch(73% 0.120 85)",
+          "oklch(84% 0.120 85)",
+          "oklch(95% 0.120 85)"
+        ],
+        "cssVar": "--star"
+      },
+      "star-hi": {
+        "role": "primary",
+        "displayName": "Bright Star",
+        "canonical": "oklch(90.7% 0.103 86)",
+        "tonalRamp": [
+          "oklch(15% 0.103 86)",
+          "oklch(25% 0.103 86)",
+          "oklch(37% 0.103 86)",
+          "oklch(49% 0.103 86)",
+          "oklch(61% 0.103 86)",
+          "oklch(73% 0.103 86)",
+          "oklch(84% 0.103 86)",
+          "oklch(95% 0.103 86)"
+        ],
+        "cssVar": "--star-hi"
+      },
+      "star-ink": {
+        "role": "primary",
+        "displayName": "Star Ink",
+        "canonical": "oklch(19.6% 0.030 86)",
+        "tonalRamp": [
+          "oklch(15% 0.030 86)",
+          "oklch(25% 0.030 86)",
+          "oklch(37% 0.030 86)",
+          "oklch(49% 0.030 86)",
+          "oklch(61% 0.030 86)",
+          "oklch(73% 0.030 86)",
+          "oklch(84% 0.030 86)",
+          "oklch(95% 0.030 86)"
+        ],
+        "cssVar": "--star-ink"
+      },
+      "moon-1": {
+        "role": "neutral",
+        "displayName": "Moonlight",
+        "canonical": "oklch(95.7% 0.014 277)",
+        "tonalRamp": [
+          "oklch(15% 0.014 277)",
+          "oklch(25% 0.014 277)",
+          "oklch(37% 0.014 277)",
+          "oklch(49% 0.014 277)",
+          "oklch(61% 0.014 277)",
+          "oklch(73% 0.014 277)",
+          "oklch(84% 0.014 277)",
+          "oklch(95% 0.014 277)"
+        ],
+        "cssVar": "--moon-1"
+      },
+      "moon-2": {
+        "role": "neutral",
+        "displayName": "Dim Moonlight",
+        "canonical": "oklch(84.0% 0.038 276)",
+        "tonalRamp": [
+          "oklch(15% 0.038 276)",
+          "oklch(25% 0.038 276)",
+          "oklch(37% 0.038 276)",
+          "oklch(49% 0.038 276)",
+          "oklch(61% 0.038 276)",
+          "oklch(73% 0.038 276)",
+          "oklch(84% 0.038 276)",
+          "oklch(95% 0.038 276)"
+        ],
+        "cssVar": "--moon-2"
+      },
+      "moon-3": {
+        "role": "neutral",
+        "displayName": "Faint Moonlight",
+        "canonical": "oklch(67.8% 0.060 276)",
+        "tonalRamp": [
+          "oklch(15% 0.060 276)",
+          "oklch(25% 0.060 276)",
+          "oklch(37% 0.060 276)",
+          "oklch(49% 0.060 276)",
+          "oklch(61% 0.060 276)",
+          "oklch(73% 0.060 276)",
+          "oklch(84% 0.060 276)",
+          "oklch(95% 0.060 276)"
+        ],
+        "cssVar": "--moon-3"
+      },
+      "danger": {
+        "role": "status",
+        "displayName": "Soft Coral",
+        "canonical": "oklch(83.6% 0.092 34)",
+        "tonalRamp": [
+          "oklch(15% 0.092 34)",
+          "oklch(25% 0.092 34)",
+          "oklch(37% 0.092 34)",
+          "oklch(49% 0.092 34)",
+          "oklch(61% 0.092 34)",
+          "oklch(73% 0.092 34)",
+          "oklch(84% 0.092 34)",
+          "oklch(95% 0.092 34)"
+        ],
+        "cssVar": "--danger"
+      },
+      "ok": {
+        "role": "status",
+        "displayName": "Night Sage",
+        "canonical": "oklch(87.1% 0.090 137)",
+        "tonalRamp": [
+          "oklch(15% 0.090 137)",
+          "oklch(25% 0.090 137)",
+          "oklch(37% 0.090 137)",
+          "oklch(49% 0.090 137)",
+          "oklch(61% 0.090 137)",
+          "oklch(73% 0.090 137)",
+          "oklch(84% 0.090 137)",
+          "oklch(95% 0.090 137)"
+        ],
+        "cssVar": "--ok"
+      },
+      "town-ground": {
+        "role": "neutral",
+        "displayName": "Town Ground",
+        "canonical": "oklch(12.5% 0.022 270)",
+        "tonalRamp": [
+          "oklch(15% 0.022 270)",
+          "oklch(25% 0.022 270)",
+          "oklch(37% 0.022 270)",
+          "oklch(49% 0.022 270)",
+          "oklch(61% 0.022 270)",
+          "oklch(73% 0.022 270)",
+          "oklch(84% 0.022 270)",
+          "oklch(95% 0.022 270)"
+        ],
+        "note": "Literal value in town.svg and Footer.css; not a CSS custom property."
+      },
+      "town-far": {
+        "role": "neutral",
+        "displayName": "Far Town",
+        "canonical": "oklch(23.5% 0.073 271)",
+        "tonalRamp": [
+          "oklch(15% 0.073 271)",
+          "oklch(25% 0.073 271)",
+          "oklch(37% 0.073 271)",
+          "oklch(49% 0.073 271)",
+          "oklch(61% 0.073 271)",
+          "oklch(73% 0.073 271)",
+          "oklch(84% 0.073 271)",
+          "oklch(95% 0.073 271)"
+        ],
+        "note": "Literal value in town.svg and Footer.css; not a CSS custom property."
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The single first-viewport h1, Moonlight with a deep text-shadow."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section h2s."
+      },
+      "title-display": {
+        "displayName": "Title, display",
+        "purpose": "Lalezar names of things inside panels and verses (story title, lullaby titles, reviewer roster); usually Bright Star. Range about 1.6rem to 2.5rem."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Generic Vazirmatn h3."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Section intros in Dim Moonlight, 40 to 54ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default text, stylistic set ss01; answers capped at 64ch."
+      },
+      "story": {
+        "displayName": "Story",
+        "purpose": "The generated tale, max 62ch, revealed paragraph by paragraph."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Nav, form labels, notes, help text (600 to 700). Buttons use 750 at 1.0625rem."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sh-panel",
+        "value": "0 30px 70px -24px rgb(1 2 10 / 0.85), 0 8px 20px -8px rgb(1 2 10 / 0.6)",
+        "purpose": "Panel float under every night panel, paired with inset 0 1px 0 rgb(238 240 250 / 0.1)."
+      },
+      {
+        "name": "sh-btn",
+        "value": "0 10px 26px -10px rgb(244 201 107 / 0.55)",
+        "purpose": "Warm star glow, star button only, paired with inset 0 1px 0 rgb(255 248 225 / 0.7)."
+      },
+      {
+        "name": "well",
+        "value": "inset 0 2px 6px rgb(0 0 0 / 0.45), inset 0 0 0 1px rgb(238 240 250 / 0.3)",
+        "purpose": "Recessed text inputs."
+      },
+      {
+        "name": "header-band",
+        "value": "0 10px 30px -18px rgb(0 0 0 / 0.9)",
+        "purpose": "Solid header after 40px of scroll."
+      },
+      {
+        "name": "text-on-sky",
+        "value": "0 2px 14px rgb(2 3 12 / 0.9)",
+        "purpose": "text-shadow for any text set directly on the sky."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 3px solid #ffdc8f; outline-offset: 3px",
+        "purpose": "System focus-visible ring in Bright Star."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All UI transitions and the story unfold."
+      },
+      {
+        "name": "t-fast",
+        "value": "160ms",
+        "purpose": "Button, chip hover and press."
+      },
+      {
+        "name": "t-med",
+        "value": "420ms",
+        "purpose": "Header solidify, accordion chevron."
+      },
+      {
+        "name": "t-slow",
+        "value": "900ms",
+        "purpose": "Story unfold (clip top-down, blur 6px to 0, opacity), staggered 260ms per paragraph."
+      },
+      {
+        "name": "sky",
+        "value": "live WebGL; camera eases toward horizon with scroll; shooting star every 11s",
+        "purpose": "Background world; paused by the motion toggle, reduced motion or save-data; webp poster otherwise."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation and transition durations 1ms",
+        "purpose": "Global prefers-reduced-motion override."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "menu",
+        "value": "1080px"
+      },
+      {
+        "name": "one-column",
+        "value": "900px"
+      },
+      {
+        "name": "hero-mobile",
+        "value": "760px"
+      },
+      {
+        "name": "compact-header",
+        "value": "720px"
+      },
+      {
+        "name": "tight-panel",
+        "value": "560px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Star Button",
+      "kind": "button",
+      "refersTo": "button-star",
+      "description": "The one primary action in view: Star Gold pill with a warm glow.",
+      "html": "<button class=\"ds-btn-star\" dir=\"rtl\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20\"/></svg>قصه را بساز</button>",
+      "css": ":host{--night:#070a18;--deep:#060918;--panel:#0e1430;--halo:#c9d6ff;--star:#f4c96b;--star-hi:#ffdc8f;--star-ink:#1b1405;--moon-1:#eef0fa;--moon-2:#c3c9e4;--moon-3:#8d95bd;--danger:#ffb4a2;--ease-out:cubic-bezier(0.16,1,0.3,1)} .ds-btn-star{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 24px;border:0;border-radius:999px;font-family:'Vazirmatn Variable','Vazirmatn',Tahoma,sans-serif;font-weight:750;font-size:1.0625rem;background:var(--star);color:var(--star-ink);box-shadow:0 10px 26px -10px rgb(244 201 107 / 0.55),inset 0 1px 0 rgb(255 248 225 / 0.7);cursor:pointer;transition:background-color 160ms var(--ease-out),transform 160ms var(--ease-out)} .ds-btn-star:hover{background:var(--star-hi)} .ds-btn-star:active{transform:translateY(1px)} .ds-btn-star:focus-visible{outline:3px solid var(--star-hi);outline-offset:3px}"
+    },
+    {
+      "name": "Line Button",
+      "kind": "button",
+      "refersTo": "button-line",
+      "description": "Secondary action: transparent pill with a moonlight edge.",
+      "html": "<button class=\"ds-btn-line\" dir=\"rtl\">یک قصهٔ دیگر</button>",
+      "css": ":host{--night:#070a18;--deep:#060918;--panel:#0e1430;--halo:#c9d6ff;--star:#f4c96b;--star-hi:#ffdc8f;--star-ink:#1b1405;--moon-1:#eef0fa;--moon-2:#c3c9e4;--moon-3:#8d95bd;--danger:#ffb4a2;--ease-out:cubic-bezier(0.16,1,0.3,1)} .ds-btn-line{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 24px;border:0;border-radius:999px;font-family:'Vazirmatn Variable','Vazirmatn',Tahoma,sans-serif;font-weight:750;font-size:1.0625rem;background:transparent;color:var(--moon-1);box-shadow:inset 0 0 0 1px var(--moon-3);cursor:pointer;transition:background-color 160ms var(--ease-out),box-shadow 160ms var(--ease-out)} .ds-btn-line:hover{background:rgb(238 240 250 / 0.08);box-shadow:inset 0 0 0 1px var(--moon-1)} .ds-btn-line:focus-visible{outline:3px solid var(--star-hi);outline-offset:3px}"
+    },
+    {
+      "name": "Name Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Recessed Deep Well field; Star Gold caret, Bright Star focus ring, Soft Coral invalid ring.",
+      "html": "<input class=\"ds-input\" dir=\"rtl\" placeholder=\"مثلاً آوا\" aria-label=\"اسم بچه\">",
+      "css": ":host{--night:#070a18;--deep:#060918;--panel:#0e1430;--halo:#c9d6ff;--star:#f4c96b;--star-hi:#ffdc8f;--star-ink:#1b1405;--moon-1:#eef0fa;--moon-2:#c3c9e4;--moon-3:#8d95bd;--danger:#ffb4a2;--ease-out:cubic-bezier(0.16,1,0.3,1)} .ds-input{min-height:56px;width:100%;max-width:420px;padding:0 16px;border:0;border-radius:14px;background:var(--deep);color:var(--moon-1);caret-color:var(--star);font-family:'Vazirmatn Variable','Vazirmatn',Tahoma,sans-serif;font-size:1.25rem;font-weight:650;box-shadow:inset 0 2px 6px rgb(0 0 0 / 0.45),inset 0 0 0 1px rgb(238 240 250 / 0.3)} .ds-input::placeholder{color:var(--moon-3);font-weight:450} .ds-input:focus-visible{outline:3px solid var(--star-hi);outline-offset:2px} .ds-input[aria-invalid=true]{box-shadow:inset 0 2px 6px rgb(0 0 0 / 0.45),inset 0 0 0 2px var(--danger)}"
+    },
+    {
+      "name": "Hero Chips",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Radio chips; selected fills solid Moonlight, never gold.",
+      "html": "<div class=\"ds-chips\" dir=\"rtl\"><label class=\"ds-chip\"><input type=\"radio\" name=\"ds-h\" checked><span>خرگوش برفی</span></label><label class=\"ds-chip\"><input type=\"radio\" name=\"ds-h\"><span>ماهی قرمز</span></label><label class=\"ds-chip\"><input type=\"radio\" name=\"ds-h\"><span>کبوتر ماه</span></label></div>",
+      "css": ":host{--night:#070a18;--deep:#060918;--panel:#0e1430;--halo:#c9d6ff;--star:#f4c96b;--star-hi:#ffdc8f;--star-ink:#1b1405;--moon-1:#eef0fa;--moon-2:#c3c9e4;--moon-3:#8d95bd;--danger:#ffb4a2;--ease-out:cubic-bezier(0.16,1,0.3,1)} .ds-chips{display:flex;flex-wrap:wrap;gap:8px;background:var(--panel);padding:16px;border-radius:14px} .ds-chip{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 16px;border-radius:999px;background:rgb(7 10 24 / 0.35);box-shadow:inset 0 0 0 1px rgb(238 240 250 / 0.35);color:var(--moon-2);font-family:'Vazirmatn Variable','Vazirmatn',Tahoma,sans-serif;font-weight:650;cursor:pointer;transition:background-color 160ms var(--ease-out),color 160ms var(--ease-out)} .ds-chip input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer} .ds-chip:hover{color:var(--moon-1);box-shadow:inset 0 0 0 1px var(--moon-2)} .ds-chip:has(input:checked){background:var(--moon-1);color:var(--panel);box-shadow:0 6px 14px -6px rgb(0 0 0 / 0.6)} .ds-chip:has(input:focus-visible){outline:3px solid var(--star-hi);outline-offset:3px}"
+    },
+    {
+      "name": "Stage Tabs",
+      "kind": "chip",
+      "refersTo": "tab",
+      "description": "Pill tabs; selected fills Moon Halo.",
+      "html": "<div class=\"ds-tabs\" dir=\"rtl\" role=\"tablist\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\">پیش از ازدواج</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">بارداری</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">نوزاد</button></div>",
+      "css": ":host{--night:#070a18;--deep:#060918;--panel:#0e1430;--halo:#c9d6ff;--star:#f4c96b;--star-hi:#ffdc8f;--star-ink:#1b1405;--moon-1:#eef0fa;--moon-2:#c3c9e4;--moon-3:#8d95bd;--danger:#ffb4a2;--ease-out:cubic-bezier(0.16,1,0.3,1)} .ds-tabs{display:flex;flex-wrap:wrap;gap:8px;background:var(--panel);padding:16px;border-radius:14px} .ds-tab{min-height:44px;padding:0 16px;border:0;border-radius:999px;background:transparent;box-shadow:inset 0 0 0 1px rgb(201 214 255 / 0.35);color:var(--moon-2);font-family:'Vazirmatn Variable','Vazirmatn',Tahoma,sans-serif;font-weight:650;cursor:pointer} .ds-tab:hover{box-shadow:inset 0 0 0 1px var(--moon-2)} .ds-tab[aria-selected=true]{background:var(--halo);color:var(--panel);box-shadow:none} .ds-tab:focus-visible{outline:3px solid var(--star-hi);outline-offset:3px}"
+    },
+    {
+      "name": "Night Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Translucent indigo surface with a 1px halo edge and moonlight from above.",
+      "html": "<div class=\"ds-sky\"><div class=\"ds-panel\" dir=\"rtl\"><h3 class=\"ds-panel-title\">قصهٔ امشب</h3><p class=\"ds-panel-body\">اسم بچه را بنویسید و قهرمانش را انتخاب کنید.</p></div></div>",
+      "css": ":host{--night:#070a18;--deep:#060918;--panel:#0e1430;--halo:#c9d6ff;--star:#f4c96b;--star-hi:#ffdc8f;--star-ink:#1b1405;--moon-1:#eef0fa;--moon-2:#c3c9e4;--moon-3:#8d95bd;--danger:#ffb4a2;--ease-out:cubic-bezier(0.16,1,0.3,1)} .ds-sky{padding:32px;background:linear-gradient(to bottom,#02030a,#0a1030 60%,#161d44)} .ds-panel{position:relative;max-width:480px;padding:32px;border-radius:24px;border:1px solid rgb(201 214 255 / 0.16);background:radial-gradient(120% 60% at 50% -10%,rgb(201 214 255 / 0.1),transparent 60%),rgb(14 20 48 / 0.9);box-shadow:0 30px 70px -24px rgb(1 2 10 / 0.85),0 8px 20px -8px rgb(1 2 10 / 0.6),inset 0 1px 0 rgb(238 240 250 / 0.1)} .ds-panel-title{margin:0 0 12px;font-family:'Lalezar','Vazirmatn Variable',serif;font-weight:400;font-size:2.2rem;line-height:1.1;color:var(--star-hi)} .ds-panel-body{margin:0;font-family:'Vazirmatn Variable','Vazirmatn',Tahoma,sans-serif;line-height:1.9;color:var(--moon-2)}"
+    },
+    {
+      "name": "Header Bar",
+      "kind": "nav",
+      "refersTo": "motion-toggle",
+      "description": "Thin dark band: Lalezar wordmark, pill nav links, motion toggle, quiet signup link.",
+      "html": "<nav class=\"ds-nav\" dir=\"rtl\"><span class=\"ds-word\">دردونه</span><a href=\"#\">قصه‌ساز</a><a href=\"#\">پرسش‌های سلامت</a><a href=\"#\">لالایی</a><span class=\"ds-end\"><button class=\"ds-toggle\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" aria-hidden=\"true\"><rect x=\"14\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\"/><rect x=\"6\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\"/></svg><span>توقف تصاویر متحرک</span></button><a class=\"ds-quiet\" href=\"#\">ثبت‌نام رایگان</a></span></nav>",
+      "css": ":host{--night:#070a18;--deep:#060918;--panel:#0e1430;--halo:#c9d6ff;--star:#f4c96b;--star-hi:#ffdc8f;--star-ink:#1b1405;--moon-1:#eef0fa;--moon-2:#c3c9e4;--moon-3:#8d95bd;--danger:#ffb4a2;--ease-out:cubic-bezier(0.16,1,0.3,1)} .ds-nav{display:flex;align-items:center;gap:4px;height:64px;padding:0 24px;background:rgb(7 10 24 / 0.94);box-shadow:0 10px 30px -18px rgb(0 0 0 / 0.9);font-family:'Vazirmatn Variable','Vazirmatn',Tahoma,sans-serif;} .ds-word{font-family:'Lalezar','Vazirmatn Variable',serif;font-size:1.75rem;line-height:1;color:var(--moon-1);margin-inline-end:16px;padding-top:4px} .ds-nav>a{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border-radius:999px;color:var(--moon-2);text-decoration:none;font-size:0.9375rem;font-weight:600} .ds-nav>a:hover{color:var(--moon-1);background:rgb(238 240 250 / 0.08)} .ds-end{margin-inline-start:auto;display:flex;align-items:center;gap:12px} .ds-toggle{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:0;border-radius:999px;background:rgb(7 10 24 / 0.55);box-shadow:inset 0 0 0 1px rgb(238 240 250 / 0.28);color:var(--moon-1);font:inherit;font-size:0.9375rem;font-weight:600;cursor:pointer} .ds-toggle:hover{box-shadow:inset 0 0 0 1px var(--moon-2)} .ds-quiet{color:var(--moon-2);font-size:0.9375rem;font-weight:650;text-underline-offset:0.35em;text-decoration-thickness:1px} .ds-quiet:hover{color:var(--moon-1)} .ds-nav a:focus-visible,.ds-toggle:focus-visible{outline:3px solid var(--star-hi);outline-offset:3px}"
+    },
+    {
+      "name": "Lullaby Verse",
+      "kind": "custom",
+      "refersTo": "title-display",
+      "description": "Uncontained verse: Bright Star Lalezar title, faint origin, lyric lines, dashed moonlight divider.",
+      "html": "<div class=\"ds-verses\" dir=\"rtl\"><figure class=\"ds-verse\"><figcaption><span class=\"ds-vt\">لالا لالا گل خشخاش</span><span class=\"ds-vo\">قدیمی، فارسی</span></figcaption><p>لالا لالا گل خشخاش</p><p>بابات رفته خدا همراش</p></figure><figure class=\"ds-verse\"><figcaption><span class=\"ds-vt\">لالا لالا گل پونه</span><span class=\"ds-vo\">قدیمی، فارسی</span></figcaption><p>لالا لالا گل پونه</p><p>گدا اومد در خونه</p></figure></div>",
+      "css": ":host{--night:#070a18;--deep:#060918;--panel:#0e1430;--halo:#c9d6ff;--star:#f4c96b;--star-hi:#ffdc8f;--star-ink:#1b1405;--moon-1:#eef0fa;--moon-2:#c3c9e4;--moon-3:#8d95bd;--danger:#ffb4a2;--ease-out:cubic-bezier(0.16,1,0.3,1)} .ds-verses{display:grid;grid-template-columns:1fr 1fr;background:var(--night);padding:32px;font-family:'Vazirmatn Variable','Vazirmatn',Tahoma,sans-serif;} .ds-verse{margin:0;padding:0 32px;display:grid;gap:16px;align-content:start} .ds-verse:first-child{padding-inline-start:0} .ds-verse+.ds-verse{border-inline-start:1px dashed rgb(238 240 250 / 0.35)} .ds-verse figcaption{display:grid;gap:2px} .ds-vt{font-family:'Lalezar','Vazirmatn Variable',serif;font-size:1.8rem;line-height:1.3;color:var(--star-hi)} .ds-vo{font-size:0.9375rem;color:var(--moon-3)} .ds-verse p{margin:0;font-size:1.2rem;line-height:2;color:var(--moon-1);text-shadow:0 2px 14px rgb(2 3 12 / 0.9)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "One Long Night",
+    "overview": "The whole page is a single night sky. A live procedural sky (WebGL fragment shader, no modelled objects) sits fixed behind everything: a full moon with soft maria and halo upper-left, three depths of twinkling stars, a faint Milky Way, thin moonlit clouds low in the frame, and one slow shooting star every eleven seconds. Scrolling drives the camera downward toward the horizon, and the page ends on the silhouette of a sleeping Iranian town (domes, wind towers, cypresses, gold-lit windows) that bleeds into the footer. Content does not sit on pages or cards; it floats on the sky, either as moonlit text with a soft dark text-shadow or inside a few dark indigo night panels.\n\nThe system is calm, low-density and one-handed: Persian RTL throughout, generous vertical rhythm (112px between sections), 44px minimum targets, and a single warm color in a cold world. Moonlight (cool cream-lavender) carries all text; star gold is the only warm hue, and its filled form is spent on the one action that matters in each view. Lalezar, a heavy Persian display face, sets every headline and every title that names a thing (the story, a lullaby, the reviewer roster); Vazirmatn sets everything else.\n\nThe user rejected the earlier korsi direction (red quilt, rendered 3D room) as \"red, cluttered, amateur 3D\". The night replaces it: no literal 3D props, no warm-red room, no pastel mother-and-baby landing.",
+    "keyCharacteristics": [
+      "Fixed, living night sky as the page ground; a still poster stands in under reduced motion, save-data, a user pause, or no WebGL.",
+      "Cool moonlight text on deep indigo; star gold is the single warm accent.",
+      "Dark translucent night panels with a 1px moonlight edge and a soft halo from above.",
+      "Lalezar for named things, Vazirmatn for reading; long Persian line-height (1.9 to 2.05).",
+      "Dashed moonlight hairlines as the system's divider.",
+      "Every surface ends at the town on the horizon."
+    ],
+    "rules": [
+      {
+        "name": "The One Warm Star Rule",
+        "body": "Star Gold is the only warm fill on the page. In any view, the filled gold button is the one primary action; everything else is moonlight, halo or outline.",
+        "section": "colors"
+      },
+      {
+        "name": "The Moonlight Text Rule",
+        "body": "All text is one of three moonlights (moon-1, moon-2, moon-3) or Bright Star. Nothing below Faint Moonlight's contrast is used for text, and there is no gray: every neutral leans indigo-lavender (hue about 272 to 277).",
+        "section": "colors"
+      },
+      {
+        "name": "The Logo Is Not the Palette Rule",
+        "body": "The mark is a Moonlight crescent (#eef0fa) with one Star Gold four-point star (#f4c96b); it introduces no colour outside the palette.",
+        "section": "colors"
+      },
+      {
+        "name": "The Named Things Rule",
+        "body": "Lalezar sets headlines and the titles of things a parent would name aloud (a story, a lullaby, the reviewers). Labels, buttons, body and UI never use Lalezar.",
+        "section": "typography"
+      },
+      {
+        "name": "The Persian Numerals Rule",
+        "body": "Numbers display in Persian digits; tabular figures (.num) where they align, and phone numbers isolated LTR inside RTL text.",
+        "section": "typography"
+      },
+      {
+        "name": "The Moon Is Above Rule",
+        "body": "Light falls from the top: panel washes and inner highlights sit on the top edge, shadows fall below. Never light a surface from the side or below.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Text On Sky Rule",
+        "body": "Text placed directly on the sky carries the soft dark text-shadow; text that cannot carry it goes in a panel.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** keep exactly one filled Star Gold button per view; secondary actions are line buttons or quiet links.",
+      "**Do** set every text color from moon-1, moon-2, moon-3 or star-hi; keep text at or above Faint Moonlight's contrast.",
+      "**Do** put new content either on the sky with the soft dark text-shadow or in a Night Panel (24px radius, 1px halo edge, top-light wash, Panel float shadow).",
+      "**Do** use Lalezar 400 for headlines and named titles, Vazirmatn for everything else, and Persian line-heights of 1.9 or more for reading text.",
+      "**Do** make every button, chip, tab and toggle a pill with a 44px minimum target, outlined with inset box-shadows rather than borders.",
+      "**Do** divide with dashed 1px moonlight hairlines.",
+      "**Do** ship any moving background with a visible pause control and a still poster for reduced motion, save-data and no-WebGL.",
+      "**Do** end long pages at the horizon: the town silhouette in Far Town and Town Ground running into the footer."
+    ],
+    "donts": [
+      "**Don't** use Star Gold as a large fill, a section background, or on more than one filled control in view.",
+      "**Don't** bring back the korsi world: no red quilt, no warm-red room, no rendered 3D props or modelled objects.",
+      "**Don't** use pastel mother-and-baby palettes, split heroes with stock photography, or rows of feature cards.",
+      "**Don't** bring back red or warm cloth tones; the user rejected the red korsi world.",
+      "**Don't** use hard-edged or colored shadows; shadows are soft, dark and fall from above (the star glow is the one warm exception).",
+      "**Don't** use pure gray or pure black text colors; neutrals stay indigo-tinted.",
+      "**Don't** set labels, buttons or body copy in Lalezar."
+    ]
+  }
+}

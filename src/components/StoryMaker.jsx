@@ -5,7 +5,7 @@ import './StoryMaker.css';
 
 const MAX = 20;
 
-/* امضای صفحه: قصهٔ امشب همین‌جا، روی لحاف ساخته می‌شود؛ بدون ثبت‌نام. */
+/* امضای صفحه: قصهٔ امشب همین‌جا، روی پنل شب ساخته می‌شود؛ بدون ثبت‌نام. */
 export default function StoryMaker() {
   const id = useId();
   const [name, setName] = useState('');
