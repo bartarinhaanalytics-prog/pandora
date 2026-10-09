@@ -1,19 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { nav } from '../data/content.js';
-import { useMotion } from '../hooks/useMotion.jsx';
 import Icon from './Icon.jsx';
 import Logo from './Logo.jsx';
 import './Header.css';
-
-export function MotionToggle({ className = '' }) {
-  const { playing, toggle } = useMotion();
-  return (
-    <button type="button" className={`motion-toggle ${className}`} onClick={toggle} aria-pressed={!playing}>
-      <Icon name={playing ? 'Pause' : 'Play'} size={18} />
-      <span>{playing ? 'توقف تصاویر متحرک' : 'پخش تصاویر متحرک'}</span>
-    </button>
-  );
-}
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -75,7 +64,6 @@ export default function Header() {
           ))}
         </nav>
         <div className="header__end">
-          <MotionToggle className="motion-toggle--compact" />
           <a href="#start" className="header__cta">
             ثبت‌نام رایگان
           </a>
@@ -116,7 +104,6 @@ export default function Header() {
               </a>
             ))}
           </nav>
-          <MotionToggle />
           <a href="#start" className="btn btn--line" onClick={close}>
             ثبت‌نام رایگان
           </a>

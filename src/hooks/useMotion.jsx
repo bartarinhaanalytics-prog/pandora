@@ -1,43 +1,22 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import { useReducedMotion } from './useReducedMotion.js';
 
 /*
- * یک کلید برای همهٔ ویدیوهای پس‌زمینه (WCAG 2.2.2).
- * با «کاهش حرکت» یا «صرفه‌جویی داده» پیش‌فرض خاموش است و فقط تصویر ثابت می‌ماند.
+ * حرکت آسمان پس‌زمینه. با «کاهش حرکت» سیستم‌عامل یا «صرفه‌جویی داده»
+ * آسمان ثابت می‌ماند و فقط یک فریم رسم می‌شود.
  */
-const MotionContext = createContext({ playing: false, toggle: () => {} });
-const KEY = 'dordooneh:motion';
-
-function readPref() {
-  try {
-    return localStorage.getItem(KEY);
-  } catch {
-    return null;
-  }
-}
+const MotionContext = createContext({ playing: false });
 
 export function MotionProvider({ children }) {
   const reduced = useReducedMotion();
-  const saveData = typeof navigator !== 'undefined' && navigator.connection?.saveData;
-  const [pref, setPref] = useState(readPref);
-
-  const playing = pref ? pref === 'on' : !reduced && !saveData;
-
-  const toggle = useCallback(() => {
-    const next = playing ? 'off' : 'on';
-    setPref(next);
-    try {
-      localStorage.setItem(KEY, next);
-    } catch {
-      /* حافظهٔ مرورگر در دسترس نیست؛ فقط برای همین بازدید */
-    }
-  }, [playing]);
+  const saveData = typeof navigator !== 'undefined' && Boolean(navigator.connection?.saveData);
+  const playing = !reduced && !saveData;
 
   useEffect(() => {
     document.documentElement.dataset.motion = playing ? 'on' : 'off';
   }, [playing]);
 
-  const value = useMemo(() => ({ playing, toggle }), [playing, toggle]);
+  const value = useMemo(() => ({ playing }), [playing]);
   return <MotionContext.Provider value={value}>{children}</MotionContext.Provider>;
 }
 

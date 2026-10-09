@@ -271,7 +271,7 @@ Round, warm and unmistakable; there is only ever one gold one in view.
 - **Error:** the edge becomes a 2px Soft Coral inset ring; the message below is Soft Coral with an alert icon, announced as an alert.
 
 ### Navigation
-- **Header:** fixed 64px band; logo mark plus Lalezar wordmark at 1.75rem on the start side; nav links as pills (Dim Moonlight, 600, 0.9375rem, 44px, hover Moonlight with an 8% wash); motion toggle and quiet signup link on the end side.
+- **Header:** fixed 64px band; logo mark plus Lalezar wordmark at 1.75rem on the start side; nav links as pills (Dim Moonlight, 600, 0.9375rem, 44px, hover Moonlight with an 8% wash); quiet signup link on the end side.
 - **Mobile (under 1080px):** a 44px circular menu button opens a full-screen Night sheet with Lalezar 2rem links separated by hairlines and a line button for signup.
 - **Footer:** Town Ground background continuing the skyline, Dim Moonlight links at 44px, dashed hairline above the medical note.
 

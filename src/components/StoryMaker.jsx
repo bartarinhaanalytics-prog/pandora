@@ -1,15 +1,16 @@
 import { useId, useRef, useState } from 'react';
-import { heroes, makeStory } from '../data/stories.js';
+import { heroes, makeStory, topics } from '../data/stories.js';
 import Icon from './Icon.jsx';
 import './StoryMaker.css';
 
 const MAX = 20;
 
-/* امضای صفحه: قصهٔ امشب همین‌جا، روی پنل شب ساخته می‌شود؛ بدون ثبت‌نام. */
+/* امضای صفحه: قصهٔ امشب با موضوع دلخواه همین‌جا ساخته می‌شود؛ بدون ثبت‌نام. */
 export default function StoryMaker() {
   const id = useId();
   const [name, setName] = useState('');
   const [hero, setHero] = useState(heroes[0].id);
+  const [topic, setTopic] = useState(topics[0].id);
   const [error, setError] = useState('');
   const [story, setStory] = useState(null);
   const storyRef = useRef(null);
@@ -23,10 +24,10 @@ export default function StoryMaker() {
       return;
     }
     setError('');
-    const made = makeStory(n, heroId);
+    const made = makeStory(n, heroId, topic);
     setStory({ ...made, key: Date.now() });
     try {
-      sessionStorage.setItem('dordooneh:story', JSON.stringify({ name: n, hero: heroId, title: made.title }));
+      sessionStorage.setItem('dordooneh:story', JSON.stringify({ name: n, hero: heroId, topic, title: made.title }));
       window.dispatchEvent(new Event('dordooneh:story'));
     } catch {
       /* حافظهٔ مرورگر در دسترس نیست؛ قصه فقط روی صفحه می‌ماند */
@@ -81,6 +82,18 @@ export default function StoryMaker() {
         </div>
 
         <fieldset className="maker__heroes">
+          <legend>موضوع قصه</legend>
+          <div className="maker__chips">
+            {topics.map((t) => (
+              <label key={t.id} className="chip">
+                <input type="radio" name={`${id}-topic`} value={t.id} checked={topic === t.id} onChange={() => setTopic(t.id)} />
+                <span>{t.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset className="maker__heroes">
           <legend>قهرمان قصه</legend>
           <div className="maker__chips">
             {heroes.map((h) => (
@@ -120,7 +133,7 @@ export default function StoryMaker() {
             </button>
           </div>
           <p className="tale__note">
-            این قصهٔ نمونه روی همین گوشی ساخته شد و جایی فرستاده نشد. بعد از ثبت‌نام، هر شب قصهٔ تازه با موضوع و طول دلخواه می‌سازید.
+            این قصهٔ نمونه روی همین گوشی ساخته شد و جایی فرستاده نشد. بعد از ثبت‌نام، هر شب قصهٔ تازه با طول دلخواه و موضوع‌های بیشتر می‌سازید.
           </p>
         </article>
       )}

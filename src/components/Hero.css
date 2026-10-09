@@ -38,7 +38,4 @@
   .hero__inner {
     gap: var(--s-5);
   }
-  .hero__lead-more {
-    display: none;
-  }
 }

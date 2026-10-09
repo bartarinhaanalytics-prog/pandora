@@ -163,3 +163,12 @@
   color: var(--moon-2);
   animation: none;
 }
+
+@media (max-width: 560px) {
+  .maker__form {
+    gap: var(--s-4);
+  }
+  .maker__title {
+    font-size: 1.75rem;
+  }
+}
