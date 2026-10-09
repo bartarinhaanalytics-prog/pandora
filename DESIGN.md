@@ -122,12 +122,6 @@ components:
     textColor: "{colors.moon-1}"
     rounded: "{rounded.r-3}"
     padding: "32px"
-  motion-toggle:
-    backgroundColor: "rgb(7 10 24 / 0.55)"
-    textColor: "{colors.moon-1}"
-    rounded: "{rounded.pill}"
-    padding: "0 16px"
-    height: "44px"
 ---
 
 # Design System: Dordooneh
@@ -143,7 +137,7 @@ The system is calm, low-density and one-handed: Persian RTL throughout, generous
 The user rejected the earlier korsi direction (red quilt, rendered 3D room) as "red, cluttered, amateur 3D". The night replaces it: no literal 3D props, no warm-red room, no pastel mother-and-baby landing.
 
 **Key Characteristics:**
-- Fixed, living night sky as the page ground; a still poster stands in under reduced motion, save-data, a user pause, or no WebGL.
+- Fixed, living night sky as the page ground; a still poster stands in under reduced motion, save-data, or no WebGL.
 - Cool moonlight text on deep indigo; star gold is the single warm accent.
 - Dark translucent night panels with a 1px moonlight edge and a soft halo from above.
 - Lalezar for named things, Vazirmatn for reading; long Persian line-height (1.9 to 2.05).
@@ -216,7 +210,7 @@ Single-column scroll of full-bleed sections over the fixed sky, content inside a
 - **Two-column sections:** Health uses 5fr intro (sticky under the header) / 7fr panel; Trust uses 7fr copy / 5fr roster. Both collapse to one column at 900px.
 - **Lullabies:** three verse columns (1.2fr 1.2fr 1fr) divided by dashed hairlines, stacking at 900px with the dashes turning horizontal.
 - **Signup:** min-height 92svh, panel max 600px, bottom padding reserving clamp(170px to 320px) for the town silhouette; on mobile the panel drops toward the town.
-- **Breakpoints:** 1080px (desktop nav to menu sheet), 900px (two columns to one), 760px (hero top-aligned, footer single column), 720px (motion toggle icon-only, header signup link hidden), 560px (tighter panel padding).
+- **Breakpoints:** 1080px (desktop nav to menu sheet), 900px (two columns to one), 760px (hero top-aligned, footer single column), 720px (header signup link hidden), 560px (tighter panel padding).
 - **Header:** fixed 64px band, transparent over the sky, turning Night at 0.94 alpha with a soft shadow after 40px of scroll.
 
 ## Elevation & Depth
@@ -275,8 +269,6 @@ Round, warm and unmistakable; there is only ever one gold one in view.
 - **Mobile (under 1080px):** a 44px circular menu button opens a full-screen Night sheet with Lalezar 2rem links separated by hairlines and a line button for signup.
 - **Footer:** Town Ground background continuing the skyline, Dim Moonlight links at 44px, dashed hairline above the medical note.
 
-### Motion Toggle
-A pill (44px) on translucent Night with a 0.28 moonlight inset edge, play/pause line icon and label; collapses to a 44px circle under 720px. It pauses the live sky everywhere and persists the choice. Default is paused under reduced motion or save-data.
 
 ### Accordion (Health answers)
 Native disclosure rows separated by 1px halo hairlines (0.18); question in Moonlight 700 at 1.0625rem, min 56px; a Moon Halo chevron rotates 180 degrees on open. Each answer ends with a Bright Star review note and icon.
@@ -299,7 +291,7 @@ The fixed full-screen WebGL sky (low-power context, DPR capped at 1 on touch and
 - **Do** use Lalezar 400 for headlines and named titles, Vazirmatn for everything else, and Persian line-heights of 1.9 or more for reading text.
 - **Do** make every button, chip, tab and toggle a pill with a 44px minimum target, outlined with inset box-shadows rather than borders.
 - **Do** divide with dashed 1px moonlight hairlines.
-- **Do** ship any moving background with a visible pause control and a still poster for reduced motion, save-data and no-WebGL.
+- **Do** keep the moving sky slow and ambient, and show a still poster under reduced motion, save-data and no-WebGL (the user asked for no pause button).
 - **Do** end long pages at the horizon: the town silhouette in Far Town and Town Ground running into the footer.
 
 ### Don't:
