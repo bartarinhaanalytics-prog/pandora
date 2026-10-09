@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Sky still</title>
+<style>html,body{margin:0;height:100%;background:#000}canvas{display:block;width:100vw;height:100vh}</style></head>
+<body><canvas id="c"></canvas>
+<script type="module">
+// ?t=ثانیه&s=پیمایش ؛ برای ساخت تصویر ثابت (پوستر) و بررسی شیدر
+import { vertex, fragment } from '/src/sky/skyShader.js';
+const q = new URLSearchParams(location.search);
+const c = document.getElementById('c');
+c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio;
+const gl = c.getContext('webgl', { preserveDrawingBuffer: true });
+const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, vertex)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fragment)); gl.linkProgram(pr); gl.useProgram(pr);
+const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+gl.viewport(0, 0, c.width, c.height);
+gl.uniform2f(gl.getUniformLocation(pr, 'uRes'), c.width, c.height);
+gl.uniform1f(gl.getUniformLocation(pr, 'uTime'), Number(q.get('t') || 3));
+gl.uniform1f(gl.getUniformLocation(pr, 'uScroll'), Number(q.get('s') || 0));
+gl.drawArrays(gl.TRIANGLES, 0, 3);
+document.body.dataset.ready = '1';
+</script></body></html>

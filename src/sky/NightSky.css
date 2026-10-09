@@ -1,0 +1,25 @@
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    url('./sky-wide.webp') center / cover no-repeat,
+    linear-gradient(to bottom, #02030a, #0a1030 60%, #161d44);
+}
+@media (max-aspect-ratio: 4/5) {
+  .sky {
+    background:
+      url('./sky-tall.webp') center / cover no-repeat,
+      linear-gradient(to bottom, #02030a, #0a1030 60%, #161d44);
+  }
+}
+.sky__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 600ms ease-out;
+}
+.sky__canvas[data-ready='1'] {
+  opacity: 1;
+}

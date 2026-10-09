@@ -34,7 +34,7 @@ export default function Trust() {
           </ul>
         </div>
 
-        <div className="roster quilt">
+        <div className="roster panel">
           <h3 className="roster__title">بازبین‌ها</h3>
           <dl>
             {reviewers.map((r) => (

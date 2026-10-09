@@ -1,8 +1,0 @@
-<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#0f3f42}#w{width:900px;height:1000px;background:linear-gradient(180deg,#0f3f42,#1f5f63)}canvas{width:900px;height:1000px;display:block}</style></head>
-<body><div id="w"><canvas id="c"></canvas></div>
-<script type="module">
-import { createHeroScene } from '/src/scene/heroScene.js';
-const api = createHeroScene(document.getElementById('c'), { tier: 'high', reducedMotion: true, onFirstFrame: () => { document.body.dataset.ready = '1'; } });
-Object.defineProperty(window, 'devicePixelRatio', { value: 1 });
-api.resize(900, 1000);
-</script></body></html>

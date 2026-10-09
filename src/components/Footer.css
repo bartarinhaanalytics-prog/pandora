@@ -1,7 +1,6 @@
 .footer {
   padding: var(--s-8) 0 var(--s-7);
-  background: var(--night);
-  border-top: 1px solid rgb(246 234 214 / 0.1);
+  background: #04060f; /* هم‌رنگ ردیف جلوی شهر خفته، تا افق در پانویس ادامه یابد */
 }
 .footer__inner {
   display: grid;
@@ -11,7 +10,7 @@
 .footer__brand {
   display: grid;
   gap: var(--s-3);
-  color: var(--cotton-2);
+  color: var(--moon-2);
 }
 .footer__nav {
   display: flex;
@@ -20,7 +19,7 @@
   align-content: start;
 }
 .footer__nav a {
-  color: var(--cotton-2);
+  color: var(--moon-2);
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -28,9 +27,9 @@
 .footer__note {
   grid-column: 1 / -1;
   font-size: var(--fs-small);
-  color: var(--cotton-3);
+  color: var(--moon-3);
   padding-top: var(--s-5);
-  border-top: 1px dashed rgb(246 234 214 / 0.18);
+  border-top: 1px dashed rgb(238 240 250 / 0.18);
 }
 @media (max-width: 760px) {
   .footer__inner {

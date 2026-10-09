@@ -2,17 +2,8 @@
   position: relative;
   isolation: isolate;
   padding: var(--s-9) 0;
-  min-height: 100svh;
   display: flex;
   align-items: center;
-}
-.health__scrim {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    linear-gradient(to right, rgb(15 11 18 / 0.2) 0%, rgb(15 11 18 / 0.75) 55%, rgb(15 11 18 / 0.9) 100%),
-    linear-gradient(to bottom, var(--night) 0%, rgb(15 11 18 / 0) 18%, rgb(15 11 18 / 0) 82%, var(--night) 100%);
 }
 .health__inner {
   display: grid;
@@ -28,10 +19,10 @@
 }
 .health h2 {
   font-size: var(--fs-h2);
-  color: var(--cotton);
+  color: var(--moon-1);
 }
 .health__intro p {
-  color: var(--cotton-2);
+  color: var(--moon-2);
   font-size: var(--fs-lead);
   max-width: 40ch;
 }
@@ -48,17 +39,17 @@
   border: 0;
   border-radius: var(--r-pill);
   background: transparent;
-  box-shadow: inset 0 0 0 1px rgb(217 212 238 / 0.35);
-  color: var(--cotton-on-indigo);
+  box-shadow: inset 0 0 0 1px rgb(201 214 255 / 0.35);
+  color: var(--moon-2);
   font-weight: 650;
   cursor: pointer;
 }
 .stages__tab:hover {
-  box-shadow: inset 0 0 0 1px var(--cotton-on-indigo);
+  box-shadow: inset 0 0 0 1px var(--moon-2);
 }
 .stages__tab[aria-selected='true'] {
-  background: var(--moon);
-  color: var(--indigo-900);
+  background: var(--halo);
+  color: var(--panel);
   box-shadow: none;
 }
 
@@ -66,7 +57,7 @@
   display: grid;
 }
 .qa__item {
-  border-bottom: 1px solid rgb(217 212 238 / 0.18);
+  border-bottom: 1px solid rgb(201 214 255 / 0.18);
 }
 .qa__item summary {
   list-style: none;
@@ -80,14 +71,14 @@
   font-size: 1.0625rem;
   line-height: 1.7;
   cursor: pointer;
-  color: var(--cotton);
+  color: var(--moon-1);
 }
 .qa__item summary::-webkit-details-marker {
   display: none;
 }
 .qa__chev {
   flex: none;
-  color: var(--moon);
+  color: var(--halo);
   transition: transform var(--t-med) var(--ease-out);
 }
 .qa__item[open] .qa__chev {
@@ -97,7 +88,7 @@
   display: grid;
   gap: var(--s-3);
   padding-bottom: var(--s-5);
-  color: var(--cotton-on-indigo);
+  color: var(--moon-2);
   max-width: 64ch;
 }
 .qa__review {
@@ -105,7 +96,7 @@
   align-items: center;
   gap: var(--s-2);
   font-size: var(--fs-small);
-  color: var(--saffron-hi);
+  color: var(--star-hi);
   font-weight: 600;
 }
 .health__emergency {
@@ -114,12 +105,12 @@
   gap: var(--s-2);
   align-items: flex-start;
   font-size: var(--fs-small);
-  color: var(--cotton-on-indigo);
+  color: var(--moon-2);
 }
 .health__emergency svg {
   flex: none;
   margin-top: 5px;
-  color: var(--saffron);
+  color: var(--star);
 }
 .health__emergency a {
   font-weight: 800;
@@ -134,11 +125,7 @@
   .health__intro {
     position: static;
   }
-  .health__scrim {
-    background:
-      linear-gradient(to bottom, var(--night) 0%, rgb(15 11 18 / 0.3) 20%, rgb(15 11 18 / 0.85) 50%, var(--night) 100%);
-  }
   .health {
-    padding-top: 28svh;
+    padding-top: var(--s-8);
   }
 }

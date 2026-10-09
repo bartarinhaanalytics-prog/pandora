@@ -5,7 +5,7 @@
   transition: background-color var(--t-med) var(--ease-out), box-shadow var(--t-med) var(--ease-out);
 }
 .header--solid {
-  background: rgb(15 11 18 / 0.94);
+  background: rgb(7 10 24 / 0.94);
   box-shadow: 0 10px 30px -18px rgb(0 0 0 / 0.9);
 }
 .header__bar {
@@ -30,7 +30,7 @@
   font-family: var(--font-display);
   font-size: 1.75rem;
   line-height: 1;
-  color: var(--cotton);
+  color: var(--moon-1);
   padding-top: 4px;
 }
 .header__nav {
@@ -39,7 +39,7 @@
   margin-inline-start: var(--s-4);
 }
 .header__nav a {
-  color: var(--cotton-2);
+  color: var(--moon-2);
   text-decoration: none;
   font-size: var(--fs-small);
   font-weight: 600;
@@ -50,8 +50,8 @@
   align-items: center;
 }
 .header__nav a:hover {
-  color: var(--cotton);
-  background: rgb(246 234 214 / 0.08);
+  color: var(--moon-1);
+  background: rgb(238 240 250 / 0.08);
 }
 .header__end {
   margin-inline-start: auto;
@@ -61,7 +61,15 @@
 }
 .header__cta {
   min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--s-2);
+  color: var(--moon-2);
   font-size: var(--fs-small);
+  font-weight: 650;
+}
+.header__cta:hover {
+  color: var(--moon-1);
 }
 
 .motion-toggle {
@@ -72,15 +80,15 @@
   padding: 0 var(--s-4);
   border: 0;
   border-radius: var(--r-pill);
-  background: rgb(15 11 18 / 0.55);
-  box-shadow: inset 0 0 0 1px rgb(246 234 214 / 0.28);
-  color: var(--cotton);
+  background: rgb(7 10 24 / 0.55);
+  box-shadow: inset 0 0 0 1px rgb(238 240 250 / 0.28);
+  color: var(--moon-1);
   font-size: var(--fs-small);
   font-weight: 600;
   cursor: pointer;
 }
 .motion-toggle:hover {
-  box-shadow: inset 0 0 0 1px var(--cotton-2);
+  box-shadow: inset 0 0 0 1px var(--moon-2);
 }
 
 .header__menu {
@@ -91,8 +99,8 @@
   justify-content: center;
   border: 0;
   border-radius: var(--r-pill);
-  background: rgb(15 11 18 / 0.55);
-  box-shadow: inset 0 0 0 1px rgb(246 234 214 / 0.28);
+  background: rgb(7 10 24 / 0.55);
+  box-shadow: inset 0 0 0 1px rgb(238 240 250 / 0.28);
   cursor: pointer;
 }
 
@@ -120,15 +128,18 @@
 .sheet__nav a {
   font-family: var(--font-display);
   font-size: 2rem;
-  color: var(--cotton);
+  color: var(--moon-1);
   text-decoration: none;
   padding: var(--s-3) 0;
-  border-bottom: 1px solid rgb(246 234 214 / 0.12);
+  border-bottom: 1px solid rgb(238 240 250 / 0.12);
 }
 
 @media (max-width: 1080px) {
   .header__nav {
     display: none;
+  }
+  .header__menu {
+    display: inline-flex;
   }
 }
 @media (max-width: 720px) {
@@ -146,9 +157,6 @@
   }
   .header__cta {
     display: none;
-  }
-  .header__menu {
-    display: inline-flex;
   }
   .header__end {
     gap: var(--s-2);

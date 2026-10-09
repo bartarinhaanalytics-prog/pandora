@@ -1,8 +1,7 @@
 .trust {
+  position: relative;
+  isolation: isolate;
   padding: var(--s-9) 0;
-  background:
-    radial-gradient(60% 50% at 85% 0%, rgb(40 48 112 / 0.45), transparent 70%),
-    var(--night);
 }
 .trust__inner {
   display: grid;
@@ -18,7 +17,7 @@
   font-size: var(--fs-h2);
 }
 .trust__copy > p {
-  color: var(--cotton-2);
+  color: var(--moon-2);
   font-size: var(--fs-lead);
   max-width: 54ch;
 }
@@ -33,22 +32,22 @@
   display: flex;
   gap: var(--s-3);
   align-items: flex-start;
-  color: var(--cotton-2);
+  color: var(--moon-2);
   max-width: 60ch;
 }
 .trust__promises svg {
   flex: none;
   margin-top: 6px;
-  color: var(--saffron);
+  color: var(--star);
 }
 .trust__promises strong {
-  color: var(--cotton);
+  color: var(--moon-1);
 }
 .roster__title {
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 1.9rem;
-  color: var(--saffron-hi);
+  color: var(--star-hi);
   margin-bottom: var(--s-3);
 }
 .roster dl {
@@ -56,7 +55,7 @@
 }
 .roster__row {
   padding: var(--s-3) 0;
-  border-bottom: 1px dashed rgb(246 234 214 / 0.3);
+  border-bottom: 1px dashed rgb(238 240 250 / 0.3);
 }
 .roster__row:last-child {
   border-bottom: 0;
@@ -71,10 +70,10 @@
   justify-content: space-between;
   gap: 0 var(--s-4);
   font-size: var(--fs-small);
-  color: var(--cotton-2);
+  color: var(--moon-2);
 }
 .roster__name {
-  color: var(--cotton-3);
+  color: var(--moon-3);
   font-style: normal;
 }
 

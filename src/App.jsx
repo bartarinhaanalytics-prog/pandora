@@ -6,6 +6,7 @@ import Lullabies from './components/Lullabies.jsx';
 import Signup from './components/Signup.jsx';
 import Trust from './components/Trust.jsx';
 import { MotionProvider } from './hooks/useMotion.jsx';
+import NightSky from './sky/NightSky.jsx';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <a href="#main" className="skip-link">
         رفتن به محتوای اصلی
       </a>
+      <NightSky />
       <Header />
       <main id="main" tabIndex={-1}>
         <span id="top" />

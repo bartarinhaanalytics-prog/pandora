@@ -1,5 +1,5 @@
-import { useId, useState } from 'react';
-import BackdropVideo from './BackdropVideo.jsx';
+import { useEffect, useId, useState } from 'react';
+import town from '../sky/town.svg';
 import Icon from './Icon.jsx';
 import './Signup.css';
 
@@ -25,7 +25,15 @@ function validate(raw) {
 }
 
 /** ارسال به سرور؛ تا وقتی آدرس API تنظیم نشده، موفقیت شبیه‌سازی می‌شود. */
-async function requestCode(phone) {
+function readStory() {
+  try {
+    return JSON.parse(sessionStorage.getItem('dordooneh:story') || 'null');
+  } catch {
+    return null;
+  }
+}
+
+async function requestCode(phone, story) {
   const url = import.meta.env.VITE_SIGNUP_URL;
   if (!url) {
     await new Promise((r) => setTimeout(r, 900));
@@ -34,7 +42,7 @@ async function requestCode(phone) {
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone })
+    body: JSON.stringify(story ? { phone, story } : { phone })
   });
   if (!res.ok) throw new Error(String(res.status));
 }
@@ -44,6 +52,13 @@ export default function Signup() {
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
   const [status, setStatus] = useState('idle'); // idle | loading | success | failed
+  const [story, setStory] = useState(readStory);
+
+  useEffect(() => {
+    const on = () => setStory(readStory());
+    window.addEventListener('dordooneh:story', on);
+    return () => window.removeEventListener('dordooneh:story', on);
+  }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -52,7 +67,7 @@ export default function Signup() {
     if (msg) return;
     setStatus('loading');
     try {
-      await requestCode(normalizePhone(phone));
+      await requestCode(normalizePhone(phone), story);
       setStatus('success');
     } catch {
       setStatus('failed');
@@ -61,15 +76,20 @@ export default function Signup() {
 
   return (
     <section id="start" className="signup" aria-labelledby="signup-title">
-      <BackdropVideo name="wide" position="40% 60%" />
-      <div className="signup__scrim" aria-hidden="true" />
+      <img className="signup__town" src={town} alt="" aria-hidden="true" />
       <div className="wrap signup__inner">
-        <div className="signup__panel quilt">
+        <div className="signup__panel panel">
           <h2 id="signup-title">قصه‌های امشب را نگه دارید</h2>
           <p className="signup__lead">
             با شمارهٔ موبایل ثبت‌نام کنید تا قصه‌ها ذخیره شوند، هر شب قصهٔ تازه بسازید و پرسش‌های سلامت هر مرحله را دنبال کنید. رایگان
             است و رایگان می‌ماند.
           </p>
+          {story && (
+            <p className="signup__story">
+              <Icon name="BookHeart" size={20} />
+              <span>قصهٔ «{story.title}» بعد از تأیید شماره نگه داشته می‌شود.</span>
+            </p>
+          )}
 
           {status === 'success' ? (
             <div className="signup__ok" role="status">
@@ -103,7 +123,7 @@ export default function Signup() {
                     if (status === 'failed') setStatus('idle');
                   }}
                 />
-                <button type="submit" className="btn btn--saffron" disabled={status === 'loading'}>
+                <button type="submit" className="btn btn--star" disabled={status === 'loading'}>
                   {status === 'loading' ? (
                     <>
                       <Icon name="Loader2" size={18} className="spin" />

@@ -76,7 +76,7 @@ export default function Header() {
         </nav>
         <div className="header__end">
           <MotionToggle className="motion-toggle--compact" />
-          <a href="#start" className="btn btn--saffron header__cta">
+          <a href="#start" className="header__cta">
             ثبت‌نام رایگان
           </a>
           <button
@@ -117,7 +117,7 @@ export default function Header() {
             ))}
           </nav>
           <MotionToggle />
-          <a href="#start" className="btn btn--saffron" onClick={close}>
+          <a href="#start" className="btn btn--line" onClick={close}>
             ثبت‌نام رایگان
           </a>
         </div>

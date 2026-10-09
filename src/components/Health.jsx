@@ -1,6 +1,5 @@
 import { useId, useRef, useState } from 'react';
 import { healthStages } from '../data/content.js';
-import BackdropVideo from './BackdropVideo.jsx';
 import Icon from './Icon.jsx';
 import './Health.css';
 
@@ -25,8 +24,6 @@ export default function Health() {
 
   return (
     <section id="health" className="health" aria-labelledby="health-title">
-      <BackdropVideo name="window" position="20% 40%" />
-      <div className="health__scrim" aria-hidden="true" />
       <div className="wrap health__inner">
         <div className="health__intro">
           <h2 id="health-title">پرسش‌هایی که پرسیدنشان سخت است</h2>
@@ -36,7 +33,7 @@ export default function Health() {
           </p>
         </div>
 
-        <div className="health__panel quilt quilt--indigo">
+        <div className="health__panel panel">
           <div className="stages" role="tablist" aria-label="مرحلهٔ زندگی">
             {healthStages.map((s, i) => (
               <button
@@ -68,7 +65,7 @@ export default function Health() {
                   <p>{item.a}</p>
                   <p className="qa__review">
                     <Icon name="Stethoscope" size={18} />
-                    در انتظار بازبینی پزشک؛ تا آن زمان منتشر نمی‌شود.
+                    پیش‌نویس؛ هنوز پزشک این پاسخ را بازبینی نکرده است.
                   </p>
                 </div>
               </details>

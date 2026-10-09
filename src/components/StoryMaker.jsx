@@ -23,7 +23,14 @@ export default function StoryMaker() {
       return;
     }
     setError('');
-    setStory({ ...makeStory(n, heroId), key: Date.now() });
+    const made = makeStory(n, heroId);
+    setStory({ ...made, key: Date.now() });
+    try {
+      sessionStorage.setItem('dordooneh:story', JSON.stringify({ name: n, hero: heroId, title: made.title }));
+      window.dispatchEvent(new Event('dordooneh:story'));
+    } catch {
+      /* حافظهٔ مرورگر در دسترس نیست؛ قصه فقط روی صفحه می‌ماند */
+    }
     requestAnimationFrame(() => storyRef.current?.focus({ preventScroll: false }));
   };
 
@@ -35,7 +42,7 @@ export default function StoryMaker() {
   };
 
   return (
-    <div className="maker quilt">
+    <div className="maker panel">
       <form
         className="maker__form"
         noValidate
@@ -86,7 +93,7 @@ export default function StoryMaker() {
           </div>
         </fieldset>
 
-        <button type="submit" className="btn btn--saffron maker__go">
+        <button type="submit" className="btn btn--star maker__go">
           <Icon name="BookHeart" size={20} />
           قصه را بساز
         </button>
@@ -103,7 +110,7 @@ export default function StoryMaker() {
             </p>
           ))}
           <div className="tale__actions">
-            <a href="#start" className="btn btn--saffron">
+            <a href="#start" className="btn btn--star">
               نگه‌داشتن قصه با ثبت‌نام
               <Icon name="ArrowLeft" size={18} />
             </a>

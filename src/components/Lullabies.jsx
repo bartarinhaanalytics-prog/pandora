@@ -1,12 +1,9 @@
 import { lullabies } from '../data/content.js';
-import BackdropVideo from './BackdropVideo.jsx';
 import './Lullabies.css';
 
 export default function Lullabies() {
   return (
     <section id="lullaby" className="lull" aria-labelledby="lull-title">
-      <BackdropVideo name="quilt" position="50% 60%" />
-      <div className="lull__scrim" aria-hidden="true" />
       <div className="wrap">
         <div className="lull__head">
           <h2 id="lull-title">لالایی‌هایی که مادربزرگ‌ها می‌خواندند</h2>

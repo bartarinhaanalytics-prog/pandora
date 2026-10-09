@@ -8,27 +8,28 @@
 
 html {
   color-scheme: dark;
+  background: var(--night);
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-h);
   -webkit-text-size-adjust: 100%;
-  scrollbar-color: var(--madder-600) var(--night);
+  scrollbar-color: var(--line-strong) var(--night);
 }
 
 body {
   margin: 0;
-  background: var(--night);
-  color: var(--cotton);
+  background: transparent;
+  color: var(--moon-1);
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   font-feature-settings: 'ss01';
   overflow-x: clip;
-  caret-color: var(--saffron);
+  caret-color: var(--star);
 }
 
 ::selection {
-  background: var(--saffron);
-  color: var(--saffron-ink);
+  background: var(--star);
+  color: var(--star-ink);
 }
 
 ::-webkit-scrollbar {
@@ -38,7 +39,7 @@ body {
   background: var(--night);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--madder-700);
+  background: var(--panel-2);
   border: 3px solid var(--night);
   border-radius: 999px;
 }
@@ -74,7 +75,7 @@ p {
 }
 
 a {
-  color: var(--saffron-hi);
+  color: var(--star-hi);
   text-underline-offset: 0.35em;
   text-decoration-thickness: 1px;
 }
@@ -96,7 +97,7 @@ input {
 }
 
 :focus-visible {
-  outline: 3px solid var(--saffron-hi);
+  outline: 3px solid var(--star-hi);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -128,8 +129,8 @@ input {
   transform: translateY(-300%);
   z-index: 100;
   padding: var(--s-3) var(--s-5);
-  background: var(--saffron);
-  color: var(--saffron-ink);
+  background: var(--star);
+  color: var(--star-ink);
   border-radius: var(--r-1);
   font-weight: 700;
   text-decoration: none;
@@ -164,29 +165,29 @@ input {
     transform var(--t-fast) var(--ease-out),
     box-shadow var(--t-fast) var(--ease-out);
 }
-.btn--saffron {
-  background: var(--saffron);
-  color: var(--saffron-ink);
-  box-shadow: var(--sh-btn), inset 0 1px 0 rgb(255 240 200 / 0.6);
+.btn--star {
+  background: var(--star);
+  color: var(--star-ink);
+  box-shadow: var(--sh-btn), inset 0 1px 0 rgb(255 248 225 / 0.7);
 }
-.btn--saffron:hover {
-  background: var(--saffron-hi);
+.btn--star:hover {
+  background: var(--star-hi);
 }
-.btn--saffron:active {
+.btn--star:active {
   transform: translateY(1px);
 }
-.btn--saffron:disabled {
+.btn--star:disabled {
   opacity: 0.7;
   cursor: progress;
 }
 .btn--line {
   background: transparent;
-  color: var(--cotton);
-  box-shadow: inset 0 0 0 1px var(--cotton-3);
+  color: var(--moon-1);
+  box-shadow: inset 0 0 0 1px var(--moon-3);
 }
 .btn--line:hover {
-  background: rgb(246 234 214 / 0.08);
-  box-shadow: inset 0 0 0 1px var(--cotton);
+  background: rgb(238 240 250 / 0.08);
+  box-shadow: inset 0 0 0 1px var(--moon-1);
 }
 
 .spin {
@@ -199,50 +200,23 @@ input {
 }
 
 /*
- * پنل لحافی: زمینهٔ روناس، نوار بته‌جقه در بالا و پایین، کوک دوخت در لبه.
- * کتان فقط در دوخت و نوار حاشیه می‌آید.
+ * پنل شب: سطح نیلی تیره روی آسمان، با لبهٔ نازک مهتابی
+ * و نور ملایم ماه که از بالا روی لبه می‌نشیند.
  */
-.quilt {
+.panel {
   position: relative;
-  isolation: isolate;
   background:
-    radial-gradient(120% 80% at 50% 110%, rgb(255 150 70 / 0.18), transparent 60%),
-    var(--madder-800);
+    radial-gradient(120% 60% at 50% -10%, rgb(201 214 255 / 0.1), transparent 60%),
+    rgb(14 20 48 / 0.9);
+  border: 1px solid rgb(201 214 255 / 0.16);
   border-radius: var(--r-3);
-  padding: calc(var(--s-6) + 18px) var(--s-6) calc(var(--s-6) + 18px);
-  box-shadow: var(--sh-panel);
-}
-.quilt::before {
-  /* کوک دوخت */
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border: 1px dashed rgb(246 234 214 / 0.45);
-  border-radius: calc(var(--r-3) - 6px);
-  pointer-events: none;
-  z-index: -1;
-}
-.quilt::after {
-  /* نوار ترمه در بالا و پایین */
-  content: '';
-  position: absolute;
-  inset: 14px 14px;
-  background:
-    url('../assets/boteh-band.svg') top center / auto 18px repeat-x,
-    url('../assets/boteh-band.svg') bottom center / auto 18px repeat-x;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.9;
-}
-.quilt--indigo {
-  background:
-    radial-gradient(120% 80% at 50% 110%, rgb(140 160 255 / 0.12), transparent 60%),
-    var(--indigo-900);
+  padding: var(--s-6);
+  box-shadow: var(--sh-panel), inset 0 1px 0 rgb(238 240 250 / 0.1);
 }
 
 @media (max-width: 560px) {
-  .quilt {
-    padding: calc(var(--s-5) + 18px) var(--s-4) calc(var(--s-5) + 18px);
+  .panel {
+    padding: var(--s-5) var(--s-4);
   }
 }
 
@@ -257,4 +231,13 @@ input {
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
   }
+}
+
+/* تیترها و متن روی ویدیو */
+.hero__copy,
+.health__intro,
+.lull__head,
+.verse,
+.trust__copy {
+  text-shadow: 0 2px 14px rgb(2 3 12 / 0.9);
 }
