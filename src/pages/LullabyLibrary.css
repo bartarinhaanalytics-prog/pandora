@@ -1,0 +1,42 @@
+.lib {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-7) var(--s-8);
+}
+.lib__item {
+  display: grid;
+  gap: var(--s-4);
+  align-content: start;
+  padding-top: var(--s-5);
+  border-top: 1px dashed rgb(238 240 250 / 0.25);
+}
+.lib__title {
+  font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.4rem);
+  color: var(--star-hi);
+}
+.lib__about {
+  color: var(--moon-2);
+  margin-top: var(--s-2);
+}
+.lib__verse {
+  margin: 0;
+  display: grid;
+  gap: var(--s-1);
+}
+.lib__verse p {
+  font-size: 1.25rem;
+  line-height: 2;
+  color: var(--moon-1);
+  text-shadow: 0 1px 12px rgb(2 3 12 / 0.9);
+}
+.lib__tr {
+  display: block;
+  font-size: var(--fs-small);
+  color: var(--moon-3);
+  line-height: 1.6;
+}
+@media (max-width: 760px) {
+  .lib {
+    grid-template-columns: 1fr;
+  }
+}

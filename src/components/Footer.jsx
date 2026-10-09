@@ -1,4 +1,5 @@
-import { nav } from '../data/content.js';
+import { href } from '../lib/router.js';
+import { sitemap } from '../data/site.js';
 import Logo from './Logo.jsx';
 import './Footer.css';
 
@@ -10,14 +11,16 @@ export default function Footer() {
           <Logo />
           <p>همراه رایگان خانواده‌های ایرانی، از آمادگی ازدواج تا قصهٔ شب کودک.</p>
         </div>
-        <nav aria-label="پیوندهای پایین صفحه" className="footer__nav">
-          {nav.map((n) => (
-            <a key={n.id} href={`#${n.id}`}>
-              {n.label}
-            </a>
-          ))}
-          <a href="#start">ثبت‌نام</a>
-        </nav>
+        {sitemap.map((g) => (
+          <nav key={g.title} aria-label={g.title} className="footer__col">
+            <h2>{g.title}</h2>
+            {g.links.map((l) => (
+              <a key={l.path} href={href(l.path)}>
+                {l.label}
+              </a>
+            ))}
+          </nav>
+        ))}
         <p className="footer__note">
           محتوای سلامت دردونه جایگزین معاینه و تشخیص پزشک نیست. در وضعیت اورژانسی با{' '}
           <a href="tel:115" className="num">

@@ -1,0 +1,121 @@
+.weeks {
+  contain: paint;
+  max-width: 100%;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 2px 14px;
+  margin-bottom: var(--s-6);
+  scrollbar-width: thin;
+}
+.weeks__n {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--moon-2);
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgb(238 240 250 / 0.2);
+  background: rgb(7 10 24 / 0.4);
+}
+.weeks__n:hover {
+  color: var(--moon-1);
+  box-shadow: inset 0 0 0 1px var(--moon-2);
+}
+.weeks__n--mine {
+  box-shadow: inset 0 0 0 2px var(--star);
+}
+.weeks__n[aria-current='page'] {
+  background: var(--moon-1);
+  color: var(--panel);
+}
+.week {
+  display: grid;
+  gap: var(--s-5);
+}
+.week__head {
+  display: grid;
+  gap: var(--s-2);
+}
+.week__tri {
+  color: var(--halo);
+  font-weight: 700;
+  font-size: var(--fs-small);
+}
+.week__title {
+  font-size: clamp(3rem, 2rem + 4vw, 5.5rem);
+  color: var(--moon-1);
+  line-height: 1.05;
+  text-shadow: 0 4px 30px rgb(2 3 12 / 0.9);
+}
+.week__size {
+  font-size: var(--fs-lead);
+  color: var(--moon-2);
+}
+.week__size strong {
+  color: var(--star-hi);
+}
+.week__nums {
+  display: flex;
+  gap: var(--s-6);
+  margin: var(--s-2) 0 0;
+}
+.week__nums div {
+  display: grid;
+}
+.week__nums dt {
+  font-size: var(--fs-small);
+  color: var(--moon-3);
+}
+.week__nums dd {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--moon-1);
+}
+.week section {
+  display: grid;
+  gap: var(--s-2);
+  padding-top: var(--s-4);
+  border-top: 1px dashed rgb(238 240 250 / 0.16);
+}
+.week h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--moon-1);
+  font-size: 1.125rem;
+}
+.week h3 svg {
+  color: var(--halo);
+}
+.week section p {
+  color: var(--moon-2);
+  max-width: 64ch;
+  text-shadow: 0 1px 10px rgb(2 3 12 / 0.9);
+}
+.week__pager {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.calc {
+  position: sticky;
+  top: calc(var(--header-h) + var(--s-5));
+}
+.calc__mine,
+.calc__result {
+  color: var(--moon-2);
+}
+.calc__mine strong,
+.calc__result strong {
+  color: var(--star-hi);
+}
+@media (max-width: 900px) {
+  .calc {
+    position: static;
+  }
+}

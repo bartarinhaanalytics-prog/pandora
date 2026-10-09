@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { nav } from '../data/content.js';
+import { href } from '../lib/router.js';
+import { primaryNav, sitemap } from '../data/site.js';
 import Icon from './Icon.jsx';
 import Logo from './Logo.jsx';
 import './Header.css';
 
-export default function Header() {
+const isActive = (current, path) => current === path || (path !== '/' && current.startsWith(`${path}/`));
+
+export default function Header({ path }) {
   const [open, setOpen] = useState(false);
   const [solid, setSolid] = useState(false);
   const sheet = useRef(null);
@@ -16,6 +19,8 @@ export default function Header() {
     window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
   }, []);
+
+  useEffect(() => setOpen(false), [path]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -48,65 +53,70 @@ export default function Header() {
     };
   }, [open]);
 
-  const close = () => setOpen(false);
-
   return (
-    <header className={`header ${solid ? 'header--solid' : ''}`}>
+    <header className={`header ${solid || path !== '/' ? 'header--solid' : ''}`}>
       <div className="wrap header__bar">
-        <a href="#top" className="header__home" aria-label="دردونه، بازگشت به بالای صفحه">
+        <a href={href('/')} className="header__home" aria-label="دردونه، صفحهٔ اول">
           <Logo />
         </a>
-        <nav className="header__nav" aria-label="بخش‌های صفحه">
-          {nav.map((n) => (
-            <a key={n.id} href={`#${n.id}`}>
+        <nav className="header__nav" aria-label="بخش‌های اصلی">
+          {primaryNav.map((n) => (
+            <a key={n.path} href={href(n.path)} aria-current={isActive(path, n.path) ? 'page' : undefined}>
               {n.label}
             </a>
           ))}
         </nav>
         <div className="header__end">
-          <a href="#start" className="header__cta">
-            ثبت‌نام رایگان
+          <a href={href('/search')} className="header__icon" aria-current={path === '/search' ? 'page' : undefined}>
+            <Icon name="Search" size={20} />
+            <span className="sr-only">جستجو</span>
+          </a>
+          <a href={href('/me')} className="header__icon header__icon--me" aria-current={isActive(path, '/me') ? 'page' : undefined}>
+            <Icon name="User" size={20} />
+            <span className="sr-only">پروفایل و خانواده</span>
           </a>
           <button
             ref={opener}
             type="button"
             className="header__menu"
             aria-expanded={open}
-            aria-controls="mobile-menu"
+            aria-controls="site-menu"
             onClick={() => setOpen(true)}
           >
             <Icon name="Menu" size={22} />
-            <span className="sr-only">باز کردن فهرست</span>
+            <span className="sr-only">همهٔ بخش‌ها</span>
           </button>
         </div>
       </div>
 
       {open && (
-        <div className="sheet" id="mobile-menu" role="dialog" aria-modal="true" aria-label="فهرست" ref={sheet}>
+        <div className="sheet" id="site-menu" role="dialog" aria-modal="true" aria-label="همهٔ بخش‌ها" ref={sheet}>
           <div className="sheet__top">
             <Logo />
             <button
               type="button"
-              className="header__menu"
+              className="header__menu header__menu--show"
               onClick={() => {
-                close();
+                setOpen(false);
                 opener.current?.focus();
               }}
             >
               <Icon name="X" size={22} />
-              <span className="sr-only">بستن فهرست</span>
+              <span className="sr-only">بستن</span>
             </button>
           </div>
-          <nav aria-label="بخش‌های صفحه" className="sheet__nav">
-            {nav.map((n) => (
-              <a key={n.id} href={`#${n.id}`} onClick={close}>
-                {n.label}
-              </a>
+          <div className="sheet__groups">
+            {sitemap.map((g) => (
+              <nav key={g.title} aria-label={g.title} className="sheet__group">
+                <h2>{g.title}</h2>
+                {g.links.map((l) => (
+                  <a key={l.path} href={href(l.path)} aria-current={path === l.path ? 'page' : undefined}>
+                    {l.label}
+                  </a>
+                ))}
+              </nav>
             ))}
-          </nav>
-          <a href="#start" className="btn btn--line" onClick={close}>
-            ثبت‌نام رایگان
-          </a>
+          </div>
         </div>
       )}
     </header>

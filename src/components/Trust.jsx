@@ -1,4 +1,5 @@
 import { reviewers } from '../data/content.js';
+import { href } from '../lib/router.js';
 import Icon from './Icon.jsx';
 import './Trust.css';
 
@@ -32,6 +33,17 @@ export default function Trust() {
               </span>
             </li>
           </ul>
+          <div className="actions">
+            <a className="btn btn--line" href={href('/about')}>
+              دربارهٔ ما
+            </a>
+            <a className="btn btn--line" href={href('/privacy')}>
+              حریم خصوصی
+            </a>
+            <a className="btn btn--line" href={href('/terms')}>
+              قوانین و سلب مسئولیت
+            </a>
+          </div>
         </div>
 
         <div className="roster panel">

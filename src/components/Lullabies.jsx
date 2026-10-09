@@ -1,4 +1,5 @@
 import { lullabies } from '../data/content.js';
+import { href } from '../lib/router.js';
 import './Lullabies.css';
 
 export default function Lullabies() {
@@ -13,8 +14,8 @@ export default function Lullabies() {
           </p>
         </div>
         <div className="lull__verses">
-          {lullabies.map((l) => (
-            <figure key={l.id} className={`verse ${l.pending ? 'verse--pending' : ''}`}>
+          {lullabies.slice(0, 3).map((l) => (
+            <figure key={l.id} className={`verse`}>
               <figcaption>
                 <span className="verse__title">{l.title}</span>
                 <span className="verse__origin">{l.origin}</span>
@@ -27,6 +28,9 @@ export default function Lullabies() {
             </figure>
           ))}
         </div>
+        <a className="btn btn--line lull__more" href={href('/lullabies')}>
+          همهٔ لالایی‌ها
+        </a>
       </div>
     </section>
   );

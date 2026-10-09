@@ -14,7 +14,7 @@
 .health__intro {
   display: grid;
   gap: var(--s-4);
-  position: sticky;
+  position: static;
   top: calc(var(--header-h) + var(--s-6));
 }
 .health h2 {
@@ -128,4 +128,31 @@
   .health {
     padding-top: var(--s-8);
   }
+}
+
+.health__cats {
+  display: grid;
+  margin-top: var(--s-4);
+  width: 100%;
+  max-width: 420px;
+}
+.health__cats a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  border-bottom: 1px solid rgb(238 240 250 / 0.12);
+  color: var(--moon-1);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.0625rem;
+}
+.health__cats a svg {
+  color: var(--moon-3);
+}
+.health__cats a:hover {
+  color: var(--star-hi);
+}
+.health__actions {
+  margin-top: var(--s-5);
 }
