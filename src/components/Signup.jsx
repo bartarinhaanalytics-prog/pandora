@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
-import { finalCta } from '../data/content.js';
+import BackdropVideo from './BackdropVideo.jsx';
 import Icon from './Icon.jsx';
-import './FinalCta.css';
+import './Signup.css';
 
 const FA_DIGITS = '۰۱۲۳۴۵۶۷۸۹';
 const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩';
@@ -39,7 +39,7 @@ async function requestCode(phone) {
   if (!res.ok) throw new Error(String(res.status));
 }
 
-export default function FinalCta() {
+export default function Signup() {
   const id = useId();
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
@@ -60,34 +60,31 @@ export default function FinalCta() {
   };
 
   return (
-    <section id="start" className="section final on-night" aria-labelledby="final-title">
-      <div className="container final__grid">
-        <div className="final__pearl" aria-hidden="true">
-          <span className="final__arch" />
-          <span className="final__cradle" />
-          <span className="final__orb" />
-        </div>
-
-        <div className="final__copy">
-          <h2 id="final-title" className="h2">
-            {finalCta.title}
-          </h2>
-          <p className="lead">{finalCta.text}</p>
+    <section id="start" className="signup" aria-labelledby="signup-title">
+      <BackdropVideo name="wide" position="40% 60%" />
+      <div className="signup__scrim" aria-hidden="true" />
+      <div className="wrap signup__inner">
+        <div className="signup__panel quilt">
+          <h2 id="signup-title">قصه‌های امشب را نگه دارید</h2>
+          <p className="signup__lead">
+            با شمارهٔ موبایل ثبت‌نام کنید تا قصه‌ها ذخیره شوند، هر شب قصهٔ تازه بسازید و پرسش‌های سلامت هر مرحله را دنبال کنید. رایگان
+            است و رایگان می‌ماند.
+          </p>
 
           {status === 'success' ? (
-            <div className="final__result final__result--ok" role="status">
+            <div className="signup__ok" role="status">
               <Icon name="Check" size={22} />
               <div>
-                <p className="final__result-title">کد تأیید فرستاده شد</p>
-                <p>کد ۵ رقمی به شمارهٔ <span className="ltr num">{toFaDigits(normalizePhone(phone))}</span> پیامک شد.</p>
+                <p className="signup__ok-title">کد تأیید فرستاده شد</p>
+                <p>
+                  کد ۵ رقمی به شمارهٔ <span className="ltr num">{toFaDigits(normalizePhone(phone))}</span> پیامک شد.
+                </p>
               </div>
             </div>
           ) : (
-            <form className="final__form" onSubmit={onSubmit} noValidate>
-              <label htmlFor={`${id}-phone`} className="final__label">
-                شمارهٔ موبایل
-              </label>
-              <div className="final__row">
+            <form className="signup__form" onSubmit={onSubmit} noValidate>
+              <label htmlFor={`${id}-phone`}>شمارهٔ موبایل</label>
+              <div className="signup__row">
                 <input
                   id={`${id}-phone`}
                   name="phone"
@@ -96,7 +93,7 @@ export default function FinalCta() {
                   autoComplete="tel"
                   dir="ltr"
                   placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹"
-                  className="final__input"
+                  className="signup__input"
                   value={phone}
                   aria-invalid={Boolean(error)}
                   aria-describedby={`${id}-help${error ? ` ${id}-err` : ''}`}
@@ -106,28 +103,28 @@ export default function FinalCta() {
                     if (status === 'failed') setStatus('idle');
                   }}
                 />
-                <button type="submit" className="btn btn--accent final__submit" disabled={status === 'loading'}>
+                <button type="submit" className="btn btn--saffron" disabled={status === 'loading'}>
                   {status === 'loading' ? (
                     <>
                       <Icon name="Loader2" size={18} className="spin" />
                       در حال فرستادن…
                     </>
                   ) : (
-                    finalCta.button
+                    'فرستادن کد'
                   )}
                 </button>
               </div>
-              <p id={`${id}-help`} className="final__help">
+              <p id={`${id}-help`} className="signup__help">
                 کد تأیید پیامک می‌شود. شماره‌تان را به کسی نمی‌دهیم.
               </p>
               {error && (
-                <p id={`${id}-err`} className="final__error" role="alert">
+                <p id={`${id}-err`} className="signup__error" role="alert">
                   <Icon name="CircleAlert" size={18} />
                   {error}
                 </p>
               )}
               {status === 'failed' && (
-                <p className="final__error" role="alert">
+                <p className="signup__error" role="alert">
                   <Icon name="CircleAlert" size={18} />
                   فرستادن کد انجام نشد. اتصال اینترنت را بررسی کنید و دوباره امتحان کنید.
                 </p>

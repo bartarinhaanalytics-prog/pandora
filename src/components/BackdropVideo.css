@@ -1,0 +1,12 @@
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background: var(--night-2);
+}
+.backdrop__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

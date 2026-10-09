@@ -1,101 +1,127 @@
 import { useEffect, useRef, useState } from 'react';
-import { brand, nav } from '../data/content.js';
-import { useActiveSection } from '../hooks/useActiveSection.js';
+import { nav } from '../data/content.js';
+import { useMotion } from '../hooks/useMotion.jsx';
 import Icon from './Icon.jsx';
 import Logo from './Logo.jsx';
 import './Header.css';
 
-const IDS = nav.map((n) => n.id);
+export function MotionToggle({ className = '' }) {
+  const { playing, toggle } = useMotion();
+  return (
+    <button type="button" className={`motion-toggle ${className}`} onClick={toggle} aria-pressed={!playing}>
+      <Icon name={playing ? 'Pause' : 'Play'} size={18} />
+      <span>{playing ? 'توقف تصاویر متحرک' : 'پخش تصاویر متحرک'}</span>
+    </button>
+  );
+}
 
 export default function Header() {
-  const active = useActiveSection(IDS);
   const [open, setOpen] = useState(false);
-  const toggleRef = useRef(null);
-  const panelRef = useRef(null);
+  const [solid, setSolid] = useState(false);
+  const sheet = useRef(null);
+  const opener = useRef(null);
 
-  // بستن منوی موبایل با Escape و بازگرداندن فوکوس
+  useEffect(() => {
+    const on = () => setSolid(window.scrollY > 40);
+    on();
+    window.addEventListener('scroll', on, { passive: true });
+    return () => window.removeEventListener('scroll', on);
+  }, []);
+
   useEffect(() => {
     if (!open) return undefined;
-    const first = panelRef.current?.querySelector('a, button');
-    first?.focus();
+    const el = sheet.current;
+    const focusables = () => [...el.querySelectorAll('a, button')];
+    focusables()[0]?.focus();
     const onKey = (e) => {
       if (e.key === 'Escape') {
         setOpen(false);
-        toggleRef.current?.focus();
+        opener.current?.focus();
       }
-      if (e.key === 'Tab' && panelRef.current) {
-        const items = panelRef.current.querySelectorAll('a, button');
-        const list = [toggleRef.current, ...items];
-        const idx = list.indexOf(document.activeElement);
-        if (e.shiftKey && idx <= 0) {
+      if (e.key === 'Tab') {
+        const f = focusables();
+        const first = f[0];
+        const last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
-          list[list.length - 1].focus();
-        } else if (!e.shiftKey && idx === list.length - 1) {
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
           e.preventDefault();
-          list[0].focus();
+          first.focus();
         }
       }
     };
     document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
   }, [open]);
 
-  // با بزرگ شدن صفحه، منوی موبایل بسته شود
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 1024px)');
-    const onChange = () => mq.matches && setOpen(false);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-
-  const link = (item, extra = '') => (
-    <a
-      key={item.id}
-      href={`#${item.id}`}
-      className={`nav-link${extra}`}
-      aria-current={active === item.id ? 'location' : undefined}
-      onClick={() => setOpen(false)}
-    >
-      {item.label}
-    </a>
-  );
+  const close = () => setOpen(false);
 
   return (
-    <header className="site-header on-night">
-      <div className="container site-header__inner">
-        <a href="#top" className="site-header__brand" aria-label={`${brand.name}، بازگشت به بالای صفحه`}>
+    <header className={`header ${solid ? 'header--solid' : ''}`}>
+      <div className="wrap header__bar">
+        <a href="#top" className="header__home" aria-label="دردونه، بازگشت به بالای صفحه">
           <Logo />
         </a>
-
-        <nav className="site-nav" aria-label="منوی اصلی">
-          {nav.map((item) => link(item))}
+        <nav className="header__nav" aria-label="بخش‌های صفحه">
+          {nav.map((n) => (
+            <a key={n.id} href={`#${n.id}`}>
+              {n.label}
+            </a>
+          ))}
         </nav>
-
-        <a href="#start" className="btn btn--accent btn--sm site-header__cta">
-          {brand.primaryCta}
-        </a>
-
-        <button
-          ref={toggleRef}
-          type="button"
-          className="icon-btn site-header__toggle"
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          aria-label={open ? 'بستن منو' : 'باز کردن منو'}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <Icon name={open ? 'X' : 'Menu'} size={22} />
-        </button>
+        <div className="header__end">
+          <MotionToggle className="motion-toggle--compact" />
+          <a href="#start" className="btn btn--saffron header__cta">
+            ثبت‌نام رایگان
+          </a>
+          <button
+            ref={opener}
+            type="button"
+            className="header__menu"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen(true)}
+          >
+            <Icon name="Menu" size={22} />
+            <span className="sr-only">باز کردن فهرست</span>
+          </button>
+        </div>
       </div>
 
-      <div id="mobile-menu" ref={panelRef} className="mobile-menu" hidden={!open}>
-        <nav aria-label="منوی موبایل" className="mobile-menu__nav">
-          {nav.map((item) => link(item, ' nav-link--block'))}
-        </nav>
-        <a href="#start" className="btn btn--accent mobile-menu__cta" onClick={() => setOpen(false)}>
-          {brand.primaryCta}
-        </a>
-      </div>
+      {open && (
+        <div className="sheet" id="mobile-menu" role="dialog" aria-modal="true" aria-label="فهرست" ref={sheet}>
+          <div className="sheet__top">
+            <Logo />
+            <button
+              type="button"
+              className="header__menu"
+              onClick={() => {
+                close();
+                opener.current?.focus();
+              }}
+            >
+              <Icon name="X" size={22} />
+              <span className="sr-only">بستن فهرست</span>
+            </button>
+          </div>
+          <nav aria-label="بخش‌های صفحه" className="sheet__nav">
+            {nav.map((n) => (
+              <a key={n.id} href={`#${n.id}`} onClick={close}>
+                {n.label}
+              </a>
+            ))}
+          </nav>
+          <MotionToggle />
+          <a href="#start" className="btn btn--saffron" onClick={close}>
+            ثبت‌نام رایگان
+          </a>
+        </div>
+      )}
     </header>
   );
 }

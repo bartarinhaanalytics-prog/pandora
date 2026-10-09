@@ -1,52 +1,8 @@
-import {
-  ArrowLeft,
-  BookOpenText,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  CircleAlert,
-  Instagram,
-  Loader2,
-  Lock,
-  Mail,
-  Menu,
-  MoonStar,
-  Phone,
-  Play,
-  Route,
-  Send,
-  ShieldCheck,
-  Sparkles,
-  Timer,
-  X
-} from 'lucide-react';
+import { ArrowLeft, Bird, BookHeart, Check, ChevronDown, CircleAlert, Fish, Loader2, Menu, Moon, Pause, Phone, Play, Rabbit, RotateCcw, ShieldCheck, Stethoscope, X } from 'lucide-react';
 
-const ICONS = {
-  ArrowLeft,
-  BookOpenText,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  CircleAlert,
-  Instagram,
-  Loader2,
-  Lock,
-  Mail,
-  Menu,
-  MoonStar,
-  Phone,
-  Play,
-  Route,
-  Send,
-  ShieldCheck,
-  Sparkles,
-  Timer,
-  X
-};
+const map = { ArrowLeft, Bird, BookHeart, Check, ChevronDown, CircleAlert, Fish, Loader2, Menu, Moon, Pause, Phone, Play, Rabbit, RotateCcw, ShieldCheck, Stethoscope, X };
 
-/** آیکن تزئینی؛ برای آیکن‌های بدون متن، نام را روی دکمهٔ والد بگذارید. */
-export default function Icon({ name, size = 20, strokeWidth = 1.9, className }) {
-  const Cmp = ICONS[name];
-  if (!Cmp) return null;
-  return <Cmp size={size} strokeWidth={strokeWidth} className={className} aria-hidden="true" focusable="false" />;
+export default function Icon({ name, size = 20, ...rest }) {
+  const C = map[name];
+  return C ? <C size={size} strokeWidth={1.75} aria-hidden="true" focusable="false" {...rest} /> : null;
 }
